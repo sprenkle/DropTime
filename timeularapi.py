@@ -1,6 +1,7 @@
 import requests
 import datetime
 
+
 class TimularApi:
     # ApiKey = NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=
     # ApiSecret = NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=
@@ -13,6 +14,14 @@ class TimularApi:
         r = requests.post(url, data=body)
         self.token = r.json()['token']
 
+    @staticmethod
+    def get_utc_time(minus=False):
+        current_dt = datetime.datetime.utcnow()
+        if minus:
+            current_dt = current_dt - datetime.timedelta(seconds=1)
+        current_time = current_dt.strftime("%Y-%m-%dT%H:%M:%S.000")
+        return current_time
+
     def get_activities(self):
         url = self.base_url + '/activities'
         my_headers = {'Authorization': 'Bearer ' + self.token}
@@ -23,16 +32,26 @@ class TimularApi:
         url = self.base_url + '/tracking'
         my_headers = {'Authorization': 'Bearer ' + self.token}
         r = requests.get(url, headers=my_headers)
-        return r.json()
+        current_tracking = r.json()["currentTracking"];
+        if current_tracking is None:
+            return None
+        return current_tracking["activity"]["id"]
 
-    def stop_tracking(self, activity_id, stop_time):
+    def stop_tracking(self, activity_id, stop_time=None):
+        if stop_time is None:
+            stop_time = TimularApi.get_utc_time()
         url = self.base_url + '/tracking/' + activity_id + '/stop'
         my_headers = {'Authorization': 'Bearer ' + self.token}
         body = {"stoppedAt": stop_time}
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
 
-    def start_tracking(self, activity_id, start_time):
+    def start_tracking(self, activity_id, start_time=None):
+        if start_time is None:
+            start_time = TimularApi.get_utc_time()
+        current_tracking = self.get_tracking()
+        if current_tracking is not None:
+            self.stop_tracking(current_tracking, TimularApi.get_utc_time(True))
         url = self.base_url + '/tracking/' + activity_id + '/start'
         my_headers = {'Authorization': 'Bearer ' + self.token}
         body = {"startedAt": start_time, "note": {"text": None, "tags": [], "mentions": []}}
@@ -40,32 +59,17 @@ class TimularApi:
         return r.json()
 
 
-p1 = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=", "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
+if __name__ == "__main__":
+    p1 = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=", "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
 
-print(p1.api_key)
-print(p1.api_secret)
-print(p1.token)
+    # print(p1.api_key)
+    # print(p1.api_secret)
+    # print(p1.token)
 
-currentDT = datetime.datetime.utcnow() - datetime.timedelta(seconds=1)
-year = currentDT.year
-month = currentDT.month
-day = currentDT.day
-hour = currentDT.hour
-minute = currentDT.minute
-second = currentDT.second
-#stopTime = "%s-%d-%sT%s:%s:%s.678" % (year, month, day, hour, minute, second)
-stopTime = currentDT.strftime("%Y-%m-%dT%H:%M:%S.000")
-currentDT = datetime.datetime.utcnow()
-year = currentDT.year
-month = currentDT.month
-day = currentDT.day
-hour = currentDT.hour
-minute = currentDT.minute
-second = currentDT.second
-#startTime = "%s-%d-%sT%s:%s:%s.678" % (year, month, day, hour, minute, second)
-startTime = currentDT.strftime("%Y-%m-%dT%H:%M:%S.000")
-print (startTime)
-print(p1.get_activities())
-print(p1.stop_tracking('369008', stopTime))
-print(p1.start_tracking('369007', startTime))
-print(p1.get_tracking())
+    #print (startTime)
+    #print(p1.get_activities())
+    #print(p1.stop_tracking('369007', TimularApi.get_utc_time()))
+    #print(TimularApi.get_utc_time(True))
+    #time = TimularApi.get_utc_time(True)
+    print(p1.start_tracking('369007'))
+    #print(p1.get_tracking())
