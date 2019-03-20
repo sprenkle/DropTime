@@ -6,6 +6,9 @@ class RfiReader:
     def __init__(self):
         self.reader = SimpleMFRC522.SimpleMFRC522()
 
+    def __del__(self):
+        GPIO.cleanup
+
     def read_card(self):
-        id, text = self.reader_card()
+        id, text = self.reader.read()
         return str(id)
