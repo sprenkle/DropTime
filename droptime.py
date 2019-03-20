@@ -1,4 +1,4 @@
-from mockrfireader import MockRfiReader
+from rfireader import RfiReader
 from actions import Actions
 import time
 
@@ -20,7 +20,7 @@ class DropTime:
 
 
 if __name__ == "__main__":
-    reader = MockRfiReader()
+    reader = RfiReader()
     actions = Actions()
     dropTime = DropTime(reader, actions)
     dropTime.run()

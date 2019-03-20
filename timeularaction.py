@@ -13,6 +13,7 @@ class TimeularAction:
         return tag_id in self.task_dict
 
     def execute(self, tag_id):
+        print("Execute " + str(tag_id))
         if tag_id is None:
             if self.running_tag_id is not None:
                 self.api.stop_tracking(self.task_dict[str(self.running_tag_id)])
