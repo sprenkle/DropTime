@@ -1,4 +1,3 @@
-from timeularapi import TimularApi
 from mockrfireader import MockRfiReader
 from actions import Actions
 import time
@@ -6,11 +5,10 @@ import time
 
 class DropTime:
 
-    def __init__(self, timeular_api, reader, actions):
-        self.api = timeular_api
-        self.reader = reader
+    def __init__(self, tag_reader, all_actions):
+        self.reader = tag_reader
         self.last_read = None
-        self.actions = actions
+        self.actions = all_actions
 
     def run(self):
         while True:
@@ -23,11 +21,9 @@ class DropTime:
 
 
 if __name__ == "__main__":
-    api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
-                     "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
     reader = MockRfiReader()
     actions = Actions()
-    dropTime = DropTime(api, reader, actions)
+    dropTime = DropTime(reader, actions)
     dropTime.run()
 
 

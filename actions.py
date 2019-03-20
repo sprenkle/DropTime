@@ -1,4 +1,13 @@
+from timeularaction import TimeularAction
+
+
 class Actions:
 
+    def __init__(self):
+        self.action_list = [TimeularAction()]
+
     def execute(self, tag_id):
-        print(tag_id)
+        for action in self.action_list:
+            if action.is_actionable(tag_id):
+                action.execute(tag_id)
+
