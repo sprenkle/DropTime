@@ -13,10 +13,9 @@ class DropTime:
     def run(self):
         while True:
             card_id = self.reader.read_card()
-            if card_id is not None:
-                if self.last_read != card_id:
-                    self.last_read = card_id
-                    self.actions.execute(card_id)
+            if self.last_read != card_id:
+                self.last_read = card_id
+                self.actions.execute(card_id)
             time.sleep(.1)
 
 
