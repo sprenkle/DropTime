@@ -1,10 +1,7 @@
-from timeularaction import TimeularAction
-
-
 class Actions:
 
-    def __init__(self):
-        self.action_list = [TimeularAction()]
+    def __init__(self, timeular):
+        self.action_list = [timeular]
 
     def execute(self, tag_id):
         for action in self.action_list:
