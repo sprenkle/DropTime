@@ -1,17 +1,17 @@
 class TimeularAction:
 
-    def __init__(self, api):
-        self.task_dict = {231965344320: "369007", 438308258332: "369008", 25991398012: "369006"}
+    def __init__(self, api, card_repository):
         self.running_tag_id = None
         self.api = api
+        self.card_repository = card_repository
 
     def is_actionable(self, tag_id):
-        return tag_id in self.task_dict or tag_id is None
+        return self.card_repository.contains_id(tag_id)
 
     def execute(self, tag_id):
         if tag_id is None:
             if self.running_tag_id is not None:
-                self.api.stop_tracking(self.task_dict[self.running_tag_id])
+                self.api.stop_tracking(self.card_repository.activity_id(self.running_tag_id))
                 self.running_tag_id = None
             return
         if tag_id not in self.task_dict:

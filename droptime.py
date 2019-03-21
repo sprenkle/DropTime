@@ -2,6 +2,7 @@ import time
 import sys
 from actions import Actions
 from timeularaction import TimeularAction
+from cardrepository import CardRepository
 
 
 class DropTime:
@@ -46,7 +47,7 @@ if __name__ == "__main__":
         api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
                    "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=", logger)
 
-    actions = Actions(logger, TimeularAction(api))
+    actions = Actions(logger, TimeularAction(api, CardRepository()))
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 

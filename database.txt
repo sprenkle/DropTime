@@ -1,0 +1,95 @@
+Tags
+    tagid
+    userid
+    name
+    description
+
+ActionTypes
+    actiontypeid
+    actionname
+
+Devices
+    deviceid
+    name
+    description
+
+Users
+    userid
+    username
+    userpassword
+
+TagsToActions
+    tagid
+    actiontype
+
+Activities
+    activityid
+    userid
+    name
+    color
+    show
+    label
+    integration -- boolean use integration
+    dailygoals -- boolean use dailygoals
+    dailytime
+
+ActivitiesIntegration
+    activityid
+    integrationname
+
+TagsToActivities
+    tagid
+    activityid
+
+ActivitiesLog
+    activityid
+    tageid
+    deviceid
+    start
+    end
+
+Reminders
+    reminderid
+    userid
+    starttime
+    endtime
+    deviceid
+    requiredevice
+    showled
+    sunday
+    monday
+    tuesday
+    wednesday
+    thursday
+    friday
+    saturday
+    integration -- boolean use integration
+
+ReminderIntegrations
+    reminderid
+    integrationname
+
+ReminderLogs
+    reminderid
+    date
+    timecompleted
+    completed
+
+ReminderTagLogs
+    reminderid
+    tagid
+    date
+    timecompleted
+    completed
+
+ReminderTags -- more than on tag can be associated with a reminder
+    reminderid
+    tagid
+
+TagsToReminder
+    tagid
+    reminderid
+
+
+
+
