@@ -1,7 +1,7 @@
 class TimeularAction:
 
     def __init__(self, api):
-        self.task_dict = {"231965344320": "369007", "438308258332": "369008", "25991398012": "369006"}
+        self.task_dict = {231965344320: "369007", 438308258332: "369008", 25991398012: "369006"}
         self.running_tag_id = None
         self.api = api
 
