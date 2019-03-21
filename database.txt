@@ -1,12 +1,27 @@
-Tags
-    tagid
-    userid
-    name
-    description
+CREATE TABLE "tags"
+(
+    [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [userid]
+    [name] NVARCHAR(80)  NOT NULL,
+    [description] NVARCHAR(80)  NULL,
+    FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_TagsUserid] ON "tags" ([tagid]);
 
 ActionTypes
     actiontypeid
     actionname
+CREATE TABLE "tags"
+(
+    [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [userid]
+    [name] NVARCHAR(80)  NOT NULL,
+    [description] NVARCHAR(80)  NULL,
+    FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_TagsUserid] ON "tags" ([tagid]);
 
 Devices
     deviceid
