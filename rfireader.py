@@ -8,7 +8,7 @@ class RfiReader:
         self.reader = SimpleMFRC522.SimpleMFRC522()
 
     def read_card(self):
-        tag_id, text = self.reader.read_id_no_block()
+        tag_id = self.reader.read_id_no_block()
         if tag_id is not None and tag_id == 474735937816:
             GPIO.cleanup()
             quit()
