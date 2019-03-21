@@ -19,6 +19,8 @@ class DropTime:
             card_id = self.reader.read_card()
             if card_id is None:
                 self.none_count = self.none_count + 1
+            if card_id is not None:
+                self.none_count = 0
             self.mlogger.log("run - read id " + str(card_id))
             if self.last_read != card_id and (card_id is not None or self.none_count > 3):
                 self.mlogger.log("run - new id " + str(card_id))
