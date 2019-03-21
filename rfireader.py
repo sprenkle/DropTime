@@ -13,4 +13,7 @@ class RfiReader:
 
     def read_card(self):
         tag_id, text = self.reader.read()
+        if tag_id == "474735937816":
+            GPIO.cleanup()
+            quit()
         return tag_id

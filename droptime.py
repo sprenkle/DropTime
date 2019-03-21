@@ -42,7 +42,7 @@ if __name__ == "__main__":
         api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
                    "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
 
-    actions = Actions(logger, TimeularAction(api), StopAction())
+    actions = Actions(logger, TimeularAction(api))
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 
