@@ -1,7 +1,8 @@
-from actions import Actions
 import time
 import sys
+from actions import Actions
 from timeularaction import TimeularAction
+from stopaction import StopAction
 
 
 class DropTime:
@@ -41,7 +42,7 @@ if __name__ == "__main__":
         api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
                    "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
 
-    actions = Actions(TimeularAction(api), logger)
+    actions = Actions(logger, TimeularAction(api), StopAction())
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 

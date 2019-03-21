@@ -1,7 +1,7 @@
 class Actions:
 
-    def __init__(self, timeular, my_logger):
-        self.action_list = [timeular]
+    def __init__(self, my_logger, *actions):
+        self.action_list = list(actions)
         self.logger = my_logger
 
     def execute(self, tag_id):
