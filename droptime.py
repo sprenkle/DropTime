@@ -6,20 +6,22 @@ from timeularaction import TimeularAction
 
 class DropTime:
 
-    def __init__(self, tag_reader, all_actions, logger):
+    def __init__(self, tag_reader, all_actions, my_logger):
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
-        self.logger = logger
+        self.mlogger = my_logger
 
     def run(self):
+        self.mlogger.log("started run")
         while True:
             card_id = self.reader.read_card()
+            self.mlogger.log("read " + str(card_id))
             if self.last_read != card_id:
-                self.logger.log("run new id " +  card_id)
+                self.mlogger.log("run new id " + str(card_id))
                 self.last_read = card_id
                 self.actions.execute(card_id)
-            time.sleep(.1)
+            time.sleep(1)
 
 
 if __name__ == "__main__":
@@ -27,19 +29,19 @@ if __name__ == "__main__":
         from mockrfireader import MockRfiReader
         from mockapi import MockApi
         from debuglogger import DebugLogger
-        logger = DebugLogger
+        logger = DebugLogger()
         reader = MockRfiReader()
         api = MockApi()
     else:
         from rfireader import RfiReader
         from timeularapi import TimularApi
         from debuglogger import DebugLogger
-        logger = DebugLogger
+        logger = DebugLogger()
         reader = RfiReader()
         api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
                    "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
 
-    actions = Actions(TimeularAction(api))
+    actions = Actions(TimeularAction(api), logger)
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 

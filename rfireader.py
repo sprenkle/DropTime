@@ -10,5 +10,5 @@ class RfiReader:
         GPIO.cleanup
 
     def read_card(self):
-        id, text = self.reader.read()
-        return str(id)
+        tag_id, text = self.reader.read()
+        return tag_id
