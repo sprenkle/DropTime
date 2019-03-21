@@ -16,8 +16,9 @@ class DropTime:
         self.mlogger.log("started run")
         while True:
             card_id = self.reader.read_card()
-            if self.last_read != card_id:
-                self.mlogger.log("run new id " + str(card_id))
+            self.mlogger.log("run - read id " + str(card_id))
+            if (self.last_read is not None and card_id is None) or self.last_read != card_id:
+                self.mlogger.log("run - new id " + str(card_id))
                 self.last_read = card_id
                 self.actions.execute(card_id)
             time.sleep(1)
