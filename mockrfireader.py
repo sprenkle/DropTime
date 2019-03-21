@@ -18,6 +18,9 @@ class MockRfiReader:
             self.last_event_time = datetime.datetime.utcnow()
         return self.last_event
 
+    def stop(self):
+        pass
+
 
 if __name__ == "__main__":
     reader = MockRfiReader()
