@@ -1,3 +1,5 @@
+import RPi.GPIO as GPIO
+
 class StopAction:
 
     def __init__(self):
@@ -7,4 +9,5 @@ class StopAction:
         return tag_id == "474735937816"
 
     def execute(self, tag_id):
+        GPIO.cleanup()
         quit()

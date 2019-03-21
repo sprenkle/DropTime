@@ -9,7 +9,7 @@ class RfiReader:
         self.reader = SimpleMFRC522.SimpleMFRC522()
 
     def __del__(self):
-        GPIO.cleanup
+        GPIO.cleanup()
 
     def read_card(self):
         tag_id, text = self.reader.read()
