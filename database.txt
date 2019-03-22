@@ -1,109 +1,182 @@
+CREATE TABLE "users"
+(
+    [userid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [first] NVARCHAR(80)  NOT NULL,
+    [last] NVARCHAR(80)  NOT NULL,
+    [username] NVARCHAR(80)  NOT NULL,
+    [userpassword] NVARCHAR(80)  NOT NULL
+);
+CREATE INDEX [IFK_UsersUserid] ON "users" ([userid]);
+
+
 CREATE TABLE "tags"
 (
     [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    [userid]
+    [userid] INTEGER,
     [name] NVARCHAR(80)  NOT NULL,
-    [description] NVARCHAR(80)  NULL,
+    [description] NVARCHAR(256)  NULL,
     FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-CREATE INDEX [IFK_TagsUserid] ON "tags" ([tagid]);
+CREATE INDEX [IFK_TagsTagid] ON "tags" ([tagid]);
 
-ActionTypes
-    actiontypeid
-    actionname
-CREATE TABLE "tags"
+CREATE TABLE "actiontypes"
+(
+    [actiontypeid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [name] NVARCHAR(80)  NOT NULL,
+    [description] NVARCHAR(256)  NULL
+);
+CREATE INDEX [IFK_ActionTypesActionTypesid] ON "actiontypes" ([actiontypeid]);
+
+CREATE TABLE "devices"
+(
+    [deviceid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [name] NVARCHAR(80)  NOT NULL,
+    [description] NVARCHAR(256)  NULL
+);
+CREATE INDEX [IFK_DevicesDeviceid] ON "devices" ([deviceid]);
+
+CREATE TABLE "tagstoactions"
 (
     [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    [userid]
+    [actiontype] NVARCHAR(80)  NOT NULL
+);
+CREATE INDEX [IFK_TagsToAction] ON "tagstoactions" ([tagid]);
+
+CREATE TABLE "activities"
+(
+    [activityid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [userid] INTEGER,
     [name] NVARCHAR(80)  NOT NULL,
-    [description] NVARCHAR(80)  NULL,
+    [color] INTEGER  NULL,
+    [show] INTEGER(1) NOT NULL,
+    [integration] INTEGER(1) NOT NULL,
+    [dailygoals] INTEGER(1) NOT NULL,
+    [dailytimeSec] INTEGER NOT NULL,
     FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-CREATE INDEX [IFK_TagsUserid] ON "tags" ([tagid]);
+CREATE INDEX [IFK_ActivitiesActivityid] ON "activities" ([activityid]);
 
-Devices
-    deviceid
-    name
-    description
 
-Users
-    userid
-    username
-    userpassword
+CREATE TABLE "activitiestolabels"
+(
+    [activityid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [label] NVARCHAR(80)  NOT NULL
+);
+CREATE INDEX [IFK_ActivitiesToLabels] ON "activitiestolabels" ([activityid]);
 
-TagsToActions
-    tagid
-    actiontype
 
-Activities
-    activityid
-    userid
-    name
-    color
-    show
-    label
-    integration -- boolean use integration
-    dailygoals -- boolean use dailygoals
-    dailytime
+CREATE TABLE "activitiesintegration"
+(
+    [activityid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [integraionname] NVARCHAR(80)  NOT NULL
+);
+CREATE INDEX [IFK_ActivitiesIntegrationActivityId]] ON "activitiesintegration" ([activityid]);
 
-ActivitiesIntegration
-    activityid
-    integrationname
 
-TagsToActivities
-    tagid
-    activityid
+CREATE TABLE "tagstoactivities"
+(
+    [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [activityid] INTEGER,
+    FOREIGN KEY ([activityid]) REFERENCES "activities" ([activityid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_TagsToActivitiesTagid] ON "tagstoactivities" ([tagid]);
 
-ActivitiesLog
-    activityid
-    tageid
-    deviceid
-    start
-    end
 
-Reminders
-    reminderid
-    userid
-    starttime
-    endtime
-    deviceid
-    requiredevice
-    showled
-    sunday
-    monday
-    tuesday
-    wednesday
-    thursday
-    friday
-    saturday
-    integration -- boolean use integration
+CREATE TABLE "activitieslog"
+(
+    [activityid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [tagid] INTEGER,
+    [deviceid] INTEGER,
+    [start] NVARCHAR(23)  NOT NULL,
+    [stop] NVARCHAR(23)  NOT NULL,
+    FOREIGN KEY ([activityid]) REFERENCES "activitieslog" ([activityid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY ([tagid]) REFERENCES "tags" ([tagid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY ([deviceid]) REFERENCES "devices" ([deviceid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_ActivitiesLogActivityid] ON "activitieslog" ([activityid]);
+CREATE INDEX [IFK_ActivitiesLogTagidStart] ON "activitieslog" ([tagid],[start]);
 
-ReminderIntegrations
-    reminderid
-    integrationname
 
-ReminderLogs
-    reminderid
-    date
-    timecompleted
-    completed
+CREATE TABLE "reminders"
+(
+    [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [userid] INTEGER,
+    [start] NVARCHAR(23)  NOT NULL,
+    [stop] NVARCHAR(23)  NOT NULL,
+    [showled] INTEGER(1) NOT NULL,
+    [sunday] INTEGER(1) NOT NULL,
+    [monday] INTEGER(1) NOT NULL,
+    [tuesday] INTEGER(1) NOT NULL,
+    [wednesday] INTEGER(1) NOT NULL,
+    [thursday] INTEGER(1) NOT NULL,
+    [friday] INTEGER(1) NOT NULL,
+    [saturday] INTEGER(1) NOT NULL,
+    [integration] INTEGER(1) NOT NULL,
+    FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_RemindersReminderid] ON "reminders" ([reminderid]);
 
-ReminderTagLogs
-    reminderid
-    tagid
-    date
-    timecompleted
-    completed
 
-ReminderTags -- more than on tag can be associated with a reminder
-    reminderid
-    tagid
+CREATE TABLE "reminderstodevices"
+(
+    [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [deviceid] INTEGER,
+    FOREIGN KEY ([deviceid]) REFERENCES "reminderstodevices" ([deviceid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstodevices" ([reminderid]);
 
-TagsToReminder
-    tagid
-    reminderid
+
+CREATE TABLE "reminderintegrations"
+(
+    [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [integrationname] NVARCHAR(80)  NOT NULL
+);
+
+
+CREATE TABLE "reminderlogs"
+(
+    [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [deviceid] INTEGER NOT NULL,
+    [date] NVARCHAR(23),
+    [completed] INTEGER(1) NOT NULL,
+);
+CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstodevices" ([reminderid]);
+
+
+CREATE TABLE "remindertaglogs"
+(
+    [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [deviceid] INTEGER NOT NULL,
+    [tagid] INTEGER NOT NULL,
+    [date] NVARCHAR(23),
+    [completed] INTEGER(1) NOT NULL,
+);
+CREATE INDEX [IFK_ReminderTagLogsReminderId] ON "remindertaglogs" ([reminderid]);
+
+
+CREATE TABLE "remindertags"
+(
+    [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [deviceid] INTEGER NOT NULL,
+    [tagid] INTEGER NOT NULL
+);
+CREATE INDEX [IFK_ReminderTagsReminderId] ON "remindertags" ([reminderid]);
+
+
+CREATE TABLE "tagstoreminder"
+(
+    [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [reminderid] INTEGER NOT NULL
+);
+CREATE INDEX [IFK_TagsToReminder] ON "tagstoreminder" ([tagid]);
 
 
 
