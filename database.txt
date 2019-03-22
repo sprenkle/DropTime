@@ -72,7 +72,7 @@ CREATE TABLE "activitiesintegration"
     [activityid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [integraionname] NVARCHAR(80)  NOT NULL
 );
-CREATE INDEX [IFK_ActivitiesIntegrationActivityId]] ON "activitiesintegration" ([activityid]);
+CREATE INDEX [IFK_ActivitiesIntegrationActivityId] ON "activitiesintegration" ([activityid]);
 
 
 CREATE TABLE "tagstoactivities"
@@ -139,6 +139,7 @@ CREATE TABLE "reminderintegrations"
     [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [integrationname] NVARCHAR(80)  NOT NULL
 );
+CREATE INDEX [IFK_ReminderIntegrationsReminderId] ON "reminderintegrations" ([reminderid]);
 
 
 CREATE TABLE "reminderlogs"
@@ -146,7 +147,7 @@ CREATE TABLE "reminderlogs"
     [reminderid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [deviceid] INTEGER NOT NULL,
     [date] NVARCHAR(23),
-    [completed] INTEGER(1) NOT NULL,
+    [completed] INTEGER(1) NOT NULL
 );
 CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstodevices" ([reminderid]);
 
@@ -157,7 +158,7 @@ CREATE TABLE "remindertaglogs"
     [deviceid] INTEGER NOT NULL,
     [tagid] INTEGER NOT NULL,
     [date] NVARCHAR(23),
-    [completed] INTEGER(1) NOT NULL,
+    [completed] INTEGER(1) NOT NULL
 );
 CREATE INDEX [IFK_ReminderTagLogsReminderId] ON "remindertaglogs" ([reminderid]);
 
