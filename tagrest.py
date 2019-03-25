@@ -2,7 +2,10 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from sqlalchemy import create_engine
 from flask_jsonpify import jsonify
+from configuration import Configuration
 import collections
+import sys
+
 # 67460e74-02e3-11e8-b443-00163e990bdb
 
 db_connect = create_engine('sqlite:///droptime.db')
@@ -111,8 +114,8 @@ class Tags(Resource):
         tag = request.json
         print(tag)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO tags (userid, name, description) VALUES ('{}','{}','{}')"\
-            .format(tag["userid"], tag["name"], tag["description"])
+        querystring = "INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')"\
+            .format(tag["tagid"], tag["userid"], tag["name"], tag["description"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
 
@@ -163,7 +166,7 @@ class TagsToActionsList(Resource):
             d['identifier'] = row[2]
             objects_list.append(d)
         tags_to_actions = {"tagstoactions": objects_list}
-        return tags_to_actions  # Fetches first column that is Employee ID
+        return tags_to_actions
 
 class TagsToActions(Resource):
 
@@ -173,15 +176,18 @@ class TagsToActions(Resource):
             last_seen_tag = tag_id
         print(tag_id)
         conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from tagstoactions where tagid = '{}'".format(tag_id))  # This line performs query and returns json result
+        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join tags t on tta.tagid = t.tagid where tta.tagid = '{}'".format(tag_id)
+        print(query_string)
+        query = conn.execute(query_string)
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
             d['tagid'] = row[0]
             d['actiontype'] = row[1]
             d['identifier'] = row[2]
+            d['userid'] = row[3]
             objects_list.append(d)
-        return objects_list[0]  # Fetches first column that is Employee ID
+        return objects_list[0]
 
     def post(self):
         tagtoaction = request.json
@@ -203,6 +209,14 @@ api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities')  # Route_1
 
 if __name__ == '__main__':
-    configuratin = Configuration()
-    app.run(host='David-Tower', port='5002')
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
+        file = "debug_config.json"
+    else:
+        file = "configuration.json"
+
+
+    configuration = Configuration(file)
+    url = configuration.get_value("timeular_api", "url")
+    print("Url is {}".format(url))
+    app.run(host=url, port='5002')
 

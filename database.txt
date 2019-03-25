@@ -30,7 +30,7 @@ CREATE INDEX [IFK_ActionTypesActionTypesid] ON "actiontypes" ([actiontypeid]);
 
 CREATE TABLE "devices"
 (
-    [deviceid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [deviceid] NVARCHAR(36) PRIMARY KEY NOT NULL,
     [name] NVARCHAR(80)  NOT NULL,
     [description] NVARCHAR(256)  NULL
 );
