@@ -2,9 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from sqlalchemy import create_engine
 from flask_jsonpify import jsonify
-import json
 import collections
-#import uuid
 # 67460e74-02e3-11e8-b443-00163e990bdb
 
 db_connect = create_engine('sqlite:///droptime.db')
@@ -205,5 +203,6 @@ api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities')  # Route_1
 
 if __name__ == '__main__':
+    configuratin = Configuration()
     app.run(host='David-Tower', port='5002')
 

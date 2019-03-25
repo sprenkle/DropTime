@@ -1,7 +1,7 @@
 import requests
 
 
-class CardRepository:
+class TagRepository:
 
     def __init__(self):
         self.base_url = "http://David-Tower:5002"
@@ -27,7 +27,7 @@ class CardRepository:
 
 if __name__ == "__main__":
     # {231965344320: "369007", 438308258332: "369008", 25991398012: "369006"}
-    card_repository = CardRepository()
+    card_repository = TagRepository()
     print(card_repository.contains_id(231965344320))
 
     print(card_repository.activity_id(231965344320))
