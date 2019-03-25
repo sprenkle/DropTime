@@ -10,12 +10,19 @@ class CardRepository:
     def contains_id(self, tag_id):
         url = self.base_url + '/tagstoactions/' + str(tag_id)
         r = requests.get(url)
-        activity = r.json()["identifier"];
+        activity = r.json()
         self.activity_dict[tag_id] = activity
         return activity
 
-    def activity_id(self, tag_id):
+    def activity(self, tag_id):
         return self.activity_dict[tag_id]
+
+    def get_token(self, user_id):
+        url = self.base_url + '/users/' + str(user_id)
+        r = requests.get(url)
+        activity = r.json()
+        return activity
+
 
 
 if __name__ == "__main__":

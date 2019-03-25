@@ -13,7 +13,8 @@ api = Api(app)
 parser = reqparse.RequestParser()
 last_seen_tag = None
 
-class Users(Resource):
+
+class UsersList(Resource):
     def get(self):
         conn = db_connect.connect()  # connect to database
         query = conn.execute("select * from users")  # This line performs query and returns json result
@@ -41,6 +42,33 @@ class Users(Resource):
             .format(user["first"], user["last"], user["username"], user["userpassword"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
+
+
+class Users(Resource):
+    def get(self, user_id):
+        conn = db_connect.connect()  # connect to database
+        query = conn.execute("select * from users where userid={}".format(user_id))  # This line performs query and returns json result
+        objects_list = []
+        for row in query.cursor:
+            d = collections.OrderedDict()
+            d['userid'] = row[0]
+            d['first'] = row[1]
+            d['last'] = row[2]
+            d['username'] = row[3]
+            d['userpassword'] = row[4]
+            objects_list.append(d)
+        return objects_list[0]
+
+    def put(self, user_id):
+        user = request.json
+        print(user)
+        conn = db_connect.connect()  # connect to database
+        querystring = "Update users set username='{}', userpassword='{}' where Userid={}"\
+            .format(user["username"], user["userpassword"], user_id)
+        conn.execute(querystring)  # This line performs query and returns json result
+        return jsonify({"results": "ok"})
+
+
 
 class Devices(Resource):
     def get(self):
@@ -170,11 +198,12 @@ class TagsToActions(Resource):
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
 api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<string:tag_id>')  # Route_1
-api.add_resource(Users, '/users', '/users/<userid>')  # Route_1
+api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
+api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
 api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities')  # Route_1
 
 if __name__ == '__main__':
-    app.run(port='80')
+    app.run(host='David-Tower', port='5002')
 
