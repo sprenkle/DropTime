@@ -33,11 +33,14 @@ class DropTime:
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "test":
         from mockrfireader import MockRfiReader
-        from mockapi import MockApi
+        # from mockapi import MockApi
+        from timeularapi import TimularApi
         from debuglogger import DebugLogger
         logger = DebugLogger()
         reader = MockRfiReader()
-        api = MockApi()
+        # api = MockApi()
+        api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
+                   "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=", logger)
     else:
         from rfireader import RfiReader
         from timeularapi import TimularApi

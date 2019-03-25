@@ -38,10 +38,11 @@ CREATE INDEX [IFK_DevicesDeviceid] ON "devices" ([deviceid]);
 
 CREATE TABLE "tagstoactions"
 (
-    [tagid] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    [actiontype] NVARCHAR(80)  NOT NULL
+    [tagid] INTEGER PRIMARY KEY  NOT NULL,
+    [actiontype] NVARCHAR(80)  NOT NULL,
+    [identifier] INTEGER
 );
-CREATE INDEX [IFK_TagsToAction] ON "tagstoactions" ([tagid]);
+CREATE INDEX [IFK_TagsToAction] ON "tagstoactions" ([tagid],[actiontype],[identifier]);
 
 CREATE TABLE "activities"
 (

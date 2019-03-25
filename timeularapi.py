@@ -3,8 +3,6 @@ import datetime
 
 
 class TimularApi:
-    # ApiKey = NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=
-    # ApiSecret = NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=
     def __init__(self, api_key, api_secret, logger):
         self.api_key = api_key
         self.api_secret = api_secret
@@ -57,7 +55,7 @@ class TimularApi:
         current_tracking = self.get_tracking()
         if current_tracking is not None:
             self.stop_tracking(current_tracking, TimularApi.get_utc_time(True))
-        url = self.base_url + '/tracking/' + activity_id + '/start'
+        url = self.base_url + '/tracking/' + str(activity_id) + '/start'
         my_headers = {'Authorization': 'Bearer ' + self.token}
         body = {"startedAt": start_time, "note": {"text": None, "tags": [], "mentions": []}}
         r = requests.post(url, headers=my_headers, json=body)
@@ -65,7 +63,7 @@ class TimularApi:
 
 
 if __name__ == "__main__":
-    p1 = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=", "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=")
+    p1 = TimularApi()
 
     # print(p1.api_key)
     # print(p1.api_secret)
