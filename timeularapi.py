@@ -20,16 +20,14 @@ class TimularApi:
         current_time = current_dt.strftime("%Y-%m-%dT%H:%M:%S.000")
         return current_time
 
-    def get_activities(self, user_id):
-        token = self.get_token(user_id)
+    def get_activities(self, token):
         self.logger.log("TimularApi get_activities")
         url = self.base_url + '/activities'
         my_headers = {'Authorization': 'Bearer ' + token}
         r = requests.get(url, headers=my_headers)
         return r.json()
 
-    def get_tracking(self, user_id):
-        token = self.get_token(user_id)
+    def get_tracking(self, token):
         self.logger.log("TimularApi get_tracking")
         url = self.base_url + '/tracking'
         my_headers = {'Authorization': 'Bearer ' + token}
@@ -39,8 +37,7 @@ class TimularApi:
             return None
         return current_tracking["activity"]["id"]
 
-    def stop_tracking(self, user_id, activity_id, stop_time=None):
-        token = self.get_token(user_id)
+    def stop_tracking(self, token, activity_id, stop_time=None):
         self.logger.log("TimularApi stop_tracking " + str(activity_id))
         if stop_time is None:
             stop_time = TimularApi.get_utc_time()
@@ -50,8 +47,7 @@ class TimularApi:
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
 
-    def start_tracking(self, user_id, activity_id, start_time=None):
-        token = self.get_token(user_id)
+    def start_tracking(self, token, activity_id, start_time=None):
         self.logger.log("TimularApi start_tracking " + str(activity_id))
         if start_time is None:
             start_time = TimularApi.get_utc_time()
