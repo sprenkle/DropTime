@@ -217,9 +217,8 @@ if __name__ == '__main__':
     else:
         file = "configuration.json"
 
-
     configuration = Configuration(file)
-    url = configuration.get_value("timeular_api", "url")
+    url = configuration.get_value("tag_api", "self_url")
     print("Url is {}".format(url))
     app.run(host=url, port='5002')
 
