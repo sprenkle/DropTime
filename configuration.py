@@ -16,4 +16,4 @@ class Configuration:
 
 if __name__ == "__main__":
     conf = Configuration("debug_config.json")
-    print(conf.get_value('timeular_api', 'timeular_api_url'))
+    print(conf.get_value('tag_api', 'url'))

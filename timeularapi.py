@@ -1,17 +1,15 @@
 import requests
 import datetime
+from configuration import Configuration
+from tagrepository import TagRepository
 
 
 class TimularApi:
-    def __init__(self, api_key, api_secret, logger):
-        self.api_key = api_key
-        self.api_secret = api_secret
-        self.base_url = 'https://api.timeular.com/api/v2'
-        url = self.base_url + '/developer/sign-in'
-        body = '{"apiKey": "' + self.api_key + '","apiSecret": "' + self.api_secret + '"}'
-        r = requests.post(url, data=body)
-        #self.token = r.json()['token']
+    def __init__(self, configuration, tag_repository, logger):
+        self.base_url = configuration("timeular_api", "url")
         self.logger = logger
+        self.user_to_token = dict()
+        self.tag_repository = tag_repository;
 
     @staticmethod
     def get_utc_time(minus=False):
@@ -61,9 +59,22 @@ class TimularApi:
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
 
+    def get_token(self, user_id):
+        if user_id in self.user_to_token:
+            return self.user_to_token[user_id]
+        self.tag_repository.get_token()
+        url = self.base_url + '/developer/sign-in'
+        body = '{"apiKey": "' + self.api_key + '","apiSecret": "' + self.api_secret + '"}'
+        r = requests.post(url, data=body)
+        return r.json()
+        # self.token = r.json()['token']
+
 
 if __name__ == "__main__":
-    p1 = TimularApi()
+    from debuglogger import DebugLogger
+    file = "configuration.json"
+    p1 = TimularApi(Configuration(file), TagRepository(), DebugLogger())
+    print(p1.get_token(1))
 
     # print(p1.api_key)
     # print(p1.api_secret)
@@ -74,5 +85,5 @@ if __name__ == "__main__":
     #print(p1.stop_tracking('369007', TimularApi.get_utc_time()))
     #print(TimularApi.get_utc_time(True))
     #time = TimularApi.get_utc_time(True)
-    print(p1.start_tracking('369007'))
+    print(p1.get_token(1))
     #print(p1.get_tracking())

@@ -1,6 +1,13 @@
-{ "configuration": {
-  "timeular_api": {
-      "url": "127.0.0.1"
+{
+  "configuration": {
+    "timeular_api": {
+      "url": "https://api.timeular.com/api/v2"
+    },
+    "irreader": {
+      "uuid": "e044c8b0-c5a6-4e0f-94b6-0bec78d6a30a"
+    },
+    "tag_api": {
+      "url": "http://127.0.0.1:5002"
     }
   }
 }

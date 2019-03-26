@@ -168,6 +168,7 @@ class TagsToActionsList(Resource):
         tags_to_actions = {"tagstoactions": objects_list}
         return tags_to_actions
 
+
 class TagsToActions(Resource):
 
     def get(self, tag_id):
@@ -187,6 +188,8 @@ class TagsToActions(Resource):
             d['identifier'] = row[2]
             d['userid'] = row[3]
             objects_list.append(d)
+        if len(objects_list) == 0:
+            return None
         return objects_list[0]
 
     def post(self):
