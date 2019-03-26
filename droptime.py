@@ -3,6 +3,7 @@ import sys
 from actions import Actions
 from timeularaction import TimeularAction
 from tagrepository import TagRepository
+from configuration import Configuration
 
 
 class DropTime:
@@ -39,18 +40,20 @@ if __name__ == "__main__":
         logger = DebugLogger()
         reader = MockRfiReader()
         # api = MockApi()
-        api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
-                   "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=", logger)
+        configuration = Configuration("debug_config.json")
+        tagRepository = TagRepository(configuration)
+        api = TimularApi(configuration, tagRepository, logger)
     else:
         from rfireader import RfiReader
         from timeularapi import TimularApi
         from debuglogger import DebugLogger
         logger = DebugLogger()
         reader = RfiReader()
-        api = TimularApi("NDcwMDBfYzU5MTUwMDQ2OWU4NDA4OWExZjFlMTZlNDhlNjFlMDM=",
-                   "NDJkNDY1MjZhMDk5NDAyZTg2YjNkNWIyNDVmYmFiYjc=", logger)
+        configuration = Configuration("configuration.json")
+        tagRepository = TagRepository(configuration)
+        api = TimularApi(configuration, tagRepository, logger)
 
-    actions = Actions(logger, TimeularAction(api, TagRepository()))
+    actions = Actions(logger, TimeularAction(api, tagRepository))
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 

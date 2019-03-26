@@ -17,7 +17,7 @@ class TimeularAction:
             return
 
         # check if tag has a activity
-        if self.tag_repository.contains_id(tag_id):
+        if not self.tag_repository.contains_id(tag_id):
             self.running_tag_id = None
             return
 
@@ -27,8 +27,10 @@ class TimeularAction:
         activity = self.tag_repository.activity(tag_id);
         if tag_id not in self.user_to_token_dict:
             # get token and add
-            token = self.tag_repository.get_token(activity["userid"])
-            self.user_to_token_dict[activity["userid"]] = token
+            user_id = activity["userid"]
+            api_key, api_secret = self.tag_repository.get_api_key_token(user_id)
+            token = self.api.get_token(api_key, api_secret)
+            self.user_to_token_dict[user_id] = token
         else:
             token = self.user_to_token_dict[activity["userid"]]
 
