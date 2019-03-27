@@ -1,17 +1,64 @@
-INSERT INTO users (first, last, username, userpassword)VALUES
-('','','','')
+INSERT INTO users (userid, first, last, username, userpassword)VALUES
+('','','','','');
 
-INSERT INTO tags (userid, name, description) VALUES
-('','','');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('','','','');
 
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('','','')
+('','','');
 
 INSERT INTO activities (userid, name, color, show, integration, dailygoals, dailytimeSec) VALUES
 ('','','','','','','');
 
 Insert INTO reminders (userid, start='',stop='', showled= , sunday=, monday= , tuesday=,
                       wednesday=, thursday=, friday=, saturday=, integration=,
-                      ledpattern='[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]'
+                      ledpattern='[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]');
 
-INSERT INTO devices (name, description) VALUES ('','')
+INSERT INTO devices (name, description) VALUES ('','');
+
+
+INSERT INTO users (userid, first, last, username, userpassword)VALUES
+('72be6ab4-727b-4257-ba1d-ef58a3349bfc','David','Sprenkle',
+  'NDcwMDBfMTRjNGJhMDgxNTQ0NGUwZDgyNWQyZmY2NDA4OTA4NzU=','NDQ3OGRiYmJmOWI1NDNjODk4NjQ3YjcxNzQ2ODIzYjI=');
+
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('','','','');
+
+INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+VALUES
+('0162bb2c-a5c8-4ea6-9707-9a3afd0349d1','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'','','','','');
+
+INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+VALUES
+('98013692-5808-4546-94a5-e474252f9344','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'','','','','');
+
+INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+VALUES
+('100ac6f8-f0b3-4884-93ab-280cdbf3cfa0','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'','','','','');
+
+INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+VALUES
+('9a74d01c-c8c1-43e8-9a89-8ed02b2be5d8','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'','','','','');
+
+INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+VALUES
+('864900f9-e0a6-4e21-b370-7785af48a392','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'','','','','');
+
+INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+VALUES
+('223e3c1e-cba3-446c-918f-8ba4f0002a2d','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'','','','','');
+
+
+
+
+
+5ac96611-98b2-4711-b703-f6f3a16e7a53
+377263c0-57ae-4c7a-82e8-3c6b2a60a077
+40a5cd95-592b-4aa7-b875-07010e97e6d7
+9412e34d-68ff-48c1-be65-fd3df3256a24

@@ -5,9 +5,12 @@ from flask_jsonpify import jsonify
 from configuration import Configuration
 import collections
 import sys
+import uuid
 
+# uuid.uuid4()
 # 67460e74-02e3-11e8-b443-00163e990bdb
-
+# eb339b2f-c43b-4278-a95d-38d17828cb3f
+# 90fa5fe2-953d-4ae8-97c5-a4bcadfc3178
 db_connect = create_engine('sqlite:///droptime.db')
 app = Flask(__name__)
 api = Api(app)
@@ -39,7 +42,7 @@ class UsersList(Resource):
         print(user["username"])
         print(user["userpassword"])
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}')" \
+        querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}','{}')" \
             .format(user["first"], user["last"], user["username"], user["userpassword"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -89,10 +92,11 @@ class Devices(Resource):
         device = request.json
         print(device)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO devices (name, description) VALUES ('{}','{}')" \
-            .format(device["name"], device["description"])
+        device_id = uuid.uuid4()
+        querystring = "INSERT INTO devices (deviceid, name, description) VALUES ('{}','{}','{}')" \
+            .format(device_id, device["name"], device["description"])
         conn.execute(querystring)  # This line performs query and returns json result
-        return jsonify({"results": "ok"})
+        return jsonify({"results": "ok", "id": device_id})
 
 
 class Tags(Resource):
@@ -114,10 +118,11 @@ class Tags(Resource):
         tag = request.json
         print(tag)
         conn = db_connect.connect()  # connect to database
+        tag_id = uuid.uuid4()
         querystring = "INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')" \
-            .format(tag["tagid"], tag["userid"], tag["name"], tag["description"])
+            .format(tag_id, tag["userid"], tag["name"], tag["description"])
         conn.execute(querystring)  # This line performs query and returns json result
-        return jsonify({"results": "ok"})
+        return jsonify({"results": "ok", "id": tag_id})
 
 
 class Activities(Resource):
@@ -127,6 +132,7 @@ class Activities(Resource):
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
+            d['activityid'] = row[1]
             d['userid'] = row[1]
             d['name'] = row[2]
             d['color'] = row[3]
@@ -142,11 +148,13 @@ class Activities(Resource):
         activity = request.json
         print(activity)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO activities (userid, name, color, show, integration, dailygoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')" \
-            .format(activity["userid"], activity["name"], activity["color"], activity["show"], activity["integration"],
+        activity_id = uuid.uuid4()
+        querystring = "INSERT INTO activities (activityid, userid, name, color, show, integration, " \
+                      "dailygoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')" \
+            .format(activity_id, activity["userid"], activity["name"], activity["color"], activity["show"], activity["integration"],
                     activity["dailygoals"], activity["dailytimeSec"])
         conn.execute(querystring)  # This line performs query and returns json result
-        return jsonify({"results": "ok"})
+        return jsonify({"results": "ok", "id": activity_id})
 
 
 # {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
@@ -160,6 +168,7 @@ class Reminders(Resource):
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
+            d['reminderid'] = row[0]
             d['userid'] = row[1]
             d['start'] = row[2]
             d['stop'] = row[3]
@@ -171,7 +180,6 @@ class Reminders(Resource):
             d['thursday'] = row[9]
             d['friday'] = row[10]
             d['saturday'] = row[11]
-            d['integration'] = row[12]
 
             objects_list.append(d)
         return objects_list[0]
@@ -182,13 +190,13 @@ class Reminders(Resource):
         conn = db_connect.connect()  # connect to database
         querystring = "Update reminders set userid={}, start='{}'," \
                       "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
-                      "wednesday={}, thursday={}, friday={}, saturday={}, integration={} " \
+                      "wednesday={}, thursday={}, friday={}, saturday={} " \
                       "where reminderid={}" \
             .format(reminder["userid"], reminder["start"],
                     reminder["stop"], reminder["showled"], reminder["sunday"],
                     reminder["monday"],
                     reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
-                    reminder["friday"], reminder["saturday"], reminder["integration"],
+                    reminder["friday"], reminder["saturday"],
                     reminder_id)
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
