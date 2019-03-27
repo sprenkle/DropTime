@@ -9,7 +9,10 @@ class TimeularAction:
     def execute(self, tag_id):
         # If running tag is not None and does not equal tag_id then stop last activity
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
-            self.api.stop_tracking(self.tag_repository.activity_id(self.running_tag_id))
+            if self.tag_repository.contains_id(self.running_tag_id):
+                activity = self.tag_repository.activity(self.running_tag_id)
+                token = self.get_token(activity["userid"])
+                self.api.stop_tracking(token, activity["identifier"])
 
         # If tag_id is None then set running tag and return
         if tag_id is None:
@@ -24,14 +27,17 @@ class TimeularAction:
         # have activity start it
         self.running_tag_id = tag_id
         # todo working on this
-        activity = self.tag_repository.activity(tag_id);
-        if tag_id not in self.user_to_token_dict:
+        activity = self.tag_repository.activity(tag_id)
+        user_id = activity["userid"]
+        token = self.get_token(user_id)
+        self.api.start_tracking(token, activity["identifier"])
+
+    def get_token(self, user_id):
+        if user_id not in self.user_to_token_dict:
             # get token and add
-            user_id = activity["userid"]
             api_key, api_secret = self.tag_repository.get_api_key_token(user_id)
             token = self.api.get_token(api_key, api_secret)
             self.user_to_token_dict[user_id] = token
+            return token
         else:
-            token = self.user_to_token_dict[activity["userid"]]
-
-        self.api.start_tracking(token, activity)
+            return self.user_to_token_dict[user_id]

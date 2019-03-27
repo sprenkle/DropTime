@@ -2,6 +2,7 @@ import requests
 import datetime
 from configuration import Configuration
 from tagrepository import TagRepository
+import json
 
 
 class TimularApi:
@@ -40,7 +41,7 @@ class TimularApi:
         self.logger.log("TimularApi stop_tracking " + str(activity_id))
         if stop_time is None:
             stop_time = TimularApi.get_utc_time()
-        url = self.base_url + '/tracking/' + activity_id + '/stop'
+        url = self.base_url + '/tracking/' + str(activity_id) + '/stop'
         my_headers = {'Authorization': 'Bearer ' + token}
         body = {"stoppedAt": stop_time}
         r = requests.post(url, headers=my_headers, json=body)
@@ -56,6 +57,7 @@ class TimularApi:
         url = self.base_url + '/tracking/' + str(activity_id) + '/start'
         my_headers = {'Authorization': 'Bearer ' + token}
         body = {"startedAt": start_time, "note": {"text": None, "tags": [], "mentions": []}}
+        print(body)
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
 
