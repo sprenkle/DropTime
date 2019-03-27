@@ -251,7 +251,7 @@ class TagsToActions(Resource):
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
-api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<type>/<string:tag_id>')  # Route_1
+api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1

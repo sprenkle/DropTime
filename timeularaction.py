@@ -34,7 +34,7 @@ class TimeularAction:
         # have activity start it
         self.running_tag_id = tag_id
         # todo working on this
-        activity = self.tag_repository.activity(tag_id)
+        activity = self.tag_repository.activity(self.id, tag_id)
         user_id = activity["userid"]
         token = self.get_token(user_id)
         self.api.start_tracking(token, activity["identifier"])

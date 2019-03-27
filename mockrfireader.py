@@ -4,18 +4,18 @@ import datetime
 class MockRfiReader:
 
     def __init__(self):
-        self.arr = ['314', '231965344320', '25991398012', None, '438308258332', None]
+        self.arr = ['231965344320']
         self.last_event_time = datetime.datetime.utcnow()
         self.last_event = None
-        self.index = -1;
+        self.index = 0;
 
     def read_card(self):
         if self.last_event_time < datetime.datetime.utcnow() - datetime.timedelta(seconds=5):
-            self.index = self.index + 1
-            if self.index >= len(self.arr) - 1:
+            if self.index == len(self.arr):
                 self.index = 0
             self.last_event = self.arr[self.index]
             self.last_event_time = datetime.datetime.utcnow()
+            self.index = self.index + 1
         return self.last_event
 
     def stop(self):
