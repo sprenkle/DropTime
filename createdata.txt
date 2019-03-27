@@ -1,1 +1,17 @@
-INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')
+INSERT INTO users (first, last, username, userpassword)VALUES
+('','','','')
+
+INSERT INTO tags (userid, name, description) VALUES
+('','','');
+
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('','','')
+
+INSERT INTO activities (userid, name, color, show, integration, dailygoals, dailytimeSec) VALUES
+('','','','','','','');
+
+Insert INTO reminders (userid, start='',stop='', showled= , sunday=, monday= , tuesday=,
+                      wednesday=, thursday=, friday=, saturday=, integration=,
+                      ledpattern='[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]'
+
+INSERT INTO devices (name, description) VALUES ('','')
