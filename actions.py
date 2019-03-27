@@ -10,3 +10,8 @@ class Actions:
             self.logger.log("action " + str(tag_id))
             action.execute(tag_id)
 
+    def poll(self, tag_id):
+        self.logger.log("poll " + str(tag_id))
+        for action in self.action_list:
+            self.logger.log("action type:{}  tagid:{}".format(action.get_id(), str(tag_id)))
+            action.execute(tag_id)

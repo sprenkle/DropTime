@@ -1,4 +1,4 @@
-class TimeularAction:
+class PillAction:
 
     def __init__(self, api, tag_repository):
         self.running_tag_id = None
@@ -16,8 +16,8 @@ class TimeularAction:
     def execute(self, tag_id):
         # If running tag is not None and does not equal tag_id then stop last activity
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
-            if self.tag_repository.contains_id(self.id, self.running_tag_id):
-                activity = self.tag_repository.activity(self.id, self.running_tag_id)
+            if self.tag_repository.contains_id(self.running_tag_id):
+                activity = self.tag_repository.activity(self.running_tag_id)
                 token = self.get_token(activity["userid"])
                 self.api.stop_tracking(token, activity["identifier"])
 
@@ -27,7 +27,7 @@ class TimeularAction:
             return
 
         # check if tag has a activity
-        if not self.tag_repository.contains_id(self.id, tag_id):
+        if not self.tag_repository.contains_id(tag_id):
             self.running_tag_id = None
             return
 
@@ -38,6 +38,7 @@ class TimeularAction:
         user_id = activity["userid"]
         token = self.get_token(user_id)
         self.api.start_tracking(token, activity["identifier"])
+
 
     def get_token(self, user_id):
         if user_id not in self.user_to_token_dict:

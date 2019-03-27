@@ -39,7 +39,7 @@ class UsersList(Resource):
         print(user["username"])
         print(user["userpassword"])
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}')"\
+        querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}')" \
             .format(user["first"], user["last"], user["username"], user["userpassword"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -48,7 +48,8 @@ class UsersList(Resource):
 class Users(Resource):
     def get(self, user_id):
         conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from users where userid={}".format(user_id))  # This line performs query and returns json result
+        query = conn.execute(
+            "select * from users where userid={}".format(user_id))  # This line performs query and returns json result
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
@@ -64,11 +65,10 @@ class Users(Resource):
         user = request.json
         print(user)
         conn = db_connect.connect()  # connect to database
-        querystring = "Update users set username='{}', userpassword='{}' where Userid={}"\
+        querystring = "Update users set username='{}', userpassword='{}' where Userid={}" \
             .format(user["username"], user["userpassword"], user_id)
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
-
 
 
 class Devices(Resource):
@@ -89,7 +89,7 @@ class Devices(Resource):
         device = request.json
         print(device)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO devices (name, description) VALUES ('{}','{}')"\
+        querystring = "INSERT INTO devices (name, description) VALUES ('{}','{}')" \
             .format(device["name"], device["description"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -114,7 +114,7 @@ class Tags(Resource):
         tag = request.json
         print(tag)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')"\
+        querystring = "INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')" \
             .format(tag["tagid"], tag["userid"], tag["name"], tag["description"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -138,13 +138,55 @@ class Activities(Resource):
         activities = {"activities": objects_list}
         return activities  # Fetches first column that is Employee ID
 
-
     def post(self):
         activity = request.json
         print(activity)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO activities (userid, name, color, show, integration, dailygoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')"\
-            .format(activity["userid"], activity["name"], activity["color"], activity["show"], activity["integration"], activity["dailygoals"], activity["dailytimeSec"])
+        querystring = "INSERT INTO activities (userid, name, color, show, integration, dailygoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')" \
+            .format(activity["userid"], activity["name"], activity["color"], activity["show"], activity["integration"],
+                    activity["dailygoals"], activity["dailytimeSec"])
+        conn.execute(querystring)  # This line performs query and returns json result
+        return jsonify({"results": "ok"})
+
+
+class Reminders(Resource):
+    def get(self, reminder_id):
+        conn = db_connect.connect()  # connect to database
+        query = conn.execute("select * from reminders where reminderid={}".format(
+            reminder_id))  # This line performs query and returns json result
+        objects_list = []
+        for row in query.cursor:
+            d = collections.OrderedDict()
+            d['userid'] = row[1]
+            d['start'] = row[2]
+            d['stop'] = row[3]
+            d['showled'] = row[4]
+            d['sunday'] = row[5]
+            d['monday'] = row[6]
+            d['tuesday'] = row[7]
+            d['wednesday'] = row[8]
+            d['thursday'] = row[9]
+            d['friday'] = row[10]
+            d['saturday'] = row[11]
+            d['integration'] = row[12]
+
+            objects_list.append(d)
+        return objects_list[0]
+
+    def put(self, reminder_id):
+        reminder = request.json
+        print(reminder)
+        conn = db_connect.connect()  # connect to database
+        querystring = "Update reminders set userid={}, start='{}'," \
+                      "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
+                      "wednesday={}, thursday={}, friday={}, saturday={}, integration={} " \
+                      "where reminderid={}" \
+            .format(reminder["userid"], reminder["start"],
+                    reminder["stop"], reminder["showled"], reminder["sunday"],
+                    reminder["monday"],
+                    reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
+                    reminder["friday"], reminder["saturday"], reminder["integration"],
+                    reminder_id)
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
 
@@ -152,6 +194,7 @@ class Activities(Resource):
 class LastSeenTag(Resource):
     def get(self):
         return last_seen_tag
+
 
 class TagsToActionsList(Resource):
 
@@ -171,13 +214,14 @@ class TagsToActionsList(Resource):
 
 class TagsToActions(Resource):
 
-    def get(self, tag_id):
+    def get(self, action_type, tag_id):
         global last_seen_tag
         if tag_id is not None:
             last_seen_tag = tag_id
         print(tag_id)
         conn = db_connect.connect()  # connect to database
-        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join tags t on tta.tagid = t.tagid where tta.tagid = '{}'".format(tag_id)
+        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(
+            tag_id, action_type)
         print(query_string)
         query = conn.execute(query_string)
         objects_list = []
@@ -196,7 +240,7 @@ class TagsToActions(Resource):
         tagtoaction = request.json
         print(tagtoaction)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES ('{}','{}','{}')"\
+        querystring = "INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES ('{}','{}','{}')" \
             .format(tagtoaction["tagid"], tagtoaction["actiontype"], tagtoaction["identifier"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -204,7 +248,7 @@ class TagsToActions(Resource):
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
-api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<string:tag_id>')  # Route_1
+api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<type>/<string:tag_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
@@ -221,4 +265,3 @@ if __name__ == '__main__':
     url = configuration.get_value("tag_api", "self_url")
     print("Url is {}".format(url))
     app.run(host=url, port='5002')
-
