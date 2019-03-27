@@ -149,6 +149,9 @@ class Activities(Resource):
         return jsonify({"results": "ok"})
 
 
+# {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
+# "monday":"", "tuesday":"", "wednesday":"", "thursday":"", "friday":"", "saturday":"",
+# "integration":""}
 class Reminders(Resource):
     def get(self, reminder_id):
         conn = db_connect.connect()  # connect to database
@@ -254,6 +257,7 @@ api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
 api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities')  # Route_1
+api.add_resource(Reminders, '/reminders/<reminder_id>')  # Route_1
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == "test":
