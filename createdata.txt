@@ -54,37 +54,34 @@ INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
 ('717245989418','1','373482');
 
 DELETE FROM activities;
-
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('375340','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-,'Chores','','','');
-
+'Chores','',1,1,120);
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('374283','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
 'Work Training','','','','');
-
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('369011','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
 'Phone','','','','');
-
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('369008','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
 'Wondermachine','','','','');
-
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('369007','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
 'TimeDice','','','','');
-
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('373482','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
 'Work Meetings','','','','');
 
+Insert INTO reminders (reminderid, userid, start, stop, showled , sunday, monday, tuesday,
+                      wednesday, thursday, friday, saturday, integration,
+                      ledpattern='[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]');
 
 
 
