@@ -1,4 +1,6 @@
 import datetime
+import math
+
 
 class LedController:
 
@@ -14,6 +16,8 @@ class LedController:
     def start_progress(self, goal_time, start_amount):
         self.progress_active = True
         self.progress_started_time = datetime.datetime.utcnow()
+        self.progress_goal_time_sec = goal_time
+        self.progress_start_amount_time_sec = start_amount
 
     def stop_progress(self):
         self.progress_active = False
@@ -30,6 +34,39 @@ class LedController:
             self.deleting_showing = True
 
     def show(self):
+        # self.show_reminder()
+        if self.progress_active:
+            self.show_progress()
+
+    def show_progress(self):
+        total_time = self.progress_start_amount_time_sec + \
+                     (datetime.datetime.utcnow() - self.progress_started_time).seconds
+        percent = total_time / self.progress_goal_time_sec
+        result_over = 0
+        if percent <= 1:
+            result_under = math.floor(percent * 24)
+        else:
+            result_under = 24
+
+        if 1 < percent:
+            if percent <= 2:
+                result_over = math.floor((percent - 1) * 24)
+            else:
+                result_over = 24
+
+        led_array = []
+        index = 0;
+        for i in range(result_under):
+            led_array.append([0, 255, 0])
+            index += 1
+        for i in range(24 - index):
+            led_array.append([0, 0, 0])
+            index += 1
+
+        print(led_array)
+        print("Under - {} Over - {}".format(result_under, result_over))
+
+    def show_reminder(self):
         key_list = list(self.reminder_dict.keys())
         if len(key_list) == 0:
             if self.deleting_showing:
@@ -40,7 +77,7 @@ class LedController:
                                       [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
                 self.deleting_showing = False
                 return
-        led_array = [];
+        led_array = []
         index = 0
         for i in range(4):
             s = self.reminder_dict[key_list[index]]
@@ -51,21 +88,26 @@ class LedController:
                 index = 0
         self.led_device.show(led_array)
 
-    def show_progress(self):
-        pass
-
-    def show_reminder(self):
-        pass
 
 if __name__ == "__main__":
-    from leddevice import LedDevice
+    import time
+    from mockleddevice import MockLedDevice
 
-    led_controller = LedController(LedDevice())
+    led_controller = LedController(MockLedDevice())
+    led_controller.start_progress(30, 5)
+    delay = 1
+
+    for i in range(60):
+        led_controller.show()
+        time.sleep(delay)
+
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
     led_controller.show()
+    time.sleep(delay)
     led_controller.remove_reminder(1)
     led_controller.show()
+    time.sleep(delay)
     led_controller.remove_reminder(2)
     led_controller.show()
 
