@@ -15,3 +15,6 @@ class LedDevice:
         for i in range(self.num_pixels):
             self.pixels[i] = (led_patterns[i][0], led_patterns[i][1], led_patterns[i][2])
         self.pixels.show()
+
+    def clear(self):
+        pass
