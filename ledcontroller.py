@@ -40,9 +40,9 @@ class LedController:
 
 
 if __name__ == "__main__":
-    from mockleddevice import MockLedDevice
+    from leddevice import LedDevice
 
-    led_controller = LedController(MockLedDevice())
+    led_controller = LedController(LedDevice())
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
     led_controller.show()
