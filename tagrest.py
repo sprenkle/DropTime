@@ -52,7 +52,7 @@ class Users(Resource):
     def get(self, user_id):
         conn = db_connect.connect()  # connect to database
         query = conn.execute(
-            "select * from users where userid={}".format(user_id))  # This line performs query and returns json result
+            "select * from users where userid='{}'".format(user_id))  # This line performs query and returns json result
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
@@ -68,7 +68,7 @@ class Users(Resource):
         user = request.json
         print(user)
         conn = db_connect.connect()  # connect to database
-        querystring = "Update users set username='{}', userpassword='{}' where Userid={}" \
+        querystring = "Update users set username='{}', userpassword='{}' where Userid='{}'" \
             .format(user["username"], user["userpassword"], user_id)
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -163,7 +163,7 @@ class Activities(Resource):
 class Reminders(Resource):
     def get(self, reminder_id):
         conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from reminders where reminderid={}".format(
+        query = conn.execute("select * from reminders where reminderid='{}'".format(
             reminder_id))  # This line performs query and returns json result
         objects_list = []
         for row in query.cursor:
@@ -191,7 +191,7 @@ class Reminders(Resource):
         querystring = "Update reminders set userid={}, start='{}'," \
                       "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
                       "wednesday={}, thursday={}, friday={}, saturday={} " \
-                      "where reminderid={}" \
+                      "where reminderid='{}'" \
             .format(reminder["userid"], reminder["start"],
                     reminder["stop"], reminder["showled"], reminder["sunday"],
                     reminder["monday"],
@@ -231,8 +231,9 @@ class TagsToActions(Resource):
             last_seen_tag = tag_id
         print(tag_id)
         conn = db_connect.connect()  # connect to database
-        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(
-            tag_id, action_type)
+        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
+                       "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
+                        action_type)
         print(query_string)
         query = conn.execute(query_string)
         objects_list = []

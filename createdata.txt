@@ -22,37 +22,40 @@ INSERT INTO users (userid, first, last, username, userpassword)VALUES
   'NDcwMDBfMTRjNGJhMDgxNTQ0NGUwZDgyNWQyZmY2NDA4OTA4NzU=','NDQ3OGRiYmJmOWI1NDNjODk4NjQ3YjcxNzQ2ODIzYjI=');
 
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('','','','');
+('231965344320','72be6ab4-727b-4257-ba1d-ef58a3349bfc','sample','testing');
 
-INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
-VALUES
-('0162bb2c-a5c8-4ea6-9707-9a3afd0349d1','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'','','','','');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('231965344320','1','375340');
 
-INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('98013692-5808-4546-94a5-e474252f9344','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'','','','','');
+('375340','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+,'Chores','','','');
 
-INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('100ac6f8-f0b3-4884-93ab-280cdbf3cfa0','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'','','','','');
+('374283','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'Work Training','','','','');
 
-INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('9a74d01c-c8c1-43e8-9a89-8ed02b2be5d8','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'','','','','');
+('369011','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'Phone','','','','');
 
-INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('864900f9-e0a6-4e21-b370-7785af48a392','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'','','','','');
+('369008','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'Wondermachine','','','','');
 
-INSERT INTO activities (activities, userid, name, color, show, integration, dailygoals, dailytimeSec)
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('223e3c1e-cba3-446c-918f-8ba4f0002a2d','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'','','','','');
+('369007','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'TimeDice','','','','');
+
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
+VALUES
+('373482','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'Work Meetings','','','','');
 
 
 

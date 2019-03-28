@@ -41,7 +41,7 @@ CREATE TABLE "tagstoactions"
     [tagid] integer NOT NULL,
     [actiontype] NVARCHAR(80) NOT NULL,
     [identifier] INTEGER,
-    [active] INTEGER{1),
+    [active] INTEGER(1),
     [start] NVARCHAR(23),
     [stop] NVARCHAR(23)
 );
@@ -53,8 +53,7 @@ CREATE TABLE "activities"
     [userid] NVARCHAR(36),
     [name] NVARCHAR(80)  NOT NULL,
     [color] INTEGER  NULL,
-    [show] INTEGER(1) NOT NULL,
-    [integration] INTEGER(1) NOT NULL,
+    [show] INTEGER(1) NOT NULL, -- show daily goals colors
     [dailygoals] INTEGER(1) NOT NULL,
     [dailytimeSec] INTEGER NOT NULL,
     FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
