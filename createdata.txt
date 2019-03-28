@@ -17,15 +17,43 @@ Insert INTO reminders (userid, start='',stop='', showled= , sunday=, monday= , t
 INSERT INTO devices (name, description) VALUES ('','');
 
 
+DELETE FROM users
 INSERT INTO users (userid, first, last, username, userpassword)VALUES
 ('72be6ab4-727b-4257-ba1d-ef58a3349bfc','David','Sprenkle',
   'NDcwMDBfMTRjNGJhMDgxNTQ0NGUwZDgyNWQyZmY2NDA4OTA4NzU=','NDQ3OGRiYmJmOWI1NDNjODk4NjQ3YjcxNzQ2ODIzYjI=');
 
+DELETE FROM tags
 INSERT INTO tags (tagid, userid, name, description) VALUES
 ('231965344320','72be6ab4-727b-4257-ba1d-ef58a3349bfc','sample','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('232099365453','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice1','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('644416226029','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice2','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('1060692312690','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice3','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('648375452178','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice4','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('304929129162','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice5','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('717245989418','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice6','testing');
+
+DELETE FROM tagstoactions
 
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('231965344320','1','375340');
+('232099365453','1','375340');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('644416226029','1','374283');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('1060692312690','1','369011');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('648375452178','1','369008');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('304929129162','1','369007');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('717245989418','1','373482');
+
+DELETE FROM activities;
 
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
