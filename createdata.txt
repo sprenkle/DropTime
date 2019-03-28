@@ -17,10 +17,7 @@ Insert INTO reminders (userid, start='',stop='', showled= , sunday=, monday= , t
 INSERT INTO devices (name, description) VALUES ('','');
 
 
-DELETE FROM users
-INSERT INTO users (userid, first, last, username, userpassword)VALUES
-('72be6ab4-727b-4257-ba1d-ef58a3349bfc','David','Sprenkle',
-  'NDcwMDBfMTRjNGJhMDgxNTQ0NGUwZDgyNWQyZmY2NDA4OTA4NzU=','NDQ3OGRiYmJmOWI1NDNjODk4NjQ3YjcxNzQ2ODIzYjI=');
+
 
 DELETE FROM tags
 INSERT INTO tags (tagid, userid, name, description) VALUES
