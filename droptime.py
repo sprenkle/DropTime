@@ -4,7 +4,7 @@ from actions import Actions
 from timeularaction import TimeularAction
 from tagrepository import TagRepository
 from configuration import Configuration
-from ledcontroller import LedController
+from mockledcontroller import MockLedController
 
 
 class DropTime:
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
         api = TimularApi(configuration, tagRepository, logger)
 
-    actions = Actions(LedController(leddevice), logger, TimeularAction(api, tagRepository))
+    actions = Actions(MockLedController(leddevice), logger, TimeularAction(api, tagRepository))
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 
