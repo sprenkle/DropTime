@@ -11,7 +11,7 @@ class TimeularAction:
         return self.id
 
     def poll(self, tag_id):
-        pass
+        return {}
 
     def execute(self, tag_id):
         # If running tag is not None and does not equal tag_id then stop last activity
@@ -38,6 +38,7 @@ class TimeularAction:
         user_id = activity["userid"]
         token = self.get_token(user_id)
         self.api.start_tracking(token, activity["identifier"])
+        return {}
 
     def get_token(self, user_id):
         if user_id not in self.user_to_token_dict:

@@ -4,6 +4,7 @@ from actions import Actions
 from timeularaction import TimeularAction
 from tagrepository import TagRepository
 from configuration import Configuration
+from ledcontroller import LedController
 
 
 class DropTime:
@@ -37,6 +38,9 @@ if __name__ == "__main__":
         # from mockapi import MockApi
         from timeularapi import TimularApi
         from debuglogger import DebugLogger
+        from mockleddevice import MockLedDevice
+
+        leddevice = MockLedDevice()
         logger = DebugLogger()
         reader = MockRfiReader()
         # api = MockApi()
@@ -47,13 +51,17 @@ if __name__ == "__main__":
         from rfireader import RfiReader
         from timeularapi import TimularApi
         from debuglogger import DebugLogger
+        from leddevice import LedDevice
+
+        leddevice = LedDevice()
         logger = DebugLogger()
         reader = RfiReader()
         configuration = Configuration("configuration.json")
         tagRepository = TagRepository(configuration)
+
         api = TimularApi(configuration, tagRepository, logger)
 
-    actions = Actions(logger, TimeularAction(api, tagRepository))
+    actions = Actions(LedController(leddevice), logger, TimeularAction(api, tagRepository))
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 
