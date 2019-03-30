@@ -1,5 +1,6 @@
 import datetime
 import math
+import sys
 
 
 class LedController:
@@ -98,15 +99,21 @@ class LedController:
 
 if __name__ == "__main__":
     import time
-    from mockleddevice import MockLedDevice
 
-    led_controller = LedController(MockLedDevice())
-    delay = 1
+    if len(sys.argv) == 2 and sys.argv[1] == "test":
+        from mockleddevice import MockLedDevice
+        led_device = MockLedDevice()
+    else:
+        from leddevice import LedDevice
+        led_device = LedDevice()
 
-    led_controller.start_progress(30, 5)
-    # for i in range(60):
-    #     led_controller.show()
-    #     time.sleep(delay)
+    led_controller = LedController(led_device)
+    delay = .1
+
+    led_controller.start_progress(5, 0)
+    for i in range(60):
+        led_controller.show()
+        time.sleep(delay)
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
     led_controller.show()
