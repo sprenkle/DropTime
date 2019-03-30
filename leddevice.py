@@ -17,4 +17,6 @@ class LedDevice:
         self.pixels.show()
 
     def clear(self):
-        pass
+        for i in range(self.num_pixels):
+            self.pixels[i] = (0, 0, 0)
+        self.pixels.show()

@@ -45,6 +45,7 @@ class LedController:
                                   [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                                   [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
             self.deleting_showing = False
+            self.progress_active = False
 
         if self.have_reminder():
             self.show_reminder()
@@ -67,7 +68,6 @@ class LedController:
                 result_over = math.floor((percent - 1) * 24)
             else:
                 result_over = 24
-
         led_array = []
         index = 0;
         for i in range(result_under):
@@ -76,8 +76,9 @@ class LedController:
         for i in range(24 - index):
             led_array.append([0, 0, 0])
             index += 1
+        for i in range(result_over):
+            led_array.append([0, 0, 255])
         self.led_device.show(led_array)
-
 
     def show_reminder(self):
         key_list = list(self.reminder_dict.keys())
@@ -103,9 +104,9 @@ if __name__ == "__main__":
     delay = 1
 
     led_controller.start_progress(30, 5)
-    for i in range(60):
-        led_controller.show()
-        time.sleep(delay)
+    # for i in range(60):
+    #     led_controller.show()
+    #     time.sleep(delay)
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
     led_controller.show()
