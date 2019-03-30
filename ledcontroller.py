@@ -47,7 +47,7 @@ class LedController:
             self.deleting_showing = False
 
         if self.have_reminder():
-            self.show_progress()
+            self.show_reminder()
         else:
             if self.progress_active:
                 self.show_progress()
@@ -103,10 +103,10 @@ if __name__ == "__main__":
     led_controller = LedController(MockLedDevice())
     delay = 1
 
-    # led_controller.start_progress(30, 5)
-    # for i in range(60):
-    #     led_controller.show()
-    #     time.sleep(delay)
+    led_controller.start_progress(30, 5)
+    for i in range(60):
+        led_controller.show()
+        time.sleep(delay)
     print(led_controller.have_reminder())
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     print(led_controller.have_reminder())
