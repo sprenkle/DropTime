@@ -76,9 +76,8 @@ class LedController:
         for i in range(24 - index):
             led_array.append([0, 0, 0])
             index += 1
+        self.led_device.show(led_array)
 
-        print(led_array)
-        print("Under - {} Over - {}".format(result_under, result_over))
 
     def show_reminder(self):
         key_list = list(self.reminder_dict.keys())
@@ -107,11 +106,8 @@ if __name__ == "__main__":
     for i in range(60):
         led_controller.show()
         time.sleep(delay)
-    print(led_controller.have_reminder())
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
-    print(led_controller.have_reminder())
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
-    print(led_controller.have_reminder())
     led_controller.show()
     time.sleep(delay)
     led_controller.remove_reminder(1)
@@ -119,5 +115,4 @@ if __name__ == "__main__":
     time.sleep(delay)
     led_controller.remove_reminder(2)
     led_controller.show()
-    print(led_controller.have_reminder())
 
