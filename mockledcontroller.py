@@ -1,6 +1,6 @@
 class MockLedController:
 
-    def __init__(self):
+    def __init__(self, leddevice):
         pass
 
     def have_reminder(self):

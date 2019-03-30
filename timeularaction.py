@@ -1,11 +1,12 @@
 class TimeularAction:
 
-    def __init__(self, api, tag_repository):
+    def __init__(self, api, tag_repository, logger):
         self.running_tag_id = None
         self.api = api
         self.tag_repository = tag_repository
         self.user_to_token_dict = dict()
         self.id = 1
+        self.logger = logger
 
     def get_id(self):
         return self.id
@@ -14,6 +15,7 @@ class TimeularAction:
         return {}
 
     def execute(self, tag_id):
+        self.logger.log("tag_id = {}".format(tag_id))
         # If running tag is not None and does not equal tag_id then stop last activity
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
             if self.tag_repository.contains_id(self.id, self.running_tag_id):
@@ -23,11 +25,13 @@ class TimeularAction:
 
         # If tag_id is None then set running tag and return
         if tag_id is None:
+            self.logger.log("tag_id is none, returning")
             self.running_tag_id = None
             return
 
         # check if tag has a activity
         if not self.tag_repository.contains_id(self.id, tag_id):
+            self.logger.log("tag is not in repository, returning")
             self.running_tag_id = None
             return
 
@@ -37,6 +41,7 @@ class TimeularAction:
         activity = self.tag_repository.activity(self.id, tag_id)
         user_id = activity["userid"]
         token = self.get_token(user_id)
+        self.logger.log("start tracking")
         self.api.start_tracking(token, activity["identifier"])
         return {}
 
