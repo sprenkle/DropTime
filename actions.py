@@ -10,7 +10,7 @@ class Actions:
         for action in self.action_list:
             self.logger.log("action " + str(tag_id))
             result = action.execute(tag_id)
-            if "has_progress" in result:
+            if result is not None and "has_progress" in result:
                 if result["has_progress"]:
                     print(result["has_progress"])
                     goal_time = result["goal_time"]

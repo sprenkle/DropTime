@@ -15,7 +15,7 @@ class TimeularAction:
         return {}
 
     def execute(self, tag_id):
-        self.logger.log("tag_id = {}".format(tag_id))
+        self.logger.log("tag_id = {}  running_tag_id={}".format(tag_id, self.running_tag_id))
         # If running tag is not None and does not equal tag_id then stop last activity
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
             if self.tag_repository.contains_id(self.id, self.running_tag_id):
