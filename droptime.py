@@ -9,7 +9,7 @@ from mockledcontroller import MockLedController
 
 class DropTime:
 
-    def __init__(self,configuration, tag_repository, tag_reader, all_actions, my_logger):
+    def __init__(self, configuration, tag_repository, tag_reader, all_actions, my_logger):
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
@@ -18,7 +18,7 @@ class DropTime:
         self.tag_repository = tag_repository
         self.tag_start = None
         self.configuration = configuration
-        self.device_id = self.configuration("device", "device_id")
+        self.device_id = self.configuration.get_value("device", "device_id")
 
     def run(self):
         self.mlogger.log("started run")
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         api = TimularApi(configuration, tag_repository, logger)
 
     actions = Actions(tag_repository, MockLedController(leddevice), logger, TimeularAction(api, tag_repository, logger))
-    dropTime = DropTime(tag_repository, reader, actions, logger)
+    dropTime = DropTime(configuration, tag_repository, reader, actions, logger)
     dropTime.run()
 
 
