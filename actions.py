@@ -1,10 +1,9 @@
 class Actions:
 
-    def __init__(self, tag_repository, led_controller, my_logger, *actions):
+    def __init__(self,led_controller, my_logger, *actions):
         self.action_list = list(actions)
         self.logger = my_logger
         self.led_controller = led_controller
-        self.tag_repository = tag_repository
 
     def execute(self, tag_id):
         self.logger.log("execute " + str(tag_id))
@@ -26,8 +25,7 @@ class Actions:
             self.logger.log("action type:{}  tagid:{}".format(action.get_id(), str(tag_id)))
             result = action.execute(tag_id)
 
-    def log_tag(self, tag_id, start, end):
-        self.tag_repository.log_tag(tag_id, start, end)
+
 
 
 if __name__ == "__main__":

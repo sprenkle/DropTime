@@ -49,7 +49,7 @@ class TagRepository:
             activity = r.json()
         return 100
 
-    def log_tag(self, tagid, start, end, duration):
+    def log_tag(self, tagid, start, end):
         pass
 
 if __name__ == "__main__":

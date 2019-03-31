@@ -16,65 +16,60 @@ Insert INTO reminders (userid, start='',stop='', showled= , sunday=, monday= , t
 
 INSERT INTO devices (name, description) VALUES ('','');
 
-
-
-
 DELETE FROM tags
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('231965344320','72be6ab4-727b-4257-ba1d-ef58a3349bfc','sample','testing');
+('1056599065216','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice1','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('232099365453','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice1','testing');
+('1056599065216','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice2','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('644416226029','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice2','testing');
+('510634902246','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice3','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('1060692312690','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice3','testing');
+('853359936003','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice4','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('648375452178','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice4','testing');
+('97445692115','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice5','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('304929129162','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice5','testing');
-INSERT INTO tags (tagid, userid, name, description) VALUES
-('717245989418','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice6','testing');
+('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice6','testing');
 
 DELETE FROM tagstoactions
-
+-- Added test actions to test die
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('232099365453','1','375340');
+('232099365453','1','379734');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('644416226029','1','374283');
+('644416226029','1','379735');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('1060692312690','1','369011');
+('1060692312690','1','379736');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('648375452178','1','369008');
+('648375452178','1','379737');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('304929129162','1','369007');
+('304929129162','1','379740');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('717245989418','1','373482');
+('717245989418','1','379741');
 
 DELETE FROM activities;
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('375340','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'Chores','',1,1,120);
+('379734','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'test1','',1,1,120);
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('374283','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'Work Training','','','','');
+('379735','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'test2','','','','');
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('369011','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'Phone','','','','');
+('379736','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'test3','','','','');
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('369008','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'Wondermachine','','','','');
+('379737','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'test4','','','','');
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('369007','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'TimeDice','','','','');
+('379740','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'test5','','','','');
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
-('373482','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'Work Meetings','','','','');
+('379741','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'test6','','','','');
 
 Insert INTO reminders (reminderid, userid, start, stop, showled , sunday, monday, tuesday,
                       wednesday, thursday, friday, saturday, integration,
