@@ -9,7 +9,7 @@ from mockledcontroller import MockLedController
 
 class DropTime:
 
-    def __init__(self, configuration, tag_repository, tag_reader, all_actions, my_logger):
+    def __init__(self, led_controller,  configuration, tag_repository, tag_reader, all_actions, my_logger):
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
@@ -19,12 +19,35 @@ class DropTime:
         self.tag_start = None
         self.configuration = configuration
         self.device_id = self.configuration.get_value("device", "device_id")
+        self.led_controller = led_controller
 
     def run(self):
         self.mlogger.log("started run")
         while True:
-            self.process_actions()
+            result_list = self.process_actions()
+            if self.have_reminders():
+                self.process_reminders()
+            else:
+                self.process_results(result_list)
             time.sleep(.1)
+
+    def process_reminders(self):
+        pass
+
+    def have_reminders(self):
+        return False
+
+    def process_results(self, result_list):
+        for result in result_list:
+            if result is not None and "has_progress" in result:
+                if result["has_progress"]:
+                    print(result["has_progress"])
+                    goal_time = result["goal_time"]
+                    start_amount = result["total_amount_time"]
+                    self.led_controller.start_progress(goal_time, start_amount)
+                else:
+                    self.led_controller.stop_progress()
+                return  # this will only process first result with progress, re-look later
 
     def process_actions(self):
         card_id = self.reader.read_card()
@@ -43,8 +66,10 @@ class DropTime:
 
             self.mlogger.log("run - new id " + str(card_id))
             self.last_read = card_id
-            self.actions.execute(card_id)
+            result_list = self.actions.execute(card_id)
             self.none_count = 0
+            return result_list
+        return []
 
     def log_tag(self, tag_id, start, end):
         self.tag_repository.log_tag(tag_id, self.device_id, start, end)
