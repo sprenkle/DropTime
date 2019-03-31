@@ -24,11 +24,7 @@ class DropTime:
     def run(self):
         self.mlogger.log("started run")
         while True:
-            result_list = self.process_actions()
-            if self.have_reminders():
-                self.process_reminders()
-            else:
-                self.process_results(result_list)
+            self.process_actions()
             time.sleep(.1)
 
     def process_reminders(self):
@@ -45,9 +41,11 @@ class DropTime:
                     goal_time = result["goal_time"]
                     start_amount = result["total_amount_time"]
                     self.led_controller.start_progress(goal_time, start_amount)
+                    return False  # not showing result, led will show blue
                 else:
                     self.led_controller.stop_progress()
-                return  # this will only process first result with progress, re-look later
+                return True  # not showing result, led will show blue
+        return False # not showing result, led will show blue
 
     def process_actions(self):
         card_id = self.reader.read_card()
@@ -66,16 +64,32 @@ class DropTime:
 
             self.mlogger.log("run - new id " + str(card_id))
             self.last_read = card_id
+
             result_list = self.actions.execute(card_id)
-            self.none_count = 0
+
+            if self.have_reminders():
+                self.process_reminders()
+            else:
+                have_results = self.process_results(result_list)
+                if not have_results:
+                    if card_id is not None:
+                        self.led_controller.show_non_result_display()
+                    else:
+                        self.led_controller.clear()
+
             return result_list
         return []
+
+    def show_blue(self):
+        self.led_controller.show_non_result_display()
 
     def log_tag(self, tag_id, start, end):
         self.tag_repository.log_tag(tag_id, self.device_id, start, end)
 
 
 if __name__ == "__main__":
+    from ledcontroller import LedController
+
     if len(sys.argv) == 2 and sys.argv[1] == "test":
         from mockrfireader import MockRfiReader
         # from mockapi import MockApi
@@ -107,8 +121,8 @@ if __name__ == "__main__":
 
         api = TimularApi(configuration, tag_repository, logger)
 
-    actions = Actions(tag_repository, MockLedController(leddevice), logger, TimeularAction(api, tag_repository, logger))
-    dropTime = DropTime(configuration, tag_repository, reader, actions, logger)
+    actions = Actions(logger, TimeularAction(api, tag_repository, logger))
+    dropTime = DropTime(LedController, configuration, tag_repository, reader, actions, logger)
     dropTime.run()
 
 
