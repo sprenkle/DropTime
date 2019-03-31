@@ -41,6 +41,16 @@ class TagRepository:
         user = r.json()
         return user["username"], user["userpassword"]
 
+    def get_tag_duration(self, tag_id, start, end):
+        def logtag(self, tag_id, start, end, duration):
+            url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id)
+            print("url is {}".format(url))
+            r = requests.get(url)
+            activity = r.json()
+        return 100
+
+    def log_tag(self, tagid, start, end, duration):
+        pass
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "test":

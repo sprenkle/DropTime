@@ -258,6 +258,43 @@ class TagsToActions(Resource):
         return jsonify({"results": "ok"})
 
 
+class TagLog(Resource):
+
+    def post(self):
+        taglog = request.json
+        print(taglog)
+        conn = db_connect.connect()  # connect to database
+        querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}''{}''{}','{}','{}')" \
+            .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])
+        conn.execute(querystring)  # This line performs query and returns json result
+        return jsonify({"results": "ok"})
+
+
+class TagLogQuery(Resource):
+
+    def get(self, tag_id, start, end):
+        pass
+        # print("{}, {}, {}".format(tag_id, start, end))
+        # conn = db_connect.connect()  # connect to database
+        # query_string = "select tagid, tta.actiontype, tta.identifier, t.userid from taglog " \
+        #                "tta join " \
+        #                "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
+        #                 action_type)
+        # print(query_string)
+        # query = conn.execute(query_string)
+        # objects_list = []
+        # for row in query.cursor:
+        #     d = collections.OrderedDict()
+        #     d['tagid'] = row[0]
+        #     d['actiontype'] = row[1]
+        #     d['identifier'] = row[2]
+        #     d['userid'] = row[3]
+        #     objects_list.append(d)
+        # if len(objects_list) == 0:
+        #     return None
+        # return objects_list[0]
+
+
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
 api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>')  # Route_1
@@ -267,6 +304,8 @@ api.add_resource(Devices, '/devices')  # Route_1
 api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities')  # Route_1
 api.add_resource(Reminders, '/reminders/<reminder_id>')  # Route_1
+api.add_resource(TagLog, '/taglog')  # Route_1
+api.add_resource(TagLogQuery, '/taglog/<tagid>/start/<start>/end/<end>')  # Route_1
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == "test":

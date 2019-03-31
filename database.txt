@@ -68,9 +68,9 @@ CREATE TABLE "activitiestolabels"
 );
 CREATE INDEX [IFK_ActivitiesToLabels] ON "activitiestolabels" ([activityid]);
 
+drop table taglog
 CREATE TABLE "taglog"
 (
-    [activityid] NVARCHAR(36) NOT NULL,
     [tagid] INTEGER,
     [deviceid] NVARCHAR(36),
     [start] NVARCHAR(23)  NOT NULL,

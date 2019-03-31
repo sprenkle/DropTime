@@ -39,7 +39,9 @@ if __name__ == "__main__":
         from timeularapi import TimularApi
         from debuglogger import DebugLogger
         from mockleddevice import MockLedDevice
+        from tagrepository import TagRepository
 
+        tag_repository = TagRepository()
         leddevice = MockLedDevice()
         logger = DebugLogger()
         reader = MockRfiReader()
@@ -53,7 +55,9 @@ if __name__ == "__main__":
         from debuglogger import DebugLogger
         #from leddevice import LedDevice
         from mockleddevice import MockLedDevice
+        from tagrepository import TagRepository
 
+        tag_repository = TagRepository()
         leddevice = MockLedDevice()
         logger = DebugLogger()
         reader = RfiReader()
@@ -62,7 +66,7 @@ if __name__ == "__main__":
 
         api = TimularApi(configuration, tagRepository, logger)
 
-    actions = Actions(MockLedController(leddevice), logger, TimeularAction(api, tagRepository, logger))
+    actions = Actions(tag_repository, MockLedController(leddevice), logger, TimeularAction(api, tagRepository, logger))
     dropTime = DropTime(reader, actions, logger)
     dropTime.run()
 
