@@ -264,7 +264,7 @@ class TagLog(Resource):
         taglog = request.json
         print(taglog)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}''{}''{}','{}','{}')" \
+        querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})"\
             .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})

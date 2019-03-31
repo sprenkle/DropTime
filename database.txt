@@ -68,7 +68,7 @@ CREATE TABLE "activitiestolabels"
 );
 CREATE INDEX [IFK_ActivitiesToLabels] ON "activitiestolabels" ([activityid]);
 
-drop table taglog
+drop table taglog;
 CREATE TABLE "taglog"
 (
     [tagid] INTEGER,
@@ -76,14 +76,11 @@ CREATE TABLE "taglog"
     [start] NVARCHAR(23)  NOT NULL,
     [stop] NVARCHAR(23)  NOT NULL,
     [totaltimes] integer,
-    FOREIGN KEY ([activityid]) REFERENCES "activitieslog" ([activityid])
-                ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY ([tagid]) REFERENCES "tags" ([tagid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY ([deviceid]) REFERENCES "devices" ([deviceid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-CREATE INDEX [IFK_TagLogActivityid] ON "taglog" ([activityid]);
 CREATE INDEX [IFK_TAGLogTagidStart] ON "taglog" ([tagid],[start]);
 
 

@@ -9,7 +9,7 @@ from mockledcontroller import MockLedController
 
 class DropTime:
 
-    def __init__(self, tag_repository, tag_reader, all_actions, my_logger):
+    def __init__(self,configuration, tag_repository, tag_reader, all_actions, my_logger):
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
@@ -17,6 +17,8 @@ class DropTime:
         self.none_count = 0
         self.tag_repository = tag_repository
         self.tag_start = None
+        self.configuration = configuration
+        self.device_id = self.configuration("device", "device_id")
 
     def run(self):
         self.mlogger.log("started run")
@@ -45,7 +47,7 @@ class DropTime:
             self.none_count = 0
 
     def log_tag(self, tag_id, start, end):
-        self.tag_repository.log_tag(tag_id, start, end)
+        self.tag_repository.log_tag(tag_id, self.device_id, start, end)
 
 
 if __name__ == "__main__":

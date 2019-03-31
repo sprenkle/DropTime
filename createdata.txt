@@ -14,7 +14,10 @@ Insert INTO reminders (userid, start='',stop='', showled= , sunday=, monday= , t
                       wednesday=, thursday=, friday=, saturday=, integration=,
                       ledpattern='[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]');
 
-INSERT INTO devices (name, description) VALUES ('','');
+INSERT INTO devices (name, description) VALUES ('','','');
+
+INSERT INTO devices (deviceid, name, description) VALUES ('08f98cd6-3602-41ee-aa27-a6768412254e','white tower', 'First attempt white tower');
+
 
 DELETE FROM tags
 INSERT INTO tags (tagid, userid, name, description) VALUES
