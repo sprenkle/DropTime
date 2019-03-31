@@ -1,6 +1,6 @@
 class Actions:
 
-    def __init__(self,led_controller, my_logger, *actions):
+    def __init__(self, led_controller, my_logger, *actions):
         self.action_list = list(actions)
         self.logger = my_logger
         self.led_controller = led_controller
@@ -21,9 +21,12 @@ class Actions:
 
     def poll(self, tag_id):
         self.logger.log("poll " + str(tag_id))
+        result_list = []
         for action in self.action_list:
             self.logger.log("action type:{}  tagid:{}".format(action.get_id(), str(tag_id)))
             result = action.execute(tag_id)
+            result_list.append(result)
+        return result_list
 
 
 
