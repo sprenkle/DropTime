@@ -109,11 +109,11 @@ if __name__ == "__main__":
         from rfireader import RfiReader
         from timeularapi import TimularApi
         from debuglogger import DebugLogger
-        #from leddevice import LedDevice
-        from mockleddevice import MockLedDevice
+        from leddevice import LedDevice
+        #from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
 
-        leddevice = MockLedDevice()
+        leddevice = LedDevice()
         logger = DebugLogger()
         reader = RfiReader()
         configuration = Configuration("configuration.json")
