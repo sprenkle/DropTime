@@ -50,8 +50,7 @@ class TagRepository:
         end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.000')
         duration = (start - end).total_seconds()
         url = self.base_url + '/taglog'
-        body = "{'tagid':'{}', 'deviceid':'{}'," \ 
-                "'start': '{}', 'stop': '{}', 'totaltimes': {}}".format(tag_id, device_id, start, end, duration)
+        body = "{'tagid':'{}', 'deviceid':'{}', 'start': '{}', 'stop': '{}', 'totaltimes': {}}".format(tag_id, device_id, start, end, duration)
         r = requests.post(url, json=body)
         return r.json()
 
