@@ -49,10 +49,12 @@ class DropTime:
 
     def process_actions(self):
         card_id = self.reader.read_card()
+        logger.log("card_id read is {}".format(card_id))
         if card_id is None:
             self.none_count = self.none_count + 1
         if card_id is not None:
             self.none_count = 0
+        result_list = []
         if self.last_read != card_id and (card_id is not None or self.none_count > 2):
             logger.log("Tag changed tag_id={}".format(card_id))
             # we had a last read so we must log the stop time of the tag
@@ -78,8 +80,8 @@ class DropTime:
                     else:
                         self.led_controller.clear()
             logger.log("returned Result list = {}".format(str(have_results)))
-            return result_list
-        return []
+        logger.log("Exiting process_actions")
+        return result_list
 
     def show_blue(self):
         self.led_controller.show_non_result_display()
