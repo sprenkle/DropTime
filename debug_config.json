@@ -7,7 +7,7 @@
       "uuid": "e044c8b0-c5a6-4e0f-94b6-0bec78d6a30a"
     },
     "tag_api": {
-      "url": "http://127.0.0.1:5002",
+      "url": "http://DAVID-TOWER:5002",
       "self_url": "127.0.0.1"
     },
     "device": {
