@@ -22,8 +22,6 @@ class Actions:
         return result_list
 
 
-
-
 if __name__ == "__main__":
     from mockledcontroller import MockLedController
     from logger import Logger

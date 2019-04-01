@@ -110,6 +110,7 @@ class LedController:
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255],
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255]])
 
+
 if __name__ == "__main__":
     import time
 
@@ -136,4 +137,4 @@ if __name__ == "__main__":
     time.sleep(delay)
     led_controller.remove_reminder(2)
     led_controller.show()
-
+    led_controller.show_non_result_display()
