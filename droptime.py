@@ -54,6 +54,7 @@ class DropTime:
         if card_id is not None:
             self.none_count = 0
         if self.last_read != card_id and (card_id is not None or self.none_count > 2):
+            logger.log("Tag changed tag_id={}".format(card_id))
             # we had a last read so we must log the stop time of the tag
             if self.last_read is not None:
                 self.log_tag(self.last_read, self.tag_start, datetime.datetime.utcnow())
@@ -76,7 +77,7 @@ class DropTime:
                         self.led_controller.show_non_result_display()
                     else:
                         self.led_controller.clear()
-
+            logger.log("returned Result list = {}".format(str(have_results)))
             return result_list
         return []
 
