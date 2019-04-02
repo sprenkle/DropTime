@@ -78,8 +78,10 @@ class DropTime:
                     if card_id is not None:
                         self.led_controller.show_non_result_display()
                         #print("show_non_result_display")
-                    else:
-                        self.led_controller.clear()
+                else:
+                    self.led_controller.show_non_action_tag()
+            if card_id is None:
+                self.led_controller.clear()
             logger.log("returned Result list = {}".format(have_results))
         logger.log("Exiting process_actions")
         return result_list
@@ -111,12 +113,12 @@ if __name__ == "__main__":
     else:
         from rfireader import RfiReader
         from timeularapi import TimularApi
-        from debuglogger import DebugLogger
+        from logger import Logger
         from leddevice import LedDevice
         #from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
         leddevice = LedDevice()
-        logger = DebugLogger()
+        logger = Logger()
         reader = RfiReader()
         configuration = Configuration("configuration.json")
         tag_repository = TagRepository(configuration)

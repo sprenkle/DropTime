@@ -33,20 +33,20 @@ INSERT INTO tags (tagid, userid, name, description) VALUES
 INSERT INTO tags (tagid, userid, name, description) VALUES
 ('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice6','testing');
 
-DELETE FROM tagstoactions
+DELETE FROM tagstoactions;
 -- Added test actions to test die
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('232099365453','1','379734');
+('1056599065216','1','379734');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('644416226029','1','379735');
+('510634902246','1','379735');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
 ('1060692312690','1','379736');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('648375452178','1','379737');
+('853359936003','1','379737');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('304929129162','1','379740');
+('97445692115','1','379740');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('717245989418','1','379741');
+('644282204896','1','379741');
 
 DELETE FROM activities;
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
