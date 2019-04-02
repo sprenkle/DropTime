@@ -10,7 +10,7 @@ class MockRfiReader:
         self.index = 0;
 
     def read_card(self):
-        if self.last_event_time < datetime.datetime.utcnow() - datetime.timedelta(seconds=30):
+        if self.last_event_time < datetime.datetime.utcnow() - datetime.timedelta(seconds=5):
             if self.index == len(self.arr):
                 self.index = 0
             self.last_event = self.arr[self.index]

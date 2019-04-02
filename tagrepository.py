@@ -46,13 +46,16 @@ class TagRepository:
         return 100
 
     def log_tag(self, tag_id, device_id, start, end):
-        start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.000')
-        end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.000')
+        start_str = datetime.strftime(start, '%Y-%m-%dT%H:%M:%S.000')
+        end_str = datetime.strftime(end, '%Y-%m-%dT%H:%M:%S.000')
         duration = (start - end).total_seconds()
         url = self.base_url + '/taglog'
-        body = "{'tagid':'{}', 'deviceid':'{}', 'start': '{}', 'stop': '{}', 'totaltimes': {}}".format(tag_id, device_id, start, end, duration)
+        # body = "{tagid1:'{}', 'deviceid':'{}', 'start': '{}', " \
+        #        "'stop': '{}', 'totaltimes': {}}".format(tag_id, device_id, start_str, end_str, duration)
+        body = {'tagid': tag_id, 'deviceid': device_id, 'start': start_str, 'stop': end_str, 'totaltimes': duration}
         r = requests.post(url, json=body)
         return r.json()
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "test":

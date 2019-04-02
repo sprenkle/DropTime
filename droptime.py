@@ -76,8 +76,8 @@ class DropTime:
                 have_results = self.process_results(result_list)
                 if not have_results:
                     if card_id is not None:
-                        #self.led_controller.show_non_result_display()
-                        print("show_non_result_display")
+                        self.led_controller.show_non_result_display()
+                        #print("show_non_result_display")
                     else:
                         self.led_controller.clear()
             logger.log("returned Result list = {}".format(have_results))
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         api = TimularApi(configuration, tag_repository, logger)
 
     actions = Actions(logger, TimeularAction(api, tag_repository, logger))
-    dropTime = DropTime(LedController, configuration, tag_repository, reader, actions, logger)
+    dropTime = DropTime(LedController(leddevice), configuration, tag_repository, reader, actions, logger)
     dropTime.run()
 
 
