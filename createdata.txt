@@ -19,28 +19,28 @@ INSERT INTO devices (name, description) VALUES ('','','');
 INSERT INTO devices (deviceid, name, description) VALUES ('08f98cd6-3602-41ee-aa27-a6768412254e','white tower', 'First attempt white tower');
 
 
-DELETE FROM tags
+DELETE FROM tags;
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('1056599065216','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice1','testing');
+('922951762502','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice1','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('1056599065216','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice2','testing');
+('1056599065216','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice2','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('510634902246','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice3','testing');
+('510634902246','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice3','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('853359936003','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice4','testing');
+('853359936003','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice4','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('97445692115','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice5','testing');
+('97445692115','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice5','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','whitedice6','testing');
+('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice6','testing');
 
 DELETE FROM tagstoactions;
 -- Added test actions to test die
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('1056599065216','1','379734');
+('922951762502','1','379734');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('510634902246','1','379735');
+('1056599065216','1','379735');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('1060692312690','1','379736');
+('510634902246','1','379736');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
 ('853359936003','1','379737');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES

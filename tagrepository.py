@@ -42,13 +42,20 @@ class TagRepository:
         user = r.json()
         return user["username"], user["userpassword"]
 
-    def get_tag_duration(self, tag_id, start, end):
-        return 100
+    def get_activity_duration(self, activity_type, activity_id, start, end):
+        url = self.base_url + "/taglog/{}/{}/start/{}/end/{}".format(activity_type, activity_id, start, end)
+        print("url is {}".format(url))
+        r = requests.get(url)
+        activity = r.json()
+        if activity is None:
+            return 0
+        duration = activity["duration"]
+        return duration
 
     def log_tag(self, tag_id, device_id, start, end):
         start_str = datetime.strftime(start, '%Y-%m-%dT%H:%M:%S.000')
         end_str = datetime.strftime(end, '%Y-%m-%dT%H:%M:%S.000')
-        duration = (start - end).total_seconds()
+        duration = (end - start).total_seconds()
         url = self.base_url + '/taglog'
         # body = "{tagid1:'{}', 'deviceid':'{}', 'start': '{}', " \
         #        "'stop': '{}', 'totaltimes': {}}".format(tag_id, device_id, start_str, end_str, duration)

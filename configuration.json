@@ -8,7 +8,7 @@
     },
     "tag_api": {
       "url": "http://10.0.0.231:5002",
-      "self_url": "David-Tower"
+      "self_url": "10.0.0.231"
     },
     "device": {
       "device_id": "08f98cd6-3602-41ee-aa27-a6768412254e"

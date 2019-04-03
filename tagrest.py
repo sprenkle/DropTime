@@ -272,27 +272,30 @@ class TagLog(Resource):
 
 class TagLogQuery(Resource):
 
-    def get(self, tag_id, start, end):
-        pass
-        # print("{}, {}, {}".format(tag_id, start, end))
-        # conn = db_connect.connect()  # connect to database
-        # query_string = "select tagid, tta.actiontype, tta.identifier, t.userid from taglog " \
-        #                "tta join " \
-        #                "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
-        #                 action_type)
-        # print(query_string)
-        # query = conn.execute(query_string)
-        # objects_list = []
-        # for row in query.cursor:
-        #     d = collections.OrderedDict()
-        #     d['tagid'] = row[0]
-        #     d['actiontype'] = row[1]
-        #     d['identifier'] = row[2]
-        #     d['userid'] = row[3]
-        #     objects_list.append(d)
-        # if len(objects_list) == 0:
-        #     return None
-        # return objects_list[0]
+    def get(self, activity_type, activity_id, start, end):
+        conn = db_connect.connect()  # connect to database
+
+        if activity_type == '1':
+            query_string = "select sum(tl.totaltimes) from activities a " \
+                           "join tagstoactions tta on a.activityid = tta.identifier and tta.actiontype = 1 " \
+                           "join taglog tl on tl.tagid = tta.tagid where a.activityid = {} and " \
+                           "tl.start >= '{}' and tl.stop <= '{}'"\
+                .format(activity_id, start, end)
+
+        query = conn.execute(query_string)
+        objects_list = []
+        for row in query.cursor:
+            d = collections.OrderedDict()
+            d['duration'] = row[0]
+            if row[0] is None:
+                d['duration'] = 0
+            else:
+                d['duration'] = row[0]
+
+            objects_list.append(d)
+        if len(objects_list) == 0:
+            return {'duration': 0}
+        return objects_list[0]
 
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
@@ -305,7 +308,7 @@ api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities')  # Route_1
 api.add_resource(Reminders, '/reminders/<reminder_id>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
-api.add_resource(TagLogQuery, '/taglog/<tagid>/start/<start>/end/<end>')  # Route_1
+api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == "test":
