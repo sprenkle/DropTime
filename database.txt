@@ -54,7 +54,7 @@ CREATE TABLE "activities"
     [name] NVARCHAR(80)  NOT NULL,
     [color] INTEGER  NULL,
     [show] INTEGER(1) NOT NULL, -- show daily goals colors
-    [dailygoals] INTEGER(1) NOT NULL,
+    [dailygoals] INTEGER(1) NOT NULL, -- 0 none, 1 activation, 2 day, 3 week, 4 month, 5 year,
     [dailytimeSec] INTEGER NOT NULL,
     FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION

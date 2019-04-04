@@ -43,6 +43,8 @@ class TimeularAction:
         token = self.get_token(user_id)
         self.logger.log("start tracking")
         self.api.start_tracking(token, activity["identifier"])
+        if activity["dailygoals"] == 1:
+            return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "current_time": 0}
         return {"ActionReturnType": "NoDisplay"}
 
     def get_token(self, user_id):

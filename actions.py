@@ -6,12 +6,12 @@ class Actions:
 
     def execute(self, tag_id):
         self.logger.log("execute " + str(tag_id))
-        action_return_type = "Unidentified"
+        action_return_type = {"ActionReturnType": "Unidentified"}
         for action in self.action_list:
             self.logger.log("action " + str(tag_id))
             result = action.execute(tag_id)
             if "ActionReturnType" in result:
-                action_return_type = result["ActionReturnType"]
+                action_return_type = result
         return action_return_type
 
     def poll(self, tag_id):

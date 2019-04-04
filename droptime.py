@@ -68,7 +68,8 @@ class DropTime:
             self.logger.log("run - new id " + str(card_id))
             self.last_read = card_id
 
-            action_result = self.actions.execute(card_id)
+            action_result_list = self.actions.execute(card_id)
+            action_result = action_result_list["ActionReturnType"]
 
             # determine how to display the led
             if self.have_reminders():
@@ -81,6 +82,10 @@ class DropTime:
                     self.led_controller.show_non_result_display()
                 elif action_result == "Unidentified":
                     self.led_controller.show_non_action_tag()
+                elif action_result == "Progress":
+                    goal_time = action_result_list["goal_total"]
+                    total_time = action_result_list["dailytimeSec"]
+                    self.led_controller.start_progress(goal_time, total_time)
 
             self.logger.log("Exiting process_actions")
 

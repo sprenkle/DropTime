@@ -137,7 +137,6 @@ class Activities(Resource):
             d['name'] = row[2]
             d['color'] = row[3]
             d['show'] = row[4]
-            d['integration'] = row[5]
             d['dailygoals'] = row[6]
             d['dailytimeSec'] = row[7]
             objects_list.append(d)
