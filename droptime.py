@@ -13,7 +13,7 @@ class DropTime:
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
-        self.mlogger = my_logger
+        self.logger = my_logger
         self.none_count = 0
         self.tag_repository = tag_repository
         self.tag_start = None
@@ -22,7 +22,7 @@ class DropTime:
         self.led_controller = led_controller
 
     def run(self):
-        self.mlogger.log("started run")
+        self.logger.log("started run")
         while True:
             self.process_actions()
             time.sleep(.1)
@@ -49,14 +49,14 @@ class DropTime:
 
     def process_actions(self):
         card_id = self.reader.read_card()
-        logger.log("card_id read is {}".format(card_id))
+        self.logger.log("card_id read is {}".format(card_id))
         if card_id is None:
             self.none_count = self.none_count + 1
         if card_id is not None:
             self.none_count = 0
-        result_list = []
+
         if self.last_read != card_id and (card_id is not None or self.none_count > 2):
-            logger.log("Tag changed tag_id={}".format(card_id))
+            self.logger.log("Tag changed tag_id={}".format(card_id))
             # we had a last read so we must log the stop time of the tag
             if self.last_read is not None:
                 self.log_tag(self.last_read, self.tag_start, datetime.datetime.utcnow())
@@ -65,26 +65,24 @@ class DropTime:
             if card_id is not None:
                 self.tag_start = datetime.datetime.utcnow()
 
-            self.mlogger.log("run - new id " + str(card_id))
+            self.logger.log("run - new id " + str(card_id))
             self.last_read = card_id
 
-            result_list = self.actions.execute(card_id)
+            action_result = self.actions.execute(card_id)
 
+            # determine how to display the led
             if self.have_reminders():
                 self.process_reminders()
             else:
-                have_results = self.process_results(result_list)
-                if not have_results:
-                    if card_id is not None:
-                        self.led_controller.show_non_result_display()
-                        #print("show_non_result_display")
-                else:
+                if card_id is None:
+                    self.led_controller.clear()
+                    self.logger.log("returned Result list = {}".format(action_result))
+                elif action_result == "NoDisplay":
+                    self.led_controller.show_non_result_display()
+                elif action_result == "Unidentified":
                     self.led_controller.show_non_action_tag()
-            if card_id is None:
-                self.led_controller.clear()
-            logger.log("returned Result list = {}".format(have_results))
-        logger.log("Exiting process_actions")
-        return result_list
+
+            self.logger.log("Exiting process_actions")
 
     def show_blue(self):
         self.led_controller.show_non_result_display()

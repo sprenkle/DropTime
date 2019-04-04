@@ -27,13 +27,13 @@ class TimeularAction:
         if tag_id is None:
             self.logger.log("tag_id is none, returning")
             self.running_tag_id = None
-            return
+            return {"ActionReturnType": "Unidentified"}
 
         # check if tag has a activity
         if not self.tag_repository.contains_id(self.id, tag_id):
             self.logger.log("tag is not in repository, returning")
             self.running_tag_id = None
-            return
+            return {"ActionReturnType": "Unidentified"}
 
         # have activity start it
         self.running_tag_id = tag_id
@@ -43,7 +43,7 @@ class TimeularAction:
         token = self.get_token(user_id)
         self.logger.log("start tracking")
         self.api.start_tracking(token, activity["identifier"])
-        return {}
+        return {"ActionReturnType": "NoDisplay"}
 
     def get_token(self, user_id):
         if user_id not in self.user_to_token_dict:
