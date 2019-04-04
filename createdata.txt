@@ -32,6 +32,10 @@ INSERT INTO tags (tagid, userid, name, description) VALUES
 ('97445692115','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice5','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
 ('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice6','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('510618125025','72be6ab4-727b-4257-ba1d-ef58a3349bfc','Black Knight','testing');
+INSERT INTO tags (tagid, userid, name, description) VALUES
+('164001038962','72be6ab4-727b-4257-ba1d-ef58a3349bfc','David from Aliens','testing');
 
 DELETE FROM tagstoactions;
 -- Added test actions to test die
@@ -47,8 +51,16 @@ INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
 ('97445692115','1','379740');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
 ('644282204896','1','379741');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('510618125025','1','369008');
+INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
+('164001038962','1','369007');
 
 DELETE FROM activities;
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
+VALUES
+('369007','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'DropTime','',1,1,120);
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('379734','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
@@ -73,6 +85,10 @@ INSERT INTO activities (activityid, userid, name, color, show, dailygoals, daily
 VALUES
 ('379741','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
 'test6','','','','');
+INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
+VALUES
+('369008','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
+'Wondermachine','','','','');
 
 Insert INTO reminders (reminderid, userid, start, stop, showled , sunday, monday, tuesday,
                       wednesday, thursday, friday, saturday, integration,
