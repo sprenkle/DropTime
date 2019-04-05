@@ -65,7 +65,6 @@ class DropTime:
             # The tag_id is not null so we must give a start time
             if card_id is not None:
                 self.tag_start = datetime.datetime.utcnow()
-                self.led_controller.stop_progress()
 
             self.logger.log("run - new id " + str(card_id))
             self.last_read = card_id
@@ -78,6 +77,7 @@ class DropTime:
                 self.process_reminders()
             else:
                 if card_id is None:
+                    self.led_controller.stop_progress()
                     self.led_controller.clear()
                     self.logger.log("returned Result list = {}".format(action_result))
                 elif action_result == "NoDisplay":
