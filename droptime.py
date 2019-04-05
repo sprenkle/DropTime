@@ -25,6 +25,7 @@ class DropTime:
         self.logger.log("started run")
         while True:
             self.process_actions()
+            self.actions.poll(self.last_read)
             time.sleep(.1)
 
     def process_reminders(self):
