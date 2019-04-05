@@ -18,8 +18,7 @@ class Actions:
         self.logger.log("poll " + str(tag_id))
         result_list = []
         for action in self.action_list:
-            self.logger.log("action type:{}  tagid:{}".format(action.get_id(), str(tag_id)))
-            result = action.execute(tag_id)
+            result = action.poll(tag_id)
             result_list.append(result)
         return result_list
 
