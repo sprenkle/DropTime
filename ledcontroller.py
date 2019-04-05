@@ -61,6 +61,8 @@ class LedController:
         result_over = 0
         if percent <= 1:
             result_under = math.floor(percent * 24)
+            if result_under < 1:
+                result_under = 1
         else:
             result_under = 24
 
