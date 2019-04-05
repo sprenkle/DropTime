@@ -126,19 +126,41 @@ class Tags(Resource):
 
 
 class Activities(Resource):
+
+    def get(self, activity_id):
+        print(activity_id)
+        conn = db_connect.connect()  # connect to database
+        query = conn.execute("select * from activities where activityid={}".format(activity_id))  # This line performs query and returns json result
+        objects_list = []
+        for row in query.cursor:
+            d = collections.OrderedDict()
+            d['activityid'] = row[0]
+            d['userid'] = row[1]
+            d['name'] = row[2]
+            d['color'] = row[3]
+            d['show'] = row[4]
+            d['dailygoals'] = row[5]
+            d['dailytimeSec'] = row[6]
+            objects_list.append(d)
+        activities = objects_list[0]
+        return activities  # Fetches first column that is Employee ID
+
+
+class ActivitiesList(Resource):
+
     def get(self):
         conn = db_connect.connect()  # connect to database
         query = conn.execute("select * from activities")  # This line performs query and returns json result
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['activityid'] = row[1]
+            d['activityid'] = row[0]
             d['userid'] = row[1]
             d['name'] = row[2]
             d['color'] = row[3]
             d['show'] = row[4]
-            d['dailygoals'] = row[6]
-            d['dailytimeSec'] = row[7]
+            d['dailygoals'] = row[5]
+            d['dailytimeSec'] = row[6]
             objects_list.append(d)
         activities = {"activities": objects_list}
         return activities  # Fetches first column that is Employee ID
@@ -154,6 +176,8 @@ class Activities(Resource):
                     activity["dailygoals"], activity["dailytimeSec"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok", "id": activity_id})
+
+
 
 
 # {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
@@ -304,7 +328,8 @@ api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
 api.add_resource(Tags, '/tags')  # Route_1
-api.add_resource(Activities, '/activities')  # Route_1
+api.add_resource(Activities, '/activities/<activity_id>')  # Route_1
+api.add_resource(ActivitiesList, '/activities')  # Route_1
 api.add_resource(Reminders, '/reminders/<reminder_id>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
 api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1

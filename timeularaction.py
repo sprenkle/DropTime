@@ -19,9 +19,9 @@ class TimeularAction:
         # If running tag is not None and does not equal tag_id then stop last activity
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
             if self.tag_repository.contains_id(self.id, self.running_tag_id):
-                activity = self.tag_repository.activity(self.id, self.running_tag_id)
-                token = self.get_token(activity["userid"])
-                self.api.stop_tracking(token, activity["identifier"])
+                tag_to_action = self.tag_repository.tags_to_actions(self.id, self.running_tag_id)
+                token = self.get_token(tag_to_action["userid"])
+                self.api.stop_tracking(token, tag_to_action["identifier"])
 
         # If tag_id is None then set running tag and return
         if tag_id is None:
@@ -38,13 +38,16 @@ class TimeularAction:
         # have activity start it
         self.running_tag_id = tag_id
         # todo working on this
-        activity = self.tag_repository.activity(self.id, tag_id)
-        user_id = activity["userid"]
+        tag_to_action = self.tag_repository.tags_to_actions(self.id, tag_id)
+        user_id = tag_to_action["userid"]
         token = self.get_token(user_id)
         self.logger.log("start tracking")
-        self.api.start_tracking(token, activity["identifier"])
-        if "dailygoals" in activity and activity["dailygoals"] == 1:
-            return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "current_time": 0}
+        self.api.start_tracking(token, tag_to_action["identifier"])
+        activity = self.tag_repository.get_activity(tag_to_action["identifier"])
+        print(activity)
+
+        if "show" in activity and activity["show"] == 1:
+            return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "time_spent": 0}
         return {"ActionReturnType": "NoDisplay"}
 
     def get_token(self, user_id):

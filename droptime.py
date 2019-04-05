@@ -84,7 +84,7 @@ class DropTime:
                     self.led_controller.show_non_action_tag()
                 elif action_result == "Progress":
                     goal_time = action_result_list["goal_total"]
-                    total_time = action_result_list["dailytimeSec"]
+                    total_time = action_result_list["time_spent"]
                     self.led_controller.start_progress(goal_time, total_time)
 
             self.logger.log("Exiting process_actions")

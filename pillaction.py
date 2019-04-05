@@ -17,7 +17,7 @@ class PillAction:
         # If running tag is not None and does not equal tag_id then stop last activity
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
             if self.tag_repository.contains_id(self.running_tag_id):
-                activity = self.tag_repository.activity(self.running_tag_id)
+                activity = self.tag_repository.tags_to_actions(self.running_tag_id)
                 token = self.get_token(activity["userid"])
                 self.api.stop_tracking(token, activity["identifier"])
 
@@ -34,7 +34,7 @@ class PillAction:
         # have activity start it
         self.running_tag_id = tag_id
         # todo working on this
-        activity = self.tag_repository.activity(tag_id)
+        activity = self.tag_repository.tags_to_actions(tag_id)
         user_id = activity["userid"]
         token = self.get_token(user_id)
         self.api.start_tracking(token, activity["identifier"])

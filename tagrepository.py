@@ -9,7 +9,7 @@ class TagRepository:
     def __init__(self, configuration):
         self.base_url = configuration.get_value("tag_api", "url")
         print(self.base_url)
-        self.activity_dict = {}
+        self.tags_to_action_dict = {}
 
     def contains_id(self, action_type, tag_id):
         url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id)
@@ -19,21 +19,21 @@ class TagRepository:
         if activity is None:
             return False
         print(activity)
-        self.add_activity(action_type, tag_id, activity)
+        self.add_tags_to_action(action_type, tag_id, activity)
         return True
 
-    def activity(self, action_type, tag_id):
-        if action_type not in self.activity_dict:
+    def tags_to_actions(self, action_type, tag_id):
+        if action_type not in self.tags_to_action_dict:
             return None
-        action_dict = self.activity_dict[action_type]
+        action_dict = self.tags_to_action_dict[action_type]
         if tag_id not in action_dict:
             return None
         return action_dict[tag_id]
 
-    def add_activity(self, action_type, tag_id, activity):
-        if action_type not in self.activity_dict:
-            self.activity_dict = self.activity_dict[action_type] = dict()
-        action_dict = self.activity_dict[action_type]
+    def add_tags_to_action(self, action_type, tag_id, activity):
+        if action_type not in self.tags_to_action_dict:
+            self.tags_to_action_dict = self.tags_to_action_dict[action_type] = dict()
+        action_dict = self.tags_to_action_dict[action_type]
         action_dict[tag_id] = activity
 
     def get_api_key_token(self, user_id):
@@ -41,6 +41,12 @@ class TagRepository:
         r = requests.get(url)
         user = r.json()
         return user["username"], user["userpassword"]
+
+    def get_activity(self, activity_id):
+        url = self.base_url + '/activities/' + str(activity_id)
+        r = requests.get(url)
+        activity = r.json()
+        return activity
 
     def get_activity_duration(self, activity_type, activity_id, start, end):
         url = self.base_url + "/taglog/{}/{}/start/{}/end/{}".format(activity_type, activity_id, start, end)
