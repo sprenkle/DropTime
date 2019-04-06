@@ -80,7 +80,9 @@ class LedController:
             led_array.append([0, 0, 0])
             index += 1
         for i in range(result_over):
-            led_array.append([0, 0, 255])
+            led_array[i] = [0, 0, 255]
+
+        print("{} {}".format(result_under, result_over))
         self.led_device.show(led_array)
 
     def show_reminder(self):
@@ -134,16 +136,16 @@ if __name__ == "__main__":
     delay = .1
 
     led_controller.start_progress(5, 0)
-    for i in range(60):
+    for i in range(120):
         led_controller.show()
         time.sleep(delay)
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
     led_controller.show()
-    time.sleep(delay)
-    led_controller.remove_reminder(1)
-    led_controller.show()
-    time.sleep(delay)
-    led_controller.remove_reminder(2)
-    led_controller.show()
-    led_controller.show_non_result_display()
+    # time.sleep(delay)
+    # led_controller.remove_reminder(1)
+    # led_controller.show()
+    # time.sleep(delay)
+    # led_controller.remove_reminder(2)
+    # led_controller.show()
+    # led_controller.show_non_result_display()

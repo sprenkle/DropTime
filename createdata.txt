@@ -60,7 +60,7 @@ DELETE FROM activities;
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('369007','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'DropTime','',1,1,120);
+'DropTime','',1,1,30);
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('379734','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
