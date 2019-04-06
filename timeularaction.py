@@ -1,5 +1,6 @@
 import datetime
 
+
 class TimeularAction:
 
     def __init__(self, api, tag_repository, logger):

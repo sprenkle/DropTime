@@ -49,7 +49,9 @@ class TagRepository:
         return activity
 
     def get_activity_duration(self, activity_type, activity_id, start, end):
-        url = self.base_url + "/taglog/{}/{}/start/{}/end/{}".format(activity_type, activity_id, start, end)
+        start_str = datetime.strftime(start, '%Y-%m-%dT%H:%M:%S.000')
+        end_str = datetime.strftime(end, '%Y-%m-%dT%H:%M:%S.000')
+        url = self.base_url + "/taglog/{}/{}/start/{}/end/{}".format(activity_type, activity_id, start_str, end_str)
         print("url is {}".format(url))
         r = requests.get(url)
         activity = r.json()
