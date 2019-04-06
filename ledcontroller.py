@@ -80,7 +80,10 @@ class LedController:
             led_array.append([0, 0, 0])
             index += 1
         for i in range(result_over):
-            led_array[i] = [0, 0, 255]
+            led_array[i] = [255, 0, 0]
+        if result_over == 24:
+            for i in range(12):
+                led_array[i * 2] = [0, 255, 0]
 
         print("{} {}".format(result_under, result_over))
         self.led_device.show(led_array)
