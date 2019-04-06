@@ -68,7 +68,7 @@ VALUES
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('379735','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'test2','','','','');
+'test2','','1','2','60');
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('379736','72be6ab4-727b-4257-ba1d-ef58a3349bfc',

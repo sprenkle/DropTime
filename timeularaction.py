@@ -60,7 +60,7 @@ class TimeularAction:
         month = now.month
         day = now.day
 
-        if activity["show"] == 2: # for each day
+        if activity["dailygoals"] == 2: # for each day
             start_time = datetime.datetime(year, month, day, 0, 0, 0)
             duration = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                  datetime.datetime.utcnow())
