@@ -1,3 +1,5 @@
+import datetime
+
 class TimeularAction:
 
     def __init__(self, api, tag_repository, logger):
@@ -46,8 +48,26 @@ class TimeularAction:
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
         print(activity)
 
-        if "show" in activity and activity["show"] == 1:
-            return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "time_spent": 0}
+        if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity:
+            return {"ActionReturnType": "NoDisplay"}
+
+        time_spent = 0
+        if activity["dailygoals"] == 1: # reset each time you use it, like a timer
+            return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "time_spent": time_spent}
+
+        now = datetime.datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
+        if activity["show"] == 2: # for each day
+            start_time = datetime.datetime(year, month, day, 0, 0, 0)
+            duration = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
+                                                                 datetime.datetime.utcnow())
+            return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "time_spent": duration}
+
+
+
         return {"ActionReturnType": "NoDisplay"}
 
     def get_token(self, user_id):
