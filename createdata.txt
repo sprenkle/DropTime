@@ -31,7 +31,7 @@ INSERT INTO tags (tagid, userid, name, description) VALUES
 INSERT INTO tags (tagid, userid, name, description) VALUES
 ('97445692115','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice5','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice6','testing');
+('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','lsgreydice6','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
 ('510618125025','72be6ab4-727b-4257-ba1d-ef58a3349bfc','Black Knight','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
@@ -68,7 +68,7 @@ VALUES
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('379735','72be6ab4-727b-4257-ba1d-ef58a3349bfc',
-'test2','','','','');
+'test2','','1','2','60');
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
 VALUES
 ('379736','72be6ab4-727b-4257-ba1d-ef58a3349bfc',

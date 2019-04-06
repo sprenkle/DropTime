@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-import SimpleMFRC522
+from SimpleMFRC522 import SimpleMFRC522
 
 
 class RfiReader:
