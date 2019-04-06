@@ -17,12 +17,14 @@ class RfiReader:
         return tag_id
 
     def read_card_block(self):
-        (status, TagType) = self.mfrc522.MFRC522_Request(self.mfrc522.PICC_REQIDL)
-        if status != self.mfrc522.MI_OK:
-            return None
-        (status, uid) = self.mfrc522.MFRC522_Anticoll()
-        if status != self.mfrc522.MI_OK:
-            return None
+        uid = None
+        while not uid:
+            (status, TagType) = self.mfrc522.MFRC522_Request(self.mfrc522.PICC_REQIDL)
+            if status != self.mfrc522.MI_OK:
+                return None
+            (status, uid) = self.mfrc522.MFRC522_Anticoll()
+            if status != self.mfrc522.MI_OK:
+                return None
         return uid
 
 
