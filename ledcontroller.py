@@ -85,7 +85,6 @@ class LedController:
             for i in range(12):
                 led_array[i * 2] = [0, 255, 0]
 
-        print("{} {}".format(result_under, result_over))
         self.led_device.show(led_array)
 
     def show_reminder(self):
