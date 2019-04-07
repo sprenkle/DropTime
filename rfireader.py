@@ -12,7 +12,7 @@ class RfiReader:
         (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
         (status, uid) = self.MIFAREReader.MFRC522_Anticoll()
         if status == self.MIFAREReader.MI_OK:
-            return "%s-%s-%s-%s" % (uid[0], uid[1], uid[2], uid[3])
+            return uid[0] + (uid[1] << 8) + (uid[2] << 16) + (uid[3] << 24 )
         return None
 
 
