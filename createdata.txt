@@ -21,40 +21,40 @@ INSERT INTO devices (deviceid, name, description) VALUES ('08f98cd6-3602-41ee-aa
 
 DELETE FROM tags;
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('922951762502','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice1','testing');
+('1110893782','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice1','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('1056599065216','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice2','testing');
+('1110835958','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice2','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('510634902246','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice3','testing');
+('1110893686','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice3','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('853359936003','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice4','testing');
+('1110945990','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice4','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('97445692115','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice5','testing');
+('1110945814','72be6ab4-727b-4257-ba1d-ef58a3349bfc','greydice5','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('644282204896','72be6ab4-727b-4257-ba1d-ef58a3349bfc','lsgreydice6','testing');
+('1110835862','72be6ab4-727b-4257-ba1d-ef58a3349bfc','lsgreydice6','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('510618125025','72be6ab4-727b-4257-ba1d-ef58a3349bfc','Black Knight','testing');
+('1110893430','72be6ab4-727b-4257-ba1d-ef58a3349bfc','Black Knight','testing');
 INSERT INTO tags (tagid, userid, name, description) VALUES
-('164001038962','72be6ab4-727b-4257-ba1d-ef58a3349bfc','David from Aliens','testing');
+('1111043878','72be6ab4-727b-4257-ba1d-ef58a3349bfc','David from Aliens','testing');
 
 DELETE FROM tagstoactions;
 -- Added test actions to test die
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('922951762502','1','379734');
+('1110893782','1','379734');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('1056599065216','1','379735');
+('1110835958','1','379735');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('510634902246','1','379736');
+('1110893686','1','379736');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('853359936003','1','379737');
+('1110945990','1','379737');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('97445692115','1','379740');
+('1110945814','1','379740');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('644282204896','1','379741');
+('1110835862','1','379741');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('510618125025','1','369008');
+('1110893430','1','369008');
 INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES
-('164001038962','1','369007');
+('1111043878','1','369007');
 
 DELETE FROM activities;
 INSERT INTO activities (activityid, userid, name, color, show, dailygoals, dailytimeSec)
