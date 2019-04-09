@@ -49,7 +49,8 @@ class TimeularAction:
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
         print(activity)
 
-        if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity:
+        if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity or \
+                "" == activity["dailygoals"]:
             return {"ActionReturnType": "NoDisplay"}
 
         time_spent = 0
