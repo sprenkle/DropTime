@@ -24,8 +24,12 @@ class DropTime:
     def run(self):
         self.logger.log("started run")
         while True:
-            self.process_actions()
-            self.led_controller.show();
+            try:
+                self.process_actions()
+                self.led_controller.show()
+            except:
+                print("Error")
+                time.sleep(10)
             time.sleep(.1)
 
     def process_reminders(self):
