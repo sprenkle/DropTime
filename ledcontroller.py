@@ -55,7 +55,7 @@ class LedController:
                 self.show_progress()
 
     def show_progress(self):
-        if self.progress_goal_time_sec is None:
+        if not isinstance(self.progress_goal_time_sec, int):  # todo fix this
             return
         total_time = self.progress_start_amount_time_sec + \
                      (datetime.datetime.utcnow() - self.progress_started_time).seconds
