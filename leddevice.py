@@ -1,13 +1,14 @@
 import board
 import neopixel
 pixels = neopixel.NeoPixel(board.D18, 30)
+from configuration import Configuration
 
 
 class LedDevice:
-    def __init__(self, order="GRB"):
+    def __init__(self, configuration):
         pixel_pin = board.D18
         self.num_pixels = 24
-        if order == "RGB":
+        if self.configuration.get_value("led_device", "order") == "RGB":
             order = neopixel.RGB
         else:
             order = neopixel.GRB
