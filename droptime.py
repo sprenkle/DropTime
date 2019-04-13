@@ -4,7 +4,8 @@ import sys
 from actions import Actions
 from timeularaction import TimeularAction
 from configuration import Configuration
-from mockledcontroller import MockLedController
+import traceback
+#from mockledcontroller import MockLedController
 
 
 class DropTime:
@@ -27,8 +28,9 @@ class DropTime:
             try:
                 self.process_actions()
                 self.led_controller.show()
-            except:
-                print("Error")
+            except Exception as e:
+                print(e)
+                traceback.print_exec()
                 time.sleep(10)
             time.sleep(.1)
 
