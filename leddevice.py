@@ -8,7 +8,7 @@ class LedDevice:
     def __init__(self, configuration):
         pixel_pin = board.D18
         self.num_pixels = 24
-        if self.configuration.get_value("led_device", "order") == "RGB":
+        if configuration.get_value("led_device", "order") == "RGB":
             order = neopixel.RGB
         else:
             order = neopixel.GRB
