@@ -114,7 +114,7 @@ if __name__ == "__main__":
         from debuglogger import DebugLogger
         from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
-        leddevice = MockLedDevice()
+        led_device = MockLedDevice()
         logger = DebugLogger()
         reader = MockRfiReader()
         # api = MockApi()
@@ -128,15 +128,15 @@ if __name__ == "__main__":
         from leddevice import LedDevice
         #from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
-        leddevice = LedDevice()
+        configuration = Configuration("configuration.json")
+        led_device = LedDevice(configuration)
         logger = Logger()
         reader = RfiReader()
-        configuration = Configuration("configuration.json")
         tag_repository = TagRepository(configuration)
         api = TimularApi(configuration, tag_repository, logger)
 
     actions = Actions(logger, TimeularAction(api, tag_repository, logger))
-    dropTime = DropTime(LedController(leddevice), configuration, tag_repository, reader, actions, logger)
+    dropTime = DropTime(LedController(led_device), configuration, tag_repository, reader, actions, logger)
     dropTime.run()
 
 

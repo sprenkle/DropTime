@@ -128,13 +128,14 @@ class LedController:
 
 if __name__ == "__main__":
     import time
+    from configuration import Configuration
 
     if len(sys.argv) == 2 and sys.argv[1] == "test":
         from mockleddevice import MockLedDevice
         led_device = MockLedDevice()
     else:
         from leddevice import LedDevice
-        led_device = LedDevice()
+        led_device = LedDevice(Configuration())
 
     led_controller = LedController(led_device)
     delay = .1
