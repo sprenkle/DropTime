@@ -146,6 +146,7 @@ if __name__ == "__main__":
     led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
     led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
     led_controller.show()
+    led_controller.clear()
     # time.sleep(delay)
     # led_controller.remove_reminder(1)
     # led_controller.show()
