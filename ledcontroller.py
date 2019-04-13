@@ -134,8 +134,9 @@ if __name__ == "__main__":
         from mockleddevice import MockLedDevice
         led_device = MockLedDevice()
     else:
+        file = "configuration.json"
         from leddevice import LedDevice
-        led_device = LedDevice(Configuration())
+        led_device = LedDevice(Configuration(file))
 
     led_controller = LedController(led_device)
     delay = .1
