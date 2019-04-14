@@ -30,7 +30,6 @@ class DropTime:
                 self.led_controller.show()
             except Exception as e:
                 print(e)
-                traceback.print_exec()
                 time.sleep(10)
             time.sleep(.1)
 
