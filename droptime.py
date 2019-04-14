@@ -61,7 +61,7 @@ class DropTime:
         if card_id is not None:
             self.none_count = 0
 
-        if self.last_read != card_id and (card_id is not None or self.none_count > 2):
+        if self.last_read != card_id and (card_id is not None or self.none_count > 5):
             self.logger.log("Tag changed tag_id={}".format(card_id))
             # we had a last read so we must log the stop time of the tag
             if self.last_read is not None:
