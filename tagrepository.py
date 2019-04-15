@@ -71,6 +71,13 @@ class TagRepository:
         r = requests.post(url, json=body)
         return r.json()
 
+    def get_activity_labels(self, activity_id):
+        url = self.base_url + "/label/{}".format(activity_id)
+        print("url is {}".format(url))
+        r = requests.get(url)
+        out = r.json()
+        return out
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "test":

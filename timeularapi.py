@@ -2,16 +2,16 @@ import requests
 import datetime
 from configuration import Configuration
 from tagrepository import TagRepository
+import logging
 import json
 
 # 2019-03-31T16:57:02.000
 
 
 class TimularApi:
-    def __init__(self, configuration, tag_repository, logger):
+    def __init__(self, configuration, tag_repository):
         self.configuration = configuration
         self.base_url = self.configuration.get_value("timeular_api", "url")
-        self.logger = logger
         self.tag_repository = tag_repository;
 
     @staticmethod
@@ -23,14 +23,14 @@ class TimularApi:
         return current_time
 
     def get_activities(self, token):
-        self.logger.log("TimularApi get_activities")
+        logging.info("TimularApi get_activities")
         url = self.base_url + '/activities'
         my_headers = {'Authorization': 'Bearer ' + token}
         r = requests.get(url, headers=my_headers)
         return r.json()
 
     def get_tracking(self, token):
-        self.logger.log("TimularApi get_tracking")
+        logging.info("TimularApi get_tracking")
         url = self.base_url + '/tracking'
         my_headers = {'Authorization': 'Bearer ' + token}
         r = requests.get(url, headers=my_headers)
@@ -40,7 +40,7 @@ class TimularApi:
         return current_tracking["activity"]["id"]
 
     def stop_tracking(self, token, activity_id, stop_time=None):
-        self.logger.log("TimularApi stop_tracking " + str(activity_id))
+        logging.info("TimularApi stop_tracking " + str(activity_id))
         if stop_time is None:
             stop_time = TimularApi.get_utc_time()
         url = self.base_url + '/tracking/' + str(activity_id) + '/stop'
@@ -50,7 +50,8 @@ class TimularApi:
         return r.json()
 
     def start_tracking(self, token, activity_id, start_time=None):
-        self.logger.log("TimularApi start_tracking " + str(activity_id))
+        logging.info("TimularApi start_tracking " + str(activity_id))
+        labels = self.tag_repository.get_activity_labels(activity_id);
         if start_time is None:
             start_time = TimularApi.get_utc_time()
         current_tracking = self.get_tracking(token)
@@ -58,7 +59,7 @@ class TimularApi:
             self.stop_tracking(token, current_tracking, TimularApi.get_utc_time(True))
         url = self.base_url + '/tracking/' + str(activity_id) + '/start'
         my_headers = {'Authorization': 'Bearer ' + token}
-        body = {"startedAt": start_time, "note": {"text": None, "tags": [], "mentions": []}}
+        body = {"startedAt": start_time, "note": {"text": None, "tags": labels, "mentions": []}}
         print(body)
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
@@ -74,9 +75,8 @@ class TimularApi:
 if __name__ == "__main__":
     from debuglogger import DebugLogger
     file = "configuration.json"
-    logger = DebugLogger()
     configuration = Configuration(file)
-    p1 = TimularApi(configuration, TagRepository(configuration), logger)
+    p1 = TimularApi(configuration, TagRepository(configuration))
     #print(p1.get_token(1))
 
     # print(p1.api_key)

@@ -4,17 +4,15 @@ import sys
 from actions import Actions
 from timeularaction import TimeularAction
 from configuration import Configuration
-import traceback
-#from mockledcontroller import MockLedController
+import logging
 
 
 class DropTime:
 
-    def __init__(self, led_controller,  configuration, tag_repository, tag_reader, all_actions, my_logger):
+    def __init__(self, led_controller,  configuration, tag_repository, tag_reader, all_actions):
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
-        self.logger = my_logger
         self.none_count = 0
         self.tag_repository = tag_repository
         self.tag_start = None
@@ -23,7 +21,7 @@ class DropTime:
         self.led_controller = led_controller
 
     def run(self):
-        self.logger.log("started run")
+        logging.debug("started run")
         while True:
             try:
                 self.process_actions()
@@ -55,23 +53,23 @@ class DropTime:
 
     def process_actions(self):
         card_id = self.reader.read_card()
-        self.logger.log("card_id read is {}".format(card_id))
+        logging.debug("card_id read is {}".format(card_id))
         if card_id is None:
             self.none_count = self.none_count + 1
         if card_id is not None:
             self.none_count = 0
 
         if self.last_read != card_id and (card_id is not None or self.none_count > 5):
-            self.logger.log("Tag changed tag_id={}".format(card_id))
+            logging.info("Tag changed tag_id={}".format(card_id))
             # we had a last read so we must log the stop time of the tag
             if self.last_read is not None:
-                self.log_tag(self.last_read, self.tag_start, datetime.datetime.utcnow())
+                logging.info(self.last_read, self.tag_start, datetime.datetime.utcnow())
 
             # The tag_id is not null so we must give a start time
             if card_id is not None:
                 self.tag_start = datetime.datetime.utcnow()
 
-            self.logger.log("run - new id " + str(card_id))
+            logging.info("run - new id " + str(card_id))
             self.last_read = card_id
 
             action_result_list = self.actions.execute(card_id)
@@ -94,7 +92,7 @@ class DropTime:
                     total_time = action_result_list["time_spent"]
                     self.led_controller.start_progress(goal_time, total_time)
 
-            self.logger.log("Exiting process_actions")
+            logging.debug("Exiting process_actions")
 
     def show_blue(self):
         self.led_controller.show_non_result_display()
@@ -108,34 +106,27 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 2 and sys.argv[1] == "test":
         from mockrfireader import MockRfiReader
-        # from mockapi import MockApi
         from timeularapi import TimularApi
-        from debuglogger import DebugLogger
         from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
         led_device = MockLedDevice()
-        logger = DebugLogger()
         reader = MockRfiReader()
-        # api = MockApi()
         configuration = Configuration("debug_config.json")
         tag_repository = TagRepository(configuration)
-        api = TimularApi(configuration, tag_repository, logger)
+        api = TimularApi(configuration, tag_repository)
     else:
         from rfireader import RfiReader
         from timeularapi import TimularApi
-        from logger import Logger
         from leddevice import LedDevice
-        #from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
         configuration = Configuration("configuration.json")
         led_device = LedDevice(configuration)
-        logger = Logger()
         reader = RfiReader()
         tag_repository = TagRepository(configuration)
-        api = TimularApi(configuration, tag_repository, logger)
+        api = TimularApi(configuration, tag_repository)
 
-    actions = Actions(logger, TimeularAction(api, tag_repository, logger))
-    dropTime = DropTime(LedController(led_device), configuration, tag_repository, reader, actions, logger)
+    actions = Actions(TimeularAction(api, tag_repository))
+    dropTime = DropTime(LedController(led_device), configuration, tag_repository, reader, actions)
     dropTime.run()
 
 

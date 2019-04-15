@@ -130,7 +130,8 @@ class Activities(Resource):
     def get(self, activity_id):
         print(activity_id)
         conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from activities where activityid={}".format(activity_id))  # This line performs query and returns json result
+        query = conn.execute("select * from activities where activityid={}".format(
+            activity_id))  # This line performs query and returns json result
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
@@ -172,12 +173,11 @@ class ActivitiesList(Resource):
         activity_id = uuid.uuid4()
         querystring = "INSERT INTO activities (activityid, userid, name, color, show, integration, " \
                       "dailygoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')" \
-            .format(activity_id, activity["userid"], activity["name"], activity["color"], activity["show"], activity["integration"],
+            .format(activity_id, activity["userid"], activity["name"], activity["color"], activity["show"],
+                    activity["integration"],
                     activity["dailygoals"], activity["dailytimeSec"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok", "id": activity_id})
-
-
 
 
 # {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
@@ -298,7 +298,7 @@ class TagsToActions(Resource):
         conn = db_connect.connect()  # connect to database
         query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
                        "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
-                        action_type)
+                                                                                                         action_type)
         print(query_string)
         query = conn.execute(query_string)
         objects_list = []
@@ -329,7 +329,7 @@ class TagLog(Resource):
         taglog = request.json
         print(taglog)
         conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})"\
+        querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})" \
             .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
@@ -344,7 +344,7 @@ class TagLogQuery(Resource):
             query_string = "select sum(tl.totaltimes) from activities a " \
                            "join tagstoactions tta on a.activityid = tta.identifier and tta.actiontype = 1 " \
                            "join taglog tl on tl.tagid = tta.tagid where a.activityid = {} and " \
-                           "tl.start >= '{}' and tl.stop <= '{}'"\
+                           "tl.start >= '{}' and tl.stop <= '{}'" \
                 .format(activity_id, start, end)
 
         query = conn.execute(query_string)
@@ -363,6 +363,21 @@ class TagLogQuery(Resource):
         return objects_list[0]
 
 
+class Label(Resource):
+
+    def get(self, activity_id):
+        conn = db_connect.connect()  # connect to database
+
+        query_string = "select label from activitiestolabels where activityid = '{}'" \
+            .format(activity_id)
+
+        query = conn.execute(query_string)
+        objects_list = []
+        for row in query.cursor:
+            objects_list.append(row[0])
+        return objects_list
+
+
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
 api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>')  # Route_1
@@ -376,6 +391,7 @@ api.add_resource(Reminders, '/reminders/<reminder_id>')  # Route_1
 api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
 api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1
+api.add_resource(Label, '/label/<activity_id>')  # Route_1
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == "test":
