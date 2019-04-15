@@ -59,7 +59,15 @@ class TimularApi:
             self.stop_tracking(token, current_tracking, TimularApi.get_utc_time(True))
         url = self.base_url + '/tracking/' + str(activity_id) + '/start'
         my_headers = {'Authorization': 'Bearer ' + token}
-        body = {"startedAt": start_time, "note": {"text": None, "tags": labels, "mentions": []}}
+        text = " "
+        tags = []
+        start_tag = 1
+        for tag in labels:
+            text = text + tag
+            t = {"indices": [start_tag, len(tag) + start_tag]}
+            start_tag = len(text)
+            tags.append(t)
+        body = {"startedAt": start_time, "note": {"text": text, "tags": tags, "mentions": []}}
         print(body)
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
