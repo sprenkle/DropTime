@@ -18,4 +18,5 @@ INSERT INTO devices (name, description) VALUES ('','','');
 
 INSERT INTO devices (deviceid, name, description) VALUES ('08f98cd6-3602-41ee-aa27-a6768412254e','white tower', 'First attempt white tower');
 
+INSERT INTO reminders (reminderid, userid, "start", stop, showled, sunday, monday, tuesday, wednesday, thursday, friday, saturday) VALUES('', '', '', '', 0, 0, 0, 0, 0, 0, 0, 0);
 

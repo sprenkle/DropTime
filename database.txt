@@ -108,11 +108,22 @@ CREATE TABLE "reminderstodevices"
 (
     [reminderid] NVARCHAR(36) NOT NULL,
     [deviceid] NVARCHAR(36),
-    FOREIGN KEY ([deviceid]) REFERENCES "reminderstodevices" ([deviceid])
+    FOREIGN KEY ([deviceid]) REFERENCES "devices" ([deviceid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstodevices" ([reminderid]);
 
+CREATE TABLE "reminderstotags"
+(
+    [reminderid] NVARCHAR(36) NOT NULL,
+    [tagid] NVARCHAR(36),
+    [display] NVARCHAR(255),
+    FOREIGN KEY ([reminderid]) REFERENCES "fkreminderidreminderstotags" ([reminderid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+    FOREIGN KEY ([tagid]) REFERENCES "fktagidreminderstotags" ([tagid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstotags" ([reminderid]);
 
 
 

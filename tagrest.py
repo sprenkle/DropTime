@@ -184,28 +184,32 @@ class ActivitiesList(Resource):
 # "monday":"", "tuesday":"", "wednesday":"", "thursday":"", "friday":"", "saturday":"",
 # "integration":""}
 class Reminders(Resource):
-    def get(self, reminder_id):
+    def get(self, device_id):
         conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from reminders where reminderid='{}'".format(
-            reminder_id))  # This line performs query and returns json result
+        query = conn.execute("select rt.tagid, rt.display, rd.deviceid, r.* from reminders r join reminderstodevices rd on "
+                             "r.reminderid = rd.reminderid join reminderstotags rt on r.reminderid = rt.reminderid "
+                             "where rd.deviceid = '{}'".format(device_id))
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['reminderid'] = row[0]
-            d['userid'] = row[1]
-            d['start'] = row[2]
-            d['stop'] = row[3]
-            d['showled'] = row[4]
-            d['sunday'] = row[5]
-            d['monday'] = row[6]
-            d['tuesday'] = row[7]
-            d['wednesday'] = row[8]
-            d['thursday'] = row[9]
-            d['friday'] = row[10]
-            d['saturday'] = row[11]
+            d['tagid'] = row[0]
+            d['display'] = row[1]
+            d['deviceid'] = row[2]
+            d['reminderid'] = row[3]
+            d['userid'] = row[4]
+            d['start'] = row[5]
+            d['stop'] = row[6]
+            d['showled'] = row[7]
+            d['sunday'] = row[8]
+            d['monday'] = row[9]
+            d['tuesday'] = row[10]
+            d['wednesday'] = row[11]
+            d['thursday'] = row[12]
+            d['friday'] = row[13]
+            d['saturday'] = row[14]
 
             objects_list.append(d)
-        return objects_list[0]
+        return objects_list
 
     def put(self, reminder_id):
         reminder = request.json
@@ -226,10 +230,10 @@ class Reminders(Resource):
 
 
 class CurrentReminders(Resource):
+
     def get(self, current_time):
         conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from reminders where reminderid='{}'".format(
-            current_time))  # This line performs query and returns json result
+        query = conn.execute("select * from reminders")
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
@@ -247,7 +251,7 @@ class CurrentReminders(Resource):
             d['saturday'] = row[11]
 
             objects_list.append(d)
-        return objects_list[0]
+        return objects_list
 
     def put(self, reminder_id):
         reminder = request.json
@@ -387,7 +391,7 @@ api.add_resource(Devices, '/devices')  # Route_1
 api.add_resource(Tags, '/tags')  # Route_1
 api.add_resource(Activities, '/activities/<activity_id>')  # Route_1
 api.add_resource(ActivitiesList, '/activities')  # Route_1
-api.add_resource(Reminders, '/reminders/<reminder_id>')  # Route_1
+api.add_resource(Reminders, '/reminders/<device_id>')  # Route_1
 api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
 api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1
