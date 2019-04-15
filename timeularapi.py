@@ -51,7 +51,7 @@ class TimularApi:
 
     def start_tracking(self, token, activity_id, start_time=None):
         logging.info("TimularApi start_tracking " + str(activity_id))
-        labels = self.tag_repository.get_activity_labels(activity_id);
+        labels = self.tag_repository.get_activity_labels(activity_id)
         if start_time is None:
             start_time = TimularApi.get_utc_time()
         current_tracking = self.get_tracking(token)
@@ -59,9 +59,9 @@ class TimularApi:
             self.stop_tracking(token, current_tracking, TimularApi.get_utc_time(True))
         url = self.base_url + '/tracking/' + str(activity_id) + '/start'
         my_headers = {'Authorization': 'Bearer ' + token}
-        text = " "
+        text = ""
         tags = []
-        start_tag = 1
+        start_tag = 0
         for tag in labels:
             text = text + tag
             t = {"indices": [start_tag, len(tag) + start_tag]}
