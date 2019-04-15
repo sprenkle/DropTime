@@ -101,11 +101,11 @@ class TimeularAction:
                 self.api.stop_tracking(token, tag_to_action["identifier"])
 
     def current_tag_is_none(self):
-        self.logger.log("tag_id is none, returning")
+        logging.info("tag_id is none, returning")
         self.running_tag_id = None
         return {"ActionReturnType": "Unidentified"}
 
     def current_tag_not_in_repository(self):
-        self.logger.log("tag is not in repository, returning")
+        logging.info("tag is not in repository, returning")
         self.running_tag_id = None
         return {"ActionReturnType": "Unidentified"}

@@ -82,7 +82,7 @@ class DropTime:
                 if card_id is None:
                     self.led_controller.stop_progress()
                     self.led_controller.clear()
-                    self.logger.log("returned Result list = {}".format(action_result))
+                    logging.info("returned Result list = {}".format(action_result))
                 elif action_result == "NoDisplay":
                     self.led_controller.show_non_result_display()
                 elif action_result == "Unidentified":

@@ -73,7 +73,6 @@ class TimularApi:
 
 
 if __name__ == "__main__":
-    from debuglogger import DebugLogger
     file = "configuration.json"
     configuration = Configuration(file)
     p1 = TimularApi(configuration, TagRepository(configuration))

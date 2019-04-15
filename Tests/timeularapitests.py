@@ -7,8 +7,7 @@ class TestDropTime(unittest.TestCase):
 
     @mock.patch('timeularapi.TimularApi')
     @mock.patch('tagrepository.TagRepository')
-    @mock.patch('logger.Logger')
-    def test_initial_tag_detection_does_not_call_tag_logging(self, api, tag_repository, logger):
+    def test_initial_tag_detection_does_not_call_tag_logging(self, api, tag_repository):
         tag_id = "123"
         action = TimeularAction(api, tag_repository, logger)
         result = action.execute(tag_id)
