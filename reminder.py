@@ -16,6 +16,9 @@ class Reminder:
     def update(self):
         self.reminders = self.tag_repository.get_reminders(self.device_id)
 
+    def has_reminders(self):
+        return len(self.reminders) > 0
+
     # returns array of led values
     def get_display(self):
         current_dt = datetime.now()

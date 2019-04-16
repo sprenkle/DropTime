@@ -42,14 +42,12 @@ class DropTime:
             if self.has_reminder:
                 self.led_controller.clear()
             self.has_reminder = False
-            return;
+            return
         self.has_reminder = True
         led_display = []
         index = 0
         for i in range(4):
-            led = reminder_led_list[index]
-            for led_index in range(len(led)):
-                led_display.append(led[led_index])
+            led_display.append(eval(reminder_led_list[index]))
             index = i % len(reminder_led_list)
         self.led_controller.set_reminder(led_display)
 
@@ -78,11 +76,11 @@ class DropTime:
         if card_id is not None:
             self.none_count = 0
 
-        if self.last_read != card_id and (card_id is not None or self.none_count > 5):
+        if self.last_read != card_id and (card_id is not None or self.none_count > 2):
             logging.info("Tag changed tag_id={}".format(card_id))
             # we had a last read so we must log the stop time of the tag
             if self.last_read is not None:
-                logging.info(self.last_read, self.tag_start, datetime.datetime.utcnow())
+                self.log_tag(self.last_read, self.tag_start, datetime.datetime.utcnow())
 
             # The tag_id is not null so we must give a start time
             if card_id is not None:
@@ -95,7 +93,7 @@ class DropTime:
             action_result = action_result_list["ActionReturnType"]
 
             # determine how to display the led
-            if self.have_reminders():
+            if self.reminder.has_reminders():
                 self.process_reminders()
             else:
                 if card_id is None:
