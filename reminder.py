@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 class Reminder:
 
     def __init__(self, tag_repository, device_id):
@@ -17,32 +18,31 @@ class Reminder:
 
     # returns array of led values
     def get_display(self):
-        current_dt = datetime.now().time()
-        print(current_dt)
+        current_dt = datetime.now()
+        led_list = []
         for reminder in self.reminders:
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
+            dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.second)
+
             print(dt.time())
             print((timedelta(seconds=reminder["duration"]) + dt).time())
-            if dt.time() <= current_dt:
-                pass
 
-            if dt.time() <= current_dt <= (timedelta(seconds=reminder["duration"]) + dt).time():
+            if dt > current_dt:
+                dt = dt - timedelta(day=1)
+
+            if dt <= current_dt <= timedelta(seconds=reminder["duration"]) + dt:
+                led_list.append(reminder[""])
                 print("In time")
-            else:
-                print("not int time")
 
 
-
-
-            #hour = reminder["start"].hour
-            #minute = reminder["start"].minute
-            #second = reminder["start"].seconds
-            #print("{} {} {}".format(hour, minute, second))
+            # hour = reminder["start"].hour
+            # minute = reminder["start"].minute
+            # second = reminder["start"].seconds
+            # print("{} {} {}".format(hour, minute, second))
 
     # will be called when a tag is active
     def have_tag(self, tag_id):
         pass
-
 
 
 if __name__ == "__main__":
@@ -54,4 +54,3 @@ if __name__ == "__main__":
     _reminder = Reminder(TagRepository(_configuration), _device_id)
     _reminder.update()
     _reminder.get_display()
-
