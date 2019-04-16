@@ -113,7 +113,7 @@ class LedController:
         #     if index >= len(key_list):
         #         index = 0
         # self.led_device.show(led_array)
-        pass
+        self.led_device.show(self.reminder_list)
 
     def clear(self):
         self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
