@@ -6,6 +6,7 @@ from configuration import Configuration
 import collections
 import sys
 import uuid
+from datetime import datetime
 
 # uuid.uuid4()
 # 67460e74-02e3-11e8-b443-00163e990bdb
@@ -198,7 +199,7 @@ class Reminders(Resource):
             d['reminderid'] = row[3]
             d['userid'] = row[4]
             d['start'] = row[5]
-            d['stop'] = row[6]
+            d['duration'] = row[6]
             d['showled'] = row[7]
             d['sunday'] = row[8]
             d['monday'] = row[9]
@@ -239,8 +240,8 @@ class CurrentReminders(Resource):
             d = collections.OrderedDict()
             d['reminderid'] = row[0]
             d['userid'] = row[1]
-            d['start'] = row[2]
-            d['stop'] = row[3]
+            d['start'] = datetime.strptime(row[2], "%Y-%m-%dT%H:%M:%S.000")
+            d['duration'] = row[3]
             d['showled'] = row[4]
             d['sunday'] = row[5]
             d['monday'] = row[6]

@@ -89,7 +89,7 @@ CREATE TABLE "reminders"
     [reminderid] NVARCHAR(36) PRIMARY KEY NOT NULL,
     [userid] NVARCHAR(36),
     [start] NVARCHAR(23)  NOT NULL,
-    [stop] NVARCHAR(23)  NOT NULL,
+    [duration] int  NOT NULL,
     [showled] INTEGER(1) NOT NULL,
     [sunday] INTEGER(1) NOT NULL,
     [monday] INTEGER(1) NOT NULL,
