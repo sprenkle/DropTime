@@ -126,4 +126,3 @@ CREATE TABLE "reminderstotags"
 CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstotags" ([reminderid]);
 
 
-

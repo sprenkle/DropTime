@@ -23,26 +23,25 @@ class Reminder:
         for reminder in self.reminders:
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
             dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.second)
-
-            print(dt.time())
-            print((timedelta(seconds=reminder["duration"]) + dt).time())
-
             if dt > current_dt:
                 dt = dt - timedelta(day=1)
 
             if dt <= current_dt <= timedelta(seconds=reminder["duration"]) + dt:
-                led_list.append(reminder[""])
-                print("In time")
+                if reminder in self.resolved:
+                    continue
+                led_list.append(reminder["display"])
+            else:
+                if reminder in self.resolved:
+                    self.resolved.remove(reminder)
 
+        return led_list
 
-            # hour = reminder["start"].hour
-            # minute = reminder["start"].minute
-            # second = reminder["start"].seconds
-            # print("{} {} {}".format(hour, minute, second))
 
     # will be called when a tag is active
     def have_tag(self, tag_id):
-        pass
+        for reminder in self.reminders:
+            if reminder["tagid"] == tag_id and reminder not in self.resolved:
+                self.resolved.append(reminder)
 
 
 if __name__ == "__main__":
@@ -53,4 +52,4 @@ if __name__ == "__main__":
     _device_id = _configuration.get_value("device", "device_id")
     _reminder = Reminder(TagRepository(_configuration), _device_id)
     _reminder.update()
-    _reminder.get_display()
+    print(_reminder.get_display())

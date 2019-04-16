@@ -6,7 +6,7 @@ import sys
 class LedController:
 
     def __init__(self, led_device):
-        self.reminder_dict = dict()
+        self.reminder_list = []
         self.led_device = led_device
         self.deleting_showing = False
         self.progress_active = False
@@ -15,7 +15,7 @@ class LedController:
         self.progress_started_time = None
 
     def have_reminder(self):
-        return len(self.reminder_dict.keys()) > 0
+        return len(self.reminder_list) > 0
 
     def start_progress(self, goal_time, start_amount):
         self.progress_active = True
@@ -29,14 +29,15 @@ class LedController:
 
     # This takes a reminder_id and a array of 6 sets of ints that
     # will turn the lights on
-    def set_reminder(self, reminder_id, leds):
-        self.reminder_dict[reminder_id] = leds
+    def set_reminder(self, leds):
+        self.reminder_list = leds
 
     def remove_reminder(self, reminder_id):
-        if reminder_id in self.reminder_dict:
-            del self.reminder_dict[reminder_id]
-        if len(self.reminder_dict) == 0:
-            self.deleting_showing = True
+        # if reminder_id in self.reminder_dict:
+        #     del self.reminder_dict[reminder_id]
+        # if len(self.reminder_dict) == 0:
+        #     self.deleting_showing = True
+        pass
 
     def show(self):
         if self.deleting_showing:
@@ -53,6 +54,12 @@ class LedController:
         else:
             if self.progress_active:
                 self.show_progress()
+            else:
+                self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
     def show_progress(self):
         if not isinstance(self.progress_goal_time_sec, int):  # todo fix this
@@ -89,20 +96,24 @@ class LedController:
 
         self.led_device.show(led_array)
 
-    def show_reminder(self):
-        key_list = list(self.reminder_dict.keys())
-        if len(key_list) == 0:
-            return
-        led_array = []
-        index = 0
-        for i in range(4):
-            s = self.reminder_dict[key_list[index]]
-            for j in range(6):
-                led_array.append(s[j])
-            index += 1
-            if index >= len(key_list):
-                index = 0
+    def show_led(self, led_array):
         self.led_device.show(led_array)
+
+    def show_reminder(self):
+        # key_list = list(self.reminder_dict.keys())
+        # if len(key_list) == 0:
+        #     return
+        # led_array = []
+        # index = 0
+        # for i in range(4):
+        #     s = self.reminder_dict[key_list[index]]
+        #     for j in range(6):
+        #         led_array.append(s[j])
+        #     index += 1
+        #     if index >= len(key_list):
+        #         index = 0
+        # self.led_device.show(led_array)
+        pass
 
     def clear(self):
         self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],

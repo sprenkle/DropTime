@@ -5,11 +5,12 @@ from actions import Actions
 from timeularaction import TimeularAction
 from configuration import Configuration
 import logging
+from reminder import Reminder
 
 
 class DropTime:
 
-    def __init__(self, led_controller,  configuration, tag_repository, tag_reader, all_actions):
+    def __init__(self, led_controller,  configuration, tag_repository, tag_reader, all_actions, reminder):
         self.reader = tag_reader
         self.last_read = None
         self.actions = all_actions
@@ -19,12 +20,16 @@ class DropTime:
         self.configuration = configuration
         self.device_id = self.configuration.get_value("device", "device_id")
         self.led_controller = led_controller
+        self.reminder = reminder
+        self.has_reminder = False
 
     def run(self):
         logging.debug("started run")
         while True:
             try:
+                self.reminder.update()
                 self.process_actions()
+                self.process_reminders()
                 self.led_controller.show()
             except Exception as e:
                 print(e)
@@ -32,7 +37,21 @@ class DropTime:
             time.sleep(.1)
 
     def process_reminders(self):
-        pass
+        reminder_led_list = self.reminder.get_display()
+        if len(reminder_led_list) == 0:
+            if self.has_reminder:
+                self.led_controller.clear()
+            self.has_reminder = False
+            return;
+        self.has_reminder = True
+        led_display = []
+        index = 0
+        for i in range(4):
+            led = reminder_led_list[index]
+            for led_index in range(len(led)):
+                led_display.append(led[led_index])
+            index = i % len(reminder_led_list)
+        self.led_controller.set_reminder(led_display)
 
     def have_reminders(self):
         return False
@@ -125,8 +144,9 @@ if __name__ == "__main__":
         tag_repository = TagRepository(configuration)
         api = TimularApi(configuration, tag_repository)
 
+    device_id = configuration.get_value("device", "device_id")
     actions = Actions(TimeularAction(api, tag_repository))
-    dropTime = DropTime(LedController(led_device), configuration, tag_repository, reader, actions)
+    dropTime = DropTime(LedController(led_device), configuration, tag_repository, reader, actions, Reminder(tag_repository, device_id))
     dropTime.run()
 
 
