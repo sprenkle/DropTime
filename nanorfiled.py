@@ -4,8 +4,7 @@ import serial
 class NanoRfiLed:
 
     def __init__(self):
-        self.s = serial.Serial(port='COM4', baudrate=9600, bytesize=serial.EIGHTBITS,
-                               parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
+        self.s = serial.Serial(port='COM4', baudrate=9600)
         #self.s.open()
 
     def read_card(self):
@@ -15,14 +14,14 @@ class NanoRfiLed:
             return int(out)
 
     def show(self, led_patterns):
-        outstring = ""
-        for i in range(24):
-            pixels = (led_patterns[i][0] * 256 * 256) + (led_patterns[i][1] * 256) + led_patterns[i][2]
-            outstring = outstring + " " + str(pixels)
-        outstring = outstring + " "
-        encodeString = outstring.encode()
-        print(encodeString)
-        self.s.write(encodeString)
+        self.s.write("led".encode())
+
+        print(self.s.readline())
+
+      #  print(self.s.read_all())
+        # for i in range(1):
+        #     #pixels = (led_patterns[i][0] * 256 * 256) + (led_patterns[i][1] * 256) + led_patterns[i][2]
+        #     self.s.write("255".encode())
 
     def clear(self):
         self.show([[0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
@@ -43,6 +42,6 @@ if __name__ == "__main__":
      [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
      [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
      [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0]]
-    nano.clear()
+    nano.show(leds)
 
 
