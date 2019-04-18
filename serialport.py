@@ -1,8 +1,35 @@
+#!/usr/bin/python
 import serial
+#import syslog
+import time
+import serial
+import time
+port = "com4"
+speed = 9600
+valueToWrite = "r"
+try:
+    arduino = serial.Serial()
+    arduino.port = "COM4"
+    arduino.baudrate = 9600
+    arduino.timeout = 1
+    arduino.setDTR(False)
+    # arduinoSerialData.setRTS(False)
+    arduino.open()
 
-arduino = serial.Serial('COM4', 115200, timeout=.1)
 
-while True:
-	data = arduino.readline()[:-2] #the last bit gets rid of the new-line chars
-	if data:
-		print (data)
+#    time.sleep(2)
+    print("Connection to " + port + " established succesfully!\n")
+except Exception as e:
+    print(e)
+
+#Note: for characters such as 'a' I set data = b'a' to convert the data in bytes
+#However the same thing does not work with numbers...
+data = 0
+
+
+data = arduino.write(valueToWrite.encode())
+time.sleep(.2)
+out = arduino.readline()
+num = int(out.strip().decode()) & 0xffffffff
+print(num)
+arduino.close()

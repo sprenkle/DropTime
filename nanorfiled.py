@@ -1,32 +1,41 @@
 import serial
+import time
 
 
 class NanoRfiLed:
 
     def __init__(self):
-        self.s = serial.Serial(port='COM4', baudrate=9600)
-        #self.s.open()
+       # self.arduino = serial.Serial(port='COM4', baudrate=9600)
+        try:
+            self.arduino = serial.Serial()
+            self.arduino.port = "COM4"
+            self.arduino.baudrate = 115200
+            self.arduino.timeout = 1
+            self.arduino.setDTR(False)
+            # arduinoSerialData.setRTS(False)
+            self.arduino.open()
+
+            print("Connection to 9600 established succesfully!\n")
+        except Exception as e:
+            print(e)
 
     def read_card(self):
-        if self.s.inWaiting() > 0:
-            out = str(self.s.readline())
-            out = out[2:len(out)-5]
-            return int(out)
+        self.arduino.write("r".encode())
+        time.sleep(.1)
+        out = self.arduino.readline()
+        num = int(out.strip().decode()) & 0xffffffff
+        return num
 
     def show(self, led_patterns):
-        self.s.write("led".encode())
-
-        print(self.s.readline())
-
-      #  print(self.s.read_all())
-        # for i in range(1):
-        #     #pixels = (led_patterns[i][0] * 256 * 256) + (led_patterns[i][1] * 256) + led_patterns[i][2]
-        #     self.s.write("255".encode())
+        self.arduino.write("l".encode())
+        for i in range(24):
+            pixels = (led_patterns[i][0] * 256 * 256) + (led_patterns[i][1] * 256) + led_patterns[i][2]
+            self.arduino.write((str(pixels) + " ").encode())
 
     def clear(self):
         self.show([[0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 255, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
@@ -41,7 +50,5 @@ if __name__ == "__main__":
      [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
      [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
      [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
-     [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0]]
+     [0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     nano.show(leds)
-
-
