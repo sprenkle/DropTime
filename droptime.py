@@ -27,16 +27,19 @@ class DropTime:
         logging.debug("started run")
         while True:
             try:
+                card_id = self.reader.read_card()
+                logging.debug("card_id read is {}".format(card_id))
                 self.reminder.update()
-                self.process_actions()
-                self.process_reminders()
+                self.process_actions(card_id)
+                self.process_reminders(card_id)
                 self.led_controller.show()
             except Exception as e:
                 print(e)
                 time.sleep(10)
             time.sleep(.1)
 
-    def process_reminders(self):
+    def process_reminders(self, card_id):
+        self.reminder.have_tag(card_id)
         reminder_led_list = self.reminder.get_display()
         if len(reminder_led_list) == 0:
             if self.has_reminder:
@@ -47,7 +50,9 @@ class DropTime:
         led_display = []
         index = 0
         for i in range(4):
-            led_display.append(eval(reminder_led_list[index]))
+            for j in range(6):
+                value = eval(reminder_led_list[index])[j]
+                led_display.append(value)
             index = i % len(reminder_led_list)
         self.led_controller.set_reminder(led_display)
 
@@ -68,9 +73,7 @@ class DropTime:
                 return True  # not showing result, led will show blue
         return False # not showing result, led will show blue
 
-    def process_actions(self):
-        card_id = self.reader.read_card()
-        logging.debug("card_id read is {}".format(card_id))
+    def process_actions(self, card_id):
         if card_id is None:
             self.none_count = self.none_count + 1
         if card_id is not None:
@@ -122,12 +125,12 @@ if __name__ == "__main__":
     from ledcontroller import LedController
 
     if len(sys.argv) == 2 and sys.argv[1] == "test":
-        from mockrfireader import MockRfiReader
+        from nanorfiled import NanoRfiLed
         from timeularapi import TimularApi
-        from mockleddevice import MockLedDevice
         from tagrepository import TagRepository
-        led_device = MockLedDevice()
-        reader = MockRfiReader()
+        nano = NanoRfiLed()
+        led_device = nano
+        reader = nano
         configuration = Configuration("debug_config.json")
         tag_repository = TagRepository(configuration)
         api = TimularApi(configuration, tag_repository)

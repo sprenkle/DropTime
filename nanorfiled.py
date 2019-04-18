@@ -9,7 +9,7 @@ class NanoRfiLed:
         try:
             self.arduino = serial.Serial()
             self.arduino.port = "COM4"
-            self.arduino.baudrate = 115200
+            self.arduino.baudrate = 19200
             self.arduino.timeout = 1
             self.arduino.setDTR(False)
             # arduinoSerialData.setRTS(False)
@@ -22,20 +22,30 @@ class NanoRfiLed:
     def read_card(self):
         self.arduino.write("r".encode())
         time.sleep(.1)
-        out = self.arduino.readline()
-        num = int(out.strip().decode()) & 0xffffffff
+        out = self.arduino.readline().decode().strip()
+        num = int(out.strip()) & 0xffffffff
+        if num == 0:
+            return None
         return num
 
     def show(self, led_patterns):
-        self.arduino.write("l".encode())
+        p = "l "
+        self.arduino.write(p.encode())
         for i in range(24):
+            print(i)
+            value = led_patterns[i][0]
+            value1 = led_patterns[i][1]
+            value2 = led_patterns[i][1]
             pixels = (led_patterns[i][0] * 256 * 256) + (led_patterns[i][1] * 256) + led_patterns[i][2]
-            self.arduino.write((str(pixels) + " ").encode())
+            p = (str(pixels) + " ")
+            print(p)
+            self.arduino.write(p.encode())
+          #  time.sleep(.01)
 
     def clear(self):
-        self.show([[0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+        self.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                              [0, 0, 0], [0, 255, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
@@ -50,5 +60,11 @@ if __name__ == "__main__":
      [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
      [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
      [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
-     [0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+     [0, 0, 255], [255, 0, 0], [0, 255, 0], [0, 255, 0]]
+
+    # leds = [[0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 255, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     nano.show(leds)
