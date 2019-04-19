@@ -29,12 +29,12 @@ class DropTime:
             try:
                 card_id = self.reader.read_card()
                 logging.debug("card_id read is {}".format(card_id))
-                self.reminder.update()
+               # self.reminder.update()
                 self.process_actions(card_id)
-                self.process_reminders(card_id)
+               # self.process_reminders(card_id)
                 self.led_controller.show()
             except Exception as e:
-                print(e)
+                print(e.with_traceback())
                 time.sleep(10)
             time.sleep(.1)
 
