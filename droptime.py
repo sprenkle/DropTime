@@ -29,12 +29,12 @@ class DropTime:
             try:
                 card_id = self.reader.read_card()
                 logging.debug("card_id read is {}".format(card_id))
-               # self.reminder.update()
+                self.reminder.update()
                 self.process_actions(card_id)
-               # self.process_reminders(card_id)
+                self.process_reminders(card_id)
                 self.led_controller.show()
             except Exception as e:
-                print(e.with_traceback())
+                print(e)
                 time.sleep(10)
             time.sleep(.1)
 
@@ -59,19 +59,6 @@ class DropTime:
     def have_reminders(self):
         return False
 
-    def process_results(self, result_list):
-        for result in result_list:
-            if result is not None and "has_progress" in result:
-                if result["has_progress"]:
-                    print(result["has_progress"])
-                    goal_time = result["goal_time"]
-                    start_amount = result["total_amount_time"]
-                    self.led_controller.start_progress(goal_time, start_amount)
-                    return False  # not showing result, led will show blue
-                else:
-                    self.led_controller.stop_progress()
-                return True  # not showing result, led will show blue
-        return False # not showing result, led will show blue
 
     def process_actions(self, card_id):
         if card_id is None:
@@ -97,7 +84,8 @@ class DropTime:
 
             # determine how to display the led
             if self.reminder.has_reminders():
-                self.process_reminders()
+                pass
+             #   self.process_reminders()
             else:
                 if card_id is None:
                     self.led_controller.stop_progress()
@@ -114,8 +102,6 @@ class DropTime:
 
             logging.debug("Exiting process_actions")
 
-    def show_blue(self):
-        self.led_controller.show_non_result_display()
 
     def log_tag(self, tag_id, start, end):
         self.tag_repository.log_tag(tag_id, self.device_id, start, end)
@@ -125,12 +111,12 @@ if __name__ == "__main__":
     from ledcontroller import LedController
 
     if len(sys.argv) == 2 and sys.argv[1] == "test":
-        from nanorfiled import NanoRfiLed
         from timeularapi import TimularApi
         from tagrepository import TagRepository
-        nano = NanoRfiLed()
-        led_device = nano
-        reader = nano
+        from mockleddevice import MockLedDevice
+        from mockrfireader import MockRfiReader
+        led_device = MockLedDevice()
+        reader = MockRfiReader()
         configuration = Configuration("debug_config.json")
         tag_repository = TagRepository(configuration)
         api = TimularApi(configuration, tag_repository)

@@ -25,10 +25,10 @@ except Exception as e:
 #Note: for characters such as 'a' I set data = b'a' to convert the data in bytes
 #However the same thing does not work with numbers...
 data = 0
-for i in range(100):
+data = arduino.write("c".encode())
+for i in range(1000):
 
     data = arduino.write(valueToWrite.encode())
-    time.sleep(.2)
     out = arduino.readline()
     num = int(out.strip().decode()) & 0xffffffff
     print(num)

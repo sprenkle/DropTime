@@ -22,7 +22,10 @@ class NanoRfiLed:
     def read_card(self):
         self.arduino.read_all()
         self.arduino.write("r".encode())
+       # time.sleep(1)
         out = self.arduino.readline().decode().strip()
+        if out == '':
+            return 0
         num = int(out) & 0xffffffff
         if num == 0:
             return None
@@ -30,20 +33,18 @@ class NanoRfiLed:
 
     def show(self, led_patterns):
         p = "l "
-        if not self.arduino.is_open:
-            self.arduino.open()
-            print("PORT WAS NOT OPEN -----------------------------")
         self.arduino.write(p.encode())
+        #time.sleep(1)
         for i in range(24):
            # print(i)
             value = led_patterns[i][0]
             value1 = led_patterns[i][1]
-            value2 = led_patterns[i][1]
+            value2 = led_patterns[i][2]
             pixels = (led_patterns[i][0] * 256 * 256) + (led_patterns[i][1] * 256) + led_patterns[i][2]
             p = (str(pixels) + " ")
          #   print(p)
             self.arduino.write(p.encode())
-          #  time.sleep(.01)
+            #time.sleep(1)
 
     def clear(self):
         self.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
@@ -55,19 +56,21 @@ class NanoRfiLed:
 
 if __name__ == "__main__":
     nano = NanoRfiLed()
-    while True:
-        out = nano.read_card()
-        if out is not None:
-            print(str(out))
-    # leds = [[0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
-    #  [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
-    #  [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
-    #  [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
-    #  [0, 0, 255], [255, 0, 0], [0, 255, 0], [0, 255, 0]]
-    #
-    # # leds = [[0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-    # #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-    # #                           [0, 0, 0], [0, 255, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-    # #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-    # #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
-    # nano.show(leds)
+    nano.clear()
+    # while True:
+    #     out = nano.read_card()
+    #     if out is not None:
+    #         print(str(out))
+    leds = [[0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
+            [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
+            [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
+            [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
+            [0, 0, 255], [255, 0, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]]
+
+    # leds = [[0, 0, 255], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 255, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+    #                           [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    nano.show(leds)
+    time.sleep(5)
