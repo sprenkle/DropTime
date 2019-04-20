@@ -6,38 +6,22 @@ import sys
 class LedController:
 
     def __init__(self, led_device):
-        self.reminder_list = []
         self.led_device = led_device
-        self.deleting_showing = False
-        self.progress_active = False
-        self.progress_goal_time_sec = 0
-        self.progress_start_amount_time_sec = 0
-        self.progress_started_time = None
+        self.reminder_leds = None
+        self.progress_leds = None
 
-    def have_reminder(self):
-        return len(self.reminder_list) > 0
-
-    def start_progress(self, goal_time, start_amount):
-        self.progress_active = True
-        self.progress_started_time = datetime.datetime.utcnow()
-        self.progress_goal_time_sec = goal_time
-        self.progress_start_amount_time_sec = start_amount
-
-    def stop_progress(self):
-        self.progress_active = False
-        self.deleting_showing = True
-
-    # This takes a reminder_id and a array of 6 sets of ints that
-    # will turn the lights on
     def set_reminder(self, leds):
-        self.reminder_list = leds
+        self.reminder_leds = leds
 
-    def remove_reminder(self, reminder_id):
-        # if reminder_id in self.reminder_dict:
-        #     del self.reminder_dict[reminder_id]
-        # if len(self.reminder_dict) == 0:
-        #     self.deleting_showing = True
-        pass
+    def clear_reminder(self):
+        self.reminder_leds = None
+
+    def set_progress(self, leds):
+        self.progress_leds = leds
+
+    def clear_progress(self):
+        self.progress_leds = None
+
 
     def show(self):
         if self.deleting_showing:

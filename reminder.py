@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 class Reminder:
 
-    def __init__(self, tag_repository, device_id):
+    def __init__(self, tag_repository, device_id, led_controller):
         self.reminders = []
         self.active = []
         self.resolved = []
@@ -11,6 +11,7 @@ class Reminder:
         self.last_update = None
         self.device_id = device_id
         self.next_start = None
+        self.led_controller = led_controller
 
     # updates the reminders from repository
     def update(self):
@@ -36,7 +37,6 @@ class Reminder:
             else:
                 if reminder in self.resolved:
                     self.resolved.remove(reminder)
-
         return led_list
 
 
@@ -45,6 +45,25 @@ class Reminder:
         for reminder in self.reminders:
             if reminder["tagid"] == tag_id and reminder not in self.resolved:
                 self.resolved.append(reminder)
+        self.get_display()
+
+    def process_reminders(self, card_id):
+        self.have_tag(card_id)
+        reminder_led_list = self.reminder.get_display()
+        if len(reminder_led_list) == 0:
+            if self.has_reminder:
+                self.led_controller.clear()
+            self.has_reminder = False
+            return
+        self.has_reminder = True
+        led_display = []
+        index = 0
+        for i in range(4):
+            for j in range(6):
+                value = eval(reminder_led_list[index])[j]
+                led_display.append(value)
+            index = i % len(reminder_led_list)
+        self.led_controller.set_reminder(led_display)
 
 
 if __name__ == "__main__":
