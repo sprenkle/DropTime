@@ -16,14 +16,8 @@ class LedDevice:
                                    pixel_order=order)
 
     def show(self, led_patterns):
-        print(led_patterns)
         for i in range(self.num_pixels):
-            values = eval(led_patterns[i])
-            p1 = values[0]
-            p2 = values[1]
-            p3 = values[2]
-
-            self.pixels[i] = (p1, p2, p3)
+            self.pixels[i] = (led_patterns[i][0], led_patterns[i][1], led_patterns[i][2])
         self.pixels.show()
 
     def clear(self):
