@@ -1,11 +1,12 @@
 import time
 import datetime
-import sys
 from actions import Actions
 from timeularaction import TimeularAction
 from configuration import Configuration
 import logging
 from reminder import Reminder
+import sys
+import traceback
 
 
 class DropTime:
@@ -33,6 +34,7 @@ class DropTime:
                 self.reminder.have_tag(card_id)
                 self.led_controller.show()
             except Exception as e:
+                traceback.print_exc(file=sys.stdout)
                 print(e)
                 time.sleep(10)
             time.sleep(.1)
