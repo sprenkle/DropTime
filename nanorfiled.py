@@ -19,7 +19,7 @@ class NanoRfiLed:
         except Exception as e:
             print(e)
 
-    def read_card(self):
+    def read_tag(self):
         self.arduino.read_all()
         self.arduino.write("r".encode())
        # time.sleep(1)

@@ -26,7 +26,7 @@ class DropTime:
         logging.debug("started run")
         while True:
             try:
-                card_id = self.reader.read_card()
+                card_id = self.reader.read_tag()
                 logging.debug("card_id read is {}".format(card_id))
                 self.reminder.update()
                 self.process_actions(card_id)
