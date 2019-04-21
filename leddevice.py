@@ -17,9 +17,9 @@ class LedDevice:
 
     def show(self, led_patterns):
         for i in range(self.num_pixels):
-            p1 = int(led_patterns[i][0])
-            p2 = int(led_patterns[i][1])
-            p3 = int(led_patterns[i][2])
+            p1 = led_patterns[i][0]
+            p2 = led_patterns[i][1]
+            p3 = led_patterns[i][2]
             self.pixels[i] = (p1, p2, p3)
         self.pixels.show()
 
