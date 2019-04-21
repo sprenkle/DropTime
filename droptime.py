@@ -22,9 +22,9 @@ class DropTime:
         self.reminder = reminder
         self.has_reminder = False
 
-    def run(self):
+    def run(self, num_runs):
         logging.debug("started run")
-        while True:
+        while num_runs == -1 or num_runs <= num_runs:
             try:
                 card_id = self.reader.read_tag()
                 logging.debug("card_id read is {}".format(card_id))
@@ -88,6 +88,6 @@ if __name__ == "__main__":
     actions = Actions(TimeularAction(api, tag_repository, led_controller))
     dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions,
                         Reminder(tag_repository, device_id, led_controller))
-    dropTime.run()
+    dropTime.run(-1)
 
 
