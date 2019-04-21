@@ -82,11 +82,12 @@ if __name__ == "__main__":
         led_controller = LedController(led_device)
         reader = RfiDevice()
         tag_repository = TagRepository(configuration)
-        api = TimularApi(configuration, tag_repository, led_controller)
+        api = TimularApi(configuration, tag_repository)
 
     device_id = configuration.get_value("device", "device_id")
-    actions = Actions(TimeularAction(api, tag_repository))
-    dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions, Reminder(tag_repository, device_id))
+    actions = Actions(TimeularAction(api, tag_repository, led_controller))
+    dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions,
+                        Reminder(tag_repository, device_id, led_controller))
     dropTime.run()
 
 
