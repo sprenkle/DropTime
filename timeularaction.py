@@ -1,14 +1,16 @@
 import datetime
 import logging
 
+
 class TimeularAction:
 
-    def __init__(self, api, tag_repository):
+    def __init__(self, api, tag_repository, led_controller):
         self.running_tag_id = None
         self.api = api
         self.tag_repository = tag_repository
         self.user_to_token_dict = dict()
         self.id = 1
+        self.led_controller = led_controller
 
     def get_id(self):
         return self.id
@@ -40,7 +42,7 @@ class TimeularAction:
 
         if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity or \
                 "" == activity["dailygoals"]:
-            return {"ActionReturnType": "NoDisplay"}
+            self.led_controller.set_have_tracking_tag()
 
         time_spent = 0
 
@@ -79,9 +81,7 @@ class TimeularAction:
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
 
-        return {"ActionReturnType": "Progress", "goal_total": activity["dailytimeSec"], "time_spent": time_spent}
-
-        return {"ActionReturnType": "NoDisplay"}
+        self.led_controller.set_progress(self, activity["dailytimeSec"], time_spent)
 
     def get_token(self, user_id):
         if user_id not in self.user_to_token_dict:
@@ -103,9 +103,9 @@ class TimeularAction:
     def current_tag_is_none(self):
         logging.info("tag_id is none, returning")
         self.running_tag_id = None
-        return {"ActionReturnType": "Unidentified"}
+        self.led_controller.clear_tag()
 
     def current_tag_not_in_repository(self):
         logging.info("tag is not in repository, returning")
         self.running_tag_id = None
-        return {"ActionReturnType": "Unidentified"}
+        self.led_controller.set_unknown_tag()
