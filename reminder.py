@@ -16,11 +16,16 @@ class Reminder:
     # updates the reminders from repository
     def update(self):
         self.reminders = self.tag_repository.get_reminders(self.device_id)
+        self.get_display()
 
     def has_reminders(self):
         return len(self.reminders) > 0
 
-    # returns array of led values
+    def have_tag(self, tag_id):
+        for reminder in self.reminders:
+            if reminder["tagid"] == tag_id and reminder not in self.resolved:
+                self.resolved.append(reminder)
+
     def get_display(self):
         current_dt = datetime.now()
         led_list = []
@@ -28,24 +33,18 @@ class Reminder:
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
             dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.second)
             if dt > current_dt:
-                dt = dt - timedelta(day=1)
-
-            if dt <= current_dt <= timedelta(seconds=reminder["duration"]) + dt:
+                dt = dt - timedelta(days=1)
+            duration = reminder["duration"]
+            end_time = (dt + timedelta(seconds=duration))
+            if dt <= current_dt <= end_time:
                 if reminder in self.resolved:
                     continue
                 led_list.append(reminder["display"])
             else:
                 if reminder in self.resolved:
                     self.resolved.remove(reminder)
-        return led_list
-
-
-    # will be called when a tag is active
-    def have_tag(self, tag_id):
-        for reminder in self.reminders:
-            if reminder["tagid"] == tag_id and reminder not in self.resolved:
-                self.resolved.append(reminder)
-        self.get_display()
+        if len(led_list) > 0:
+            self.led_controller.set_reminder(led_list)
 
     def process_reminders(self, card_id):
         self.have_tag(card_id)
