@@ -31,7 +31,7 @@ class Reminder:
         led_list = []
         for reminder in self.reminders:
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
-            dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.second)
+            dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.minute, dt.second)
             if dt > current_dt:
                 dt = dt - timedelta(days=1)
             duration = reminder["duration"]
@@ -45,6 +45,8 @@ class Reminder:
                     self.resolved.remove(reminder)
         if len(led_list) > 0:
             self.led_controller.set_reminder(led_list)
+        else:
+            self.led_controller.clear_reminder()
 
     def process_reminders(self, card_id):
         self.have_tag(card_id)
