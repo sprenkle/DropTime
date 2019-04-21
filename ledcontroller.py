@@ -8,7 +8,22 @@ class LedController:
     def __init__(self, led_device):
         self.led_device = led_device
         self.reminder_leds = None
-        self.progress_leds = None
+        self.progress_goal_time_sec = 0
+        self.progress_start_amount_time_sec = 0
+        self.progress_started_time = datetime.datetime.now()
+        self.tracking_progress = False
+        self.have_unknown_tag = False
+        self.have_tracking_tag = False
+
+    def set_unknown_tag(self):
+        self.have_unknown_tag = True
+
+    def set_have_tracking_tag(self):
+        self.have_tracking_tag = True
+
+    def clear_tag(self):
+        self.have_unknown_tag = False
+        self.have_tracking_tag = False
 
     def set_reminder(self, leds):
         self.reminder_leds = leds
@@ -16,38 +31,36 @@ class LedController:
     def clear_reminder(self):
         self.reminder_leds = None
 
-    def set_progress(self, leds):
-        self.progress_leds = leds
+    def set_progress(self, goal_time, previous_time):
+        self.progress_goal_time_sec = goal_time
+        self.progress_start_amount_time_sec = previous_time
+        self.progress_started_time = datetime.datetime.now()
+        self.tracking_progress = True
 
     def clear_progress(self):
-        self.progress_leds = None
-
+        self.tracking_progress = False
 
     def show(self):
-        if self.deleting_showing:
-            self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                  [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                  [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                  [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                  [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
-            self.deleting_showing = False
-            self.progress_active = False
+        if self.reminder_leds is not None:
+            self.led_device.show(self.reminder_leds)
+            return
 
-        if self.have_reminder():
-            self.show_reminder()
-        else:
-            if self.progress_active:
-                self.show_progress()
-            else:
-                self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
-                                      [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        if self.tracking_progress:
+            self.show_progress()
+
+        if self.have_tracking_tag:
+            self.show_tracking_display()
+
+        if self.have_unknown_tag:
+            self.show_unknown_tag()
+
+        self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
     def show_progress(self):
-        if not isinstance(self.progress_goal_time_sec, int):  # todo fix this
-            return
         total_time = self.progress_start_amount_time_sec + \
                      (datetime.datetime.utcnow() - self.progress_started_time).seconds
         percent = total_time / int(self.progress_goal_time_sec)
@@ -65,7 +78,7 @@ class LedController:
             else:
                 result_over = 24
         led_array = []
-        index = 0;
+        index = 0
         for i in range(result_under):
             led_array.append([0, 255, 0])
             index += 1
@@ -83,22 +96,6 @@ class LedController:
     def show_led(self, led_array):
         self.led_device.show(led_array)
 
-    def show_reminder(self):
-        # key_list = list(self.reminder_dict.keys())
-        # if len(key_list) == 0:
-        #     return
-        # led_array = []
-        # index = 0
-        # for i in range(4):
-        #     s = self.reminder_dict[key_list[index]]
-        #     for j in range(6):
-        #         led_array.append(s[j])
-        #     index += 1
-        #     if index >= len(key_list):
-        #         index = 0
-        # self.led_device.show(led_array)
-        self.led_device.show(self.reminder_list)
-
     def clear(self):
         self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
@@ -106,14 +103,14 @@ class LedController:
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
-    def show_non_result_display(self):
+    def show_tracking_display(self):
         self.led_device.show([[0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255],
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255],
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255],
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255],
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255]])
 
-    def show_non_action_tag(self):
+    def show_unknown_tag(self):
         self.led_device.show([[0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
                               [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0],
                               [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255],
