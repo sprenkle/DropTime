@@ -70,9 +70,11 @@ class Reminder:
 if __name__ == "__main__":
     from tagrepository import TagRepository
     from configuration import Configuration
+    from ledcontroller import LedController
+    from mockleddevice import MockLedDevice
 
     _configuration = Configuration("configuration.json")
     _device_id = _configuration.get_value("device", "device_id")
-    _reminder = Reminder(TagRepository(_configuration), _device_id)
+    _reminder = Reminder(TagRepository(_configuration), _device_id, LedController(MockLedDevice))
     _reminder.update()
     print(_reminder.get_display())
