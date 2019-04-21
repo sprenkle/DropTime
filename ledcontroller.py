@@ -12,18 +12,18 @@ class LedController:
         self.progress_start_amount_time_sec = 0
         self.progress_started_time = datetime.datetime.now()
         self.tracking_progress = False
-        self.have_unknown_tag = False
-        self.have_tracking_tag = False
+        self.__have_unknown_tag = False
+        self.__have_tracking_tag = False
 
     def set_unknown_tag(self):
-        self.have_unknown_tag = True
+        self.__have_unknown_tag = True
 
     def set_have_tracking_tag(self):
-        self.have_tracking_tag = True
+        self.__have_tracking_tag = True
 
     def clear_tag(self):
-        self.have_unknown_tag = False
-        self.have_tracking_tag = False
+        self.__have_unknown_tag = False
+        self.__have_tracking_tag = False
 
     def set_reminder(self, leds):
         self.reminder_leds = leds
@@ -47,12 +47,15 @@ class LedController:
 
         if self.tracking_progress:
             self.show_progress()
+            return
 
-        if self.have_tracking_tag:
+        if self.__have_tracking_tag:
             self.show_tracking_display()
+            return
 
-        if self.have_unknown_tag:
+        if self.__have_unknown_tag:
             self.show_unknown_tag()
+            return
 
         self.led_device.show([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
