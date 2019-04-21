@@ -39,11 +39,15 @@ class Reminder:
             if dt <= current_dt <= end_time:
                 if reminder in self.resolved:
                     continue
-                led_list.append(reminder["display"])
+                led_values = list(eval(reminder["display"]))
+                for i in led_values:
+                    led_list.append(i)
             else:
                 if reminder in self.resolved:
                     self.resolved.remove(reminder)
         if len(led_list) > 0:
+            while len(led_list) < 24:
+                led_list = led_list + led_list
             self.led_controller.set_reminder(led_list)
         else:
             self.led_controller.clear_reminder()
