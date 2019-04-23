@@ -78,3 +78,6 @@ class TestReminder(unittest.TestCase):
         reminder.update()
         led_controller.clear_reminder.assert_called_once()
         #led_controller.
+
+
+#{'tagid': '1110945734', 'display': '[255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255], [255, 0, 0], [0, 0, 255]', 'deviceid': '08f98cd6-3602-41ee-aa27-a6768412254e', 'reminderid': 'c40d96c0-cd5b-4d63-978d-a90c548c4fc6', 'userid': '72be6ab4-727b-4257-ba1d-ef58a3349bfc', 'start': '2019-04-02T15:39:20.000', 'duration': 43200, 'showled': 1, 'sunday': 1, 'monday': 1, 'tuesday': 1, 'wednesday': 1, 'thursday': 1, 'friday': 1, 'saturday': 1}

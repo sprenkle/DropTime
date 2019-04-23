@@ -31,7 +31,8 @@ class Reminder:
                                                  not (dt <= current_dt <= end_time )):
                 if reminder in self.resolved:
                     continue
-                led_list += reminder["display"]
+                display = eval(reminder["display"])[0]
+                led_list.append(display)
         if len(led_list) > 0:
             while len(led_list) < 24:
                 led_list += led_list
