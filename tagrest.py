@@ -192,6 +192,7 @@ class Reminders(Resource):
                              "where rd.deviceid = '{}'".format(device_id))
         objects_list = []
         for row in query.cursor:
+            current_list = []
             d = collections.OrderedDict()
             d['tagid'] = row[0]
             d['display'] = row[1]
@@ -208,8 +209,8 @@ class Reminders(Resource):
             d['thursday'] = row[12]
             d['friday'] = row[13]
             d['saturday'] = row[14]
-
-            objects_list.append(d)
+            current_list.append(d)
+            objects_list.append(current_list)
         return objects_list
 
     def put(self, reminder_id):
