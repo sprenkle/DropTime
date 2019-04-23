@@ -31,7 +31,7 @@ class DropTime:
                 logging.debug("card_id read is {}".format(card_id))
                 self.reminder.update()
                 self.process_actions(card_id)
-                self.reminder.have_tag(card_id)
+                self.reminder.process_reminders(card_id)
                 self.led_controller.show()
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)

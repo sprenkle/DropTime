@@ -13,6 +13,7 @@ class Reminder:
         self.next_start = None
         self.led_controller = led_controller
         self.has_reminder = False
+        self.reminders = []
 
     # updates the reminders from repository
     def update(self):
@@ -43,14 +44,6 @@ class Reminder:
 
     def process_reminders(self, card_id):
         self.tags_seen[card_id] = datetime.now()
-        # self.have_tag(card_id)
-        # reminder_led_list = self.reminder.get_display()
-        # if len(reminder_led_list) == 0:
-        #     if self.has_reminder:
-        #         self.led_controller.clear()
-        #     self.has_reminder = False
-        #     return
-        # self.has_reminder = True
 
 
 if __name__ == "__main__":
