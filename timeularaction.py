@@ -24,10 +24,12 @@ class TimeularAction:
         self.stop_running_tag(tag_id)
 
         if tag_id is None:
-            return self.current_tag_is_none()
+            self.current_tag_is_none()
+            return
 
         if not self.tag_repository.contains_id(self.id, tag_id):
-            return self.current_tag_not_in_repository()
+            self.current_tag_not_in_repository()
+            return
 
         # have activity start it
         self.running_tag_id = tag_id
@@ -38,11 +40,11 @@ class TimeularAction:
         logging.info("start tracking")
         self.api.start_tracking(token, tag_to_action["identifier"])
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
-        print(activity)
 
         if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity or \
                 "" == activity["dailygoals"]:
             self.led_controller.set_have_tracking_tag()
+            return
 
         time_spent = 0
 
@@ -81,7 +83,7 @@ class TimeularAction:
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
 
-        self.led_controller.set_progress(self, activity["dailytimeSec"], time_spent)
+        self.led_controller.set_progress(activity["dailytimeSec"], time_spent)
 
     def get_token(self, user_id):
         if user_id not in self.user_to_token_dict:

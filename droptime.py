@@ -1,11 +1,12 @@
 import time
 import datetime
-import sys
 from actions import Actions
 from timeularaction import TimeularAction
 from configuration import Configuration
 import logging
 from reminder import Reminder
+import sys
+import traceback
 
 
 class DropTime:
@@ -22,17 +23,18 @@ class DropTime:
         self.reminder = reminder
         self.has_reminder = False
 
-    def run(self):
+    def run(self, num_runs):
         logging.debug("started run")
-        while True:
+        while num_runs == -1 or num_runs <= num_runs:
             try:
-                card_id = self.reader.read_card()
+                card_id = self.reader.read_tag()
                 logging.debug("card_id read is {}".format(card_id))
                 self.reminder.update()
                 self.process_actions(card_id)
                 self.reminder.have_tag(card_id)
                 self.led_controller.show()
             except Exception as e:
+                traceback.print_exc(file=sys.stdout)
                 print(e)
                 time.sleep(10)
             time.sleep(.1)
@@ -82,11 +84,12 @@ if __name__ == "__main__":
         led_controller = LedController(led_device)
         reader = RfiDevice()
         tag_repository = TagRepository(configuration)
-        api = TimularApi(configuration, tag_repository, led_controller)
+        api = TimularApi(configuration, tag_repository)
 
     device_id = configuration.get_value("device", "device_id")
-    actions = Actions(TimeularAction(api, tag_repository))
-    dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions, Reminder(tag_repository, device_id))
-    dropTime.run()
+    actions = Actions(TimeularAction(api, tag_repository, led_controller))
+    dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions,
+                        Reminder(tag_repository, device_id, led_controller))
+    dropTime.run(-1)
 
 

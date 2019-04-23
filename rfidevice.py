@@ -31,7 +31,7 @@ class RfiDevice:
 
 if __name__ == "__main__":
     reader = RfiDevice()
-    value = reader.read_card()
+    value = reader.read_tag()
     while value is None:
-        value = reader.read_card()
+        value = reader.read_tag()
     print(value)
