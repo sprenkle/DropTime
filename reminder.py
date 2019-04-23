@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 class Reminder:
 
     def __init__(self, tag_repository, device_id, led_controller):
-        self.reminders = []
+        self.tags_seen = dict()
         self.active = []
         self.resolved = []
         self.tag_repository = tag_repository
@@ -12,21 +12,11 @@ class Reminder:
         self.device_id = device_id
         self.next_start = None
         self.led_controller = led_controller
+        self.has_reminder = False
 
     # updates the reminders from repository
     def update(self):
         self.reminders = self.tag_repository.get_reminders(self.device_id)
-        self.get_display()
-
-    def has_reminders(self):
-        return len(self.reminders) > 0
-
-    def have_tag(self, tag_id):
-        for reminder in self.reminders:
-            if reminder["tagid"] == tag_id and reminder not in self.resolved:
-                self.resolved.append(reminder)
-
-    def get_display(self):
         current_dt = datetime.now()
         led_list = []
         for reminder in self.reminders:
@@ -36,35 +26,31 @@ class Reminder:
                 dt = dt - timedelta(days=1)
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
-            if dt <= current_dt <= end_time:
+            if dt <= current_dt <= end_time and (reminder["tagid"] not in self.tags_seen or
+                                                 not (dt <= current_dt <= end_time )):
                 if reminder in self.resolved:
                     continue
-                led_list.append(reminder["display"])
-            else:
-                if reminder in self.resolved:
-                    self.resolved.remove(reminder)
+                led_list += reminder["display"]
         if len(led_list) > 0:
-            self.led_controller.set_reminder(led_list)
+            while len(led_list) < 24:
+                led_list += led_list
+            self.led_controller.set_reminder(led_list[0:24])
         else:
             self.led_controller.clear_reminder()
 
+    def has_reminders(self):
+        return len(self.reminders) > 0
+
     def process_reminders(self, card_id):
-        self.have_tag(card_id)
-        reminder_led_list = self.reminder.get_display()
-        if len(reminder_led_list) == 0:
-            if self.has_reminder:
-                self.led_controller.clear()
-            self.has_reminder = False
-            return
-        self.has_reminder = True
-        led_display = []
-        index = 0
-        for i in range(4):
-            for j in range(6):
-                value = eval(reminder_led_list[index])[j]
-                led_display.append(value)
-            index = i % len(reminder_led_list)
-        self.led_controller.set_reminder(led_display)
+        self.tags_seen[card_id] = datetime.now()
+        # self.have_tag(card_id)
+        # reminder_led_list = self.reminder.get_display()
+        # if len(reminder_led_list) == 0:
+        #     if self.has_reminder:
+        #         self.led_controller.clear()
+        #     self.has_reminder = False
+        #     return
+        # self.has_reminder = True
 
 
 if __name__ == "__main__":
