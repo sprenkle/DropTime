@@ -44,7 +44,8 @@ class Reminder:
         return len(self.reminders) > 0
 
     def process_reminders(self, card_id):
-        self.tags_seen[card_id] = datetime.now()
+        if card_id is not None:
+            self.tags_seen[card_id] = datetime.now()
 
 
 if __name__ == "__main__":

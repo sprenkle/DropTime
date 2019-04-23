@@ -9,8 +9,8 @@ class MockLedDevice:
         for i in range(self.num_pixels):
             display = display + str(led_patterns[i][0] + led_patterns[i][1] * 255 + led_patterns[i][2] * 255 * 255) + " "
         if self.last_display != display:
-            print(display)
             self.last_display = display
+        print(display)
 
     def clear(self):
         print("Clear")
