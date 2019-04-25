@@ -23,7 +23,7 @@ class Reminder:
             self.reminders = self.tag_repository.get_reminders(self.device_id)
             self.next_update = datetime.now() + timedelta(minutes=5)
 
-        logging.info("update called with {}".format())
+        logging.info("update called")
         current_dt = datetime.now()
         led_list = []
         for reminder in self.reminders:
