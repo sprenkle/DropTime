@@ -1,6 +1,7 @@
 import datetime
 import math
 import sys
+import logging
 
 
 class LedController:
@@ -32,12 +33,14 @@ class LedController:
         self.reminder_leds = None
 
     def set_progress(self, goal_time, previous_time):
+        logging.info("set_progress with goal_time={} previous_time={}", goal_time, previous_time)
         self.progress_goal_time_sec = goal_time
         self.progress_start_amount_time_sec = previous_time
         self.progress_started_time = datetime.datetime.now()
         self.tracking_progress = True
 
     def clear_progress(self):
+        logging.info("clear_progress")
         self.tracking_progress = False
 
     def show(self):
