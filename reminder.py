@@ -9,16 +9,20 @@ class Reminder:
         self.active = []
         self.resolved = []
         self.tag_repository = tag_repository
-        self.last_update = None
         self.device_id = device_id
         self.next_start = None
         self.led_controller = led_controller
         self.has_reminder = False
         self.reminders = []
+        self.next_update = datetime.now() + timedelta(minutes=5)
 
     # updates the reminders from repository
     def update(self):
-        self.reminders = self.tag_repository.get_reminders(self.device_id)
+        if datetime.now() >= self.next_update:
+            logging.debug("Called reminder update")
+            self.reminders = self.tag_repository.get_reminders(self.device_id)
+            self.next_update = datetime.now() + timedelta(minutes=5)
+
         logging.info("update called with {}".format())
         current_dt = datetime.now()
         led_list = []
@@ -46,6 +50,7 @@ class Reminder:
         return len(self.reminders) > 0
 
     def process_reminders(self, card_id):
+        logging.debug("process_reminders with tag_id = {}".format(card_id))
         if card_id is not None:
             self.tags_seen[card_id] = datetime.now()
 
