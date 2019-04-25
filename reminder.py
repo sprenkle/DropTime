@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import logging
 
 
 class Reminder:
@@ -18,6 +19,7 @@ class Reminder:
     # updates the reminders from repository
     def update(self):
         self.reminders = self.tag_repository.get_reminders(self.device_id)
+        logging.info("update called with {}".format())
         current_dt = datetime.now()
         led_list = []
         for reminder in self.reminders:

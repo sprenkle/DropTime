@@ -69,6 +69,7 @@ if __name__ == "__main__":
         from tagrepository import TagRepository
         from mockleddevice import MockLedDevice
         from mockrfireader import MockRfiReader
+        logging.basicConfig(level=logging.DEBUG)
         led_device = MockLedDevice()
         led_controller = LedController(led_device)
         reader = MockRfiReader()
@@ -80,6 +81,7 @@ if __name__ == "__main__":
         from timeularapi import TimularApi
         from leddevice import LedDevice
         from tagrepository import TagRepository
+        logging.basicConfig(level=logging.DEBUG)
         configuration = Configuration("configuration.json")
         led_device = LedDevice(configuration)
         led_controller = LedController(led_device)
