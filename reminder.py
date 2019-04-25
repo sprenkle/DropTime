@@ -14,7 +14,7 @@ class Reminder:
         self.led_controller = led_controller
         self.has_reminder = False
         self.reminders = []
-        self.next_update = datetime.now() + timedelta(minutes=5)
+        self.next_update = datetime.now() 
         self.reminders = self.tag_repository.get_reminders(self.device_id)
 
     # updates the reminders from repository
