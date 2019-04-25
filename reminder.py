@@ -34,6 +34,12 @@ class Reminder:
                 dt = dt - timedelta(days=1)
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
+            if reminder["tagid"] in self.tags_seen:
+                tag_time = self.tags_seen[reminder["tagid"]]
+            else:
+                tag_time = None
+
+            logging.info("{} <= {} <= {}  --  {} <= {} <= {}".format(dt, current_dt, end_time, dt, tag_time, end_time))
             if dt <= current_dt <= end_time and (reminder["tagid"] not in self.tags_seen or
                                                  not (dt <= self.tags_seen[reminder["tagid"]] <= end_time )):
                 display = eval(reminder["display"])[0]
