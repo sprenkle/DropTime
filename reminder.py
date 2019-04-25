@@ -38,7 +38,7 @@ class Reminder:
                 tag_time = self.tags_seen[reminder["tagid"]]
             else:
                 tag_time = None
-
+            logging.info(self.tags_seen)
             logging.info("{} <= {} <= {}  --  {} <= {} <= {}".format(dt, current_dt, end_time, dt, tag_time, end_time))
             if dt <= current_dt <= end_time and (reminder["tagid"] not in self.tags_seen or
                                                  not (dt <= self.tags_seen[reminder["tagid"]] <= end_time )):
