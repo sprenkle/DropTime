@@ -41,3 +41,27 @@ class TestLedController(unittest.TestCase):
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
+    def test_when_tacking_tag_set_then_cleared_will_show_zero(self):
+        device = Mock()
+        controller = LedController(device)
+        controller.set_have_tracking_tag()
+        controller.clear_tag()
+        controller.show()
+        device.show.assert_called_with([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
+    def test_when_progress_tag_set_then_cleared_will_show_zero(self):
+        device = Mock()
+        controller = LedController(device)
+        controller.set_progress(60, 30)
+        controller.clear_tag()
+        controller.show()
+        device.show.assert_called_with([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])

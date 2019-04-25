@@ -25,6 +25,7 @@ class LedController:
     def clear_tag(self):
         self.__have_unknown_tag = False
         self.__have_tracking_tag = False
+        self.tracking_progress = False
 
     def set_reminder(self, leds):
         self.reminder_leds = leds
@@ -38,10 +39,6 @@ class LedController:
         self.progress_start_amount_time_sec = previous_time
         self.progress_started_time = datetime.datetime.now()
         self.tracking_progress = True
-
-    def clear_progress(self):
-        logging.info("clear_progress")
-        self.tracking_progress = False
 
     def show(self):
         if self.reminder_leds is not None:
