@@ -42,8 +42,9 @@ class Reminder:
             logging.info("{} <= {} <= {}  --  {} <= {} <= {}".format(dt, current_dt, end_time, dt, tag_time, end_time))
             if dt <= current_dt <= end_time and (reminder["tagid"] not in self.tags_seen or
                                                  not (dt <= self.tags_seen[reminder["tagid"]] <= end_time )):
-                display = eval(reminder["display"])[0]
-                led_list.append(display)
+                display = list(eval(reminder["display"]))
+                for led_value in display:
+                    led_list.append(led_value)
         if len(led_list) > 0:
             while len(led_list) < 24:
                 led_list += led_list

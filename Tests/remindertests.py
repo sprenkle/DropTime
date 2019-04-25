@@ -66,7 +66,7 @@ class TestReminder(unittest.TestCase):
     def test_when_one_reminder_but_tag_found_calls_clear_reminder(self):
         now = datetime.now()
         now_str = datetime.strftime(now, '%Y-%m-%dT%H:%M:%S.000')
-        reminder_list = [{'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': 314,
+        reminder_list = [{'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': '314',
                           'start': now_str, 'duration': 300}]
         led_device = Mock()
         tag_repo = LedController(led_device)
@@ -76,15 +76,39 @@ class TestReminder(unittest.TestCase):
         reminder = Reminder(tag_repo, None, led_controller)
         reminder.process_reminders(314)
         reminder.update()
+
         led_controller.clear_reminder.assert_called_once()
+
+    def test_when_two_reminder_and_call_led_controller_with_correct_led_pattern(self):
+        now = datetime.now()
+        now_str = datetime.strftime(now, '%Y-%m-%dT%H:%M:%S.000')
+        reminder_list = [
+            {'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': '314',
+             'start': now_str, 'duration': 300}, {'display': '[255, 0, 255], [255, 0, 255], [255, 0, 255], [255, 0, 255], [255, 0, 255],'
+                                                             ' [255, 0, 255]', 'tagid': '316',
+                                                             'start': now_str, 'duration': 300}]
+        led_device = Mock()
+        tag_repo = LedController(led_device)
+        tag_repo.get_reminders = MagicMock(return_value=reminder_list)
+        led_controller = Mock()
+
+        reminder = Reminder(tag_repo, None, led_controller)
+        reminder.update()
+        led_controller.clear_reminder.assert_not_called()
+        led_controller.set_reminder.assert_called_once_with([[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0],
+                                                             [0, 255, 0], [0, 255, 0], [255, 0, 255], [255, 0, 255],
+                                                             [255, 0, 255], [255, 0, 255], [255, 0, 255], [255, 0, 255],
+                                                             [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [255, 0, 255], [255, 0, 255],
+                                                             [255, 0, 255], [255, 0, 255], [255, 0, 255], [255, 0, 255]])
+
 
     def test_when_two_reminder_but_tag_found_calls_does_not_clear_reminder(self):
         now = datetime.now()
         now_str = datetime.strftime(now, '%Y-%m-%dT%H:%M:%S.000')
         reminder_list = [
-            {'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': 314,
+            {'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': '314',
              'start': now_str, 'duration': 300}, {'display': '[255, 0, 255], [255, 0, 255], [255, 0, 255], [255, 0, 255],'
-                                                             ' [255, 0, 255]', 'tagid': 316,
+                                                             ' [255, 0, 255]', 'tagid': '316',
                                                              'start': now_str, 'duration': 300}]
         led_device = Mock()
         tag_repo = LedController(led_device)
@@ -106,9 +130,9 @@ class TestReminder(unittest.TestCase):
         now = datetime.now()
         now_str = datetime.strftime(now, '%Y-%m-%dT%H:%M:%S.000')
         reminder_list = [
-            {'display': '[255, 255, 255], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': 314,
+            {'display': '[255, 255, 255], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': '314',
              'start': now_str, 'duration': 300}, {'display': '[255, 0, 255], [0, 255, 0], [0, 255, 0], [0, 255, 0],'
-                                                             ' [0, 255, 0]', 'tagid': 316,
+                                                             ' [0, 255, 0]', 'tagid': '316',
                                                   'start': now_str, 'duration': 300}]
         led_device = Mock()
         tag_repo = LedController(led_device)
@@ -125,9 +149,9 @@ class TestReminder(unittest.TestCase):
         now = datetime.now()
         now_str = datetime.strftime(now, '%Y-%m-%dT%H:%M:%S.000')
         reminder_list = [
-            {'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': 314,
+            {'display': '[0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0], [0, 255, 0]', 'tagid': '314',
              'start': now_str, 'duration': 300}, {'display': '[255, 0, 255], [255, 0, 255], [255, 0, 255], [255, 0, 255],'
-                                                             ' [255, 0, 255]', 'tagid': 316,
+                                                             ' [255, 0, 255]', 'tagid': '316',
                                                              'start': now_str, 'duration': 300}]
         led_device = Mock()
         tag_repo = LedController(led_device)
