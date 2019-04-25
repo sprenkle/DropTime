@@ -57,7 +57,7 @@ class Reminder:
     def process_reminders(self, card_id):
         logging.debug("process_reminders with tag_id = {}".format(card_id))
         if card_id is not None:
-            self.tags_seen[card_id] = datetime.now()
+            self.tags_seen[str(card_id)] = datetime.now()
 
 
 if __name__ == "__main__":
