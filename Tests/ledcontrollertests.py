@@ -32,3 +32,12 @@ class TestLedController(unittest.TestCase):
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255],
                               [0, 0, 255], [0, 0, 255], [0, 0, 255], [0, 0, 255]])
 
+    def test_when_no_tag_outputs_zeros(self):
+        device = Mock()
+        controller = LedController(device)
+        controller.show()
+        device.show.assert_called_with([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])

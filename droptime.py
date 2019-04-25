@@ -35,7 +35,7 @@ class DropTime:
                 self.led_controller.show()
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)
-                print(e)
+                print(e) 
                 time.sleep(10)
             time.sleep(.1)
 

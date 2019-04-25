@@ -80,5 +80,4 @@ class TimularActionTests(unittest.TestCase):
         led_controller.set_unknown_tag.assert_not_called()
         led_controller.set_progress.assert_called_once()
         led_controller.set_progress.assert_called_with(60, 0)
-
         api.start_tracking.assert_called_once()
