@@ -14,7 +14,7 @@ class Reminder:
         self.led_controller = led_controller
         self.has_reminder = False
         self.reminders = []
-        self.next_update = datetime.now() 
+        self.next_update = datetime.now()
         self.reminders = self.tag_repository.get_reminders(self.device_id)
 
     # updates the reminders from repository
@@ -35,9 +35,7 @@ class Reminder:
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
             if dt <= current_dt <= end_time and (reminder["tagid"] not in self.tags_seen or
-                                                 not (dt <= current_dt <= end_time )):
-                if reminder in self.resolved:
-                    continue
+                                                 not (dt <= self.tags_seen[reminder["tagid"]] <= end_time )):
                 display = eval(reminder["display"])[0]
                 led_list.append(display)
         if len(led_list) > 0:

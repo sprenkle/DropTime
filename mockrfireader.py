@@ -4,7 +4,7 @@ import datetime
 class MockRfiReader:
 
     def __init__(self):
-        self.arr = ['1110945734', '1110989526']
+        self.arr = ['1110893782', '1110835958']
         self.last_event_time = datetime.datetime.utcnow()
         self.last_event = None
         self.index = 0
