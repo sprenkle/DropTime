@@ -69,4 +69,3 @@ if __name__ == "__main__":
     _device_id = _configuration.get_value("device", "device_id")
     _reminder = Reminder(TagRepository(_configuration), _device_id)
     _reminder.update()
-    print(_reminder.get_display())

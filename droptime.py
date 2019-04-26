@@ -81,7 +81,7 @@ if __name__ == "__main__":
         from timeularapi import TimularApi
         from leddevice import LedDevice
         from tagrepository import TagRepository
-        logging.basicConfig(level=logging.DEBUG)
+        #logging.basicConfig(level=logging.DEBUG)
         configuration = Configuration("configuration.json")
         led_device = LedDevice(configuration)
         led_controller = LedController(led_device)
