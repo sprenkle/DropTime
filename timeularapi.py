@@ -68,7 +68,6 @@ class TimularApi:
             start_tag = len(text)
             tags.append(t)
         body = {"startedAt": start_time, "note": {"text": text, "tags": tags, "mentions": []}}
-        print(body)
         r = requests.post(url, headers=my_headers, json=body)
         return r.json()
 
@@ -95,5 +94,5 @@ if __name__ == "__main__":
     #print(p1.stop_tracking('369007', TimularApi.get_utc_time()))
     #print(TimularApi.get_utc_time(True))
     #time = TimularApi.get_utc_time(True)
-    print(p1.get_token(1))
+
     #print(p1.get_tracking())

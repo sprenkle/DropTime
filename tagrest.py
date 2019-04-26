@@ -37,11 +37,6 @@ class UsersList(Resource):
 
     def post(self):
         user = request.json
-        print(user)
-        print(user["first"])
-        print(user["last"])
-        print(user["username"])
-        print(user["userpassword"])
         conn = db_connect.connect()  # connect to database
         querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}','{}')" \
             .format(user["first"], user["last"], user["username"], user["userpassword"])
@@ -67,7 +62,6 @@ class Users(Resource):
 
     def put(self, user_id):
         user = request.json
-        print(user)
         conn = db_connect.connect()  # connect to database
         querystring = "Update users set username='{}', userpassword='{}' where Userid='{}'" \
             .format(user["username"], user["userpassword"], user_id)
@@ -91,7 +85,6 @@ class Devices(Resource):
 
     def post(self):
         device = request.json
-        print(device)
         conn = db_connect.connect()  # connect to database
         device_id = uuid.uuid4()
         querystring = "INSERT INTO devices (deviceid, name, description) VALUES ('{}','{}','{}')" \
@@ -117,7 +110,6 @@ class Tags(Resource):
 
     def post(self):
         tag = request.json
-        print(tag)
         conn = db_connect.connect()  # connect to database
         tag_id = uuid.uuid4()
         querystring = "INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')" \
@@ -129,7 +121,6 @@ class Tags(Resource):
 class Activities(Resource):
 
     def get(self, activity_id):
-        print(activity_id)
         conn = db_connect.connect()  # connect to database
         query = conn.execute("select * from activities where activityid={}".format(
             activity_id))  # This line performs query and returns json result
@@ -169,7 +160,6 @@ class ActivitiesList(Resource):
 
     def post(self):
         activity = request.json
-        print(activity)
         conn = db_connect.connect()  # connect to database
         activity_id = uuid.uuid4()
         querystring = "INSERT INTO activities (activityid, userid, name, color, show, integration, " \
@@ -215,7 +205,6 @@ class Reminders(Resource):
 
     def put(self, reminder_id):
         reminder = request.json
-        print(reminder)
         conn = db_connect.connect()  # connect to database
         querystring = "Update reminders set userid={}, start='{}'," \
                       "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
@@ -257,7 +246,6 @@ class CurrentReminders(Resource):
 
     def put(self, reminder_id):
         reminder = request.json
-        print(reminder)
         conn = db_connect.connect()  # connect to database
         querystring = "Update reminders set userid={}, start='{}'," \
                       "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
@@ -300,12 +288,10 @@ class TagsToActions(Resource):
         global last_seen_tag
         if tag_id is not None:
             last_seen_tag = tag_id
-        print(tag_id)
         conn = db_connect.connect()  # connect to database
         query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
                        "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
                                                                                                          action_type)
-        print(query_string)
         query = conn.execute(query_string)
         objects_list = []
         for row in query.cursor:
@@ -321,7 +307,6 @@ class TagsToActions(Resource):
 
     def post(self):
         tagtoaction = request.json
-        print(tagtoaction)
         conn = db_connect.connect()  # connect to database
         querystring = "INSERT INTO tagstoactions (tagid, actiontype, identifier) VALUES ('{}','{}','{}')" \
             .format(tagtoaction["tagid"], tagtoaction["actiontype"], tagtoaction["identifier"])
@@ -333,7 +318,6 @@ class TagLog(Resource):
 
     def post(self):
         taglog = request.json
-        print(taglog)
         conn = db_connect.connect()  # connect to database
         querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})" \
             .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])

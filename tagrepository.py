@@ -13,12 +13,10 @@ class TagRepository:
 
     def contains_id(self, action_type, tag_id):
         url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id)
-        print("url is {}".format(url))
         r = requests.get(url)
         activity = r.json()
         if activity is None:
             return False
-        print(activity)
         self.add_tags_to_action(action_type, tag_id, activity)
         return True
 
@@ -52,7 +50,6 @@ class TagRepository:
         start_str = datetime.strftime(start, '%Y-%m-%dT%H:%M:%S.000')
         end_str = datetime.strftime(end, '%Y-%m-%dT%H:%M:%S.000')
         url = self.base_url + "/taglog/{}/{}/start/{}/end/{}".format(activity_type, activity_id, start_str, end_str)
-        print("url is {}".format(url))
         r = requests.get(url)
         activity = r.json()
         if activity is None:
@@ -73,7 +70,6 @@ class TagRepository:
 
     def get_activity_labels(self, activity_id):
         url = self.base_url + "/label/{}".format(activity_id)
-        print("url is {}".format(url))
         r = requests.get(url)
         out = r.json()
         return out
@@ -93,6 +89,5 @@ if __name__ == "__main__":
         file = "configuration.json"
     # {231965344320: "369007", 438308258332: "369008", 25991398012: "369006"}
     card_repository = TagRepository(Configuration(file))
-    print(card_repository.get_api_key_token(1))
 
    # print(card_repository.activity_id(231965344320))

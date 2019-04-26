@@ -34,4 +34,4 @@ if __name__ == "__main__":
     value = reader.read_tag()
     while value is None:
         value = reader.read_tag()
-    print(value)
+
