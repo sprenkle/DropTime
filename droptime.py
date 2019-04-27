@@ -86,7 +86,7 @@ if __name__ == "__main__":
         configuration = Configuration("configuration.json")
         led_device = LedDevice(configuration)
         led_controller = LedController(led_device)
-        reader = RfiDevice()
+        reader = RfiDevice(configuration)
         tag_repository = TagRepository(configuration)
         api = TimularApi(configuration, tag_repository)
 
