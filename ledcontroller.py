@@ -138,14 +138,14 @@ if __name__ == "__main__":
     led_controller = LedController(led_device)
     delay = .1
 
-    led_controller.start_progress(5, 0)
-    for i in range(120):
-        led_controller.show()
-        time.sleep(delay)
-    led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
-    led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
-    led_controller.show()
-    led_controller.clear()
+    # led_controller.start_progress(5, 0)
+    # for i in range(120):
+    #     led_controller.show()
+    #     time.sleep(delay)
+    # led_controller.set_reminder(1, [[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]])
+    # led_controller.set_reminder(2, [[4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]])
+    # led_controller.show()
+    # led_controller.clear()
     # time.sleep(delay)
     # led_controller.remove_reminder(1)
     # led_controller.show()
@@ -153,3 +153,8 @@ if __name__ == "__main__":
     # led_controller.remove_reminder(2)
     # led_controller.show()
     # led_controller.show_non_result_display()
+    led_controller.show_tracking_display()
+    led_controller.show()
+    time.sleep(15)
+    led_controller.clear_tag()
+    led_controller.show()
