@@ -74,6 +74,10 @@ if __name__ == "__main__":
         tag_repository = TagRepository(configuration)
         api = TimularApi(configuration, tag_repository)
     else:
+        if len(sys.argv) == 2 and sys.argv[1] == "debug":
+            logging.basicConfig(level=logging.DEBUG)
+        if len(sys.argv) == 2 and sys.argv[1] == "info":
+            logging.basicConfig(level=logging.INFO)
         from rfidevice import RfiDevice
         from timeularapi import TimularApi
         from leddevice import LedDevice

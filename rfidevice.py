@@ -5,10 +5,12 @@ import signal
 
 class RfiDevice:
     # arr = array.array('i', [1, 2, 3])
-    def __init__(self):
+    def __init__(self, configuration):
         self.MIFAREReader = MFRC522.MFRC522()
         self.none_count = 0
         self.last_card_id = None
+        self.configuration = configuration
+        self.retries = configuration.get_value("rfireader", "retries")
 
     def read_tag(self):
         (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
@@ -22,7 +24,7 @@ class RfiDevice:
         if card_id is not None:
             self.none_count = 0
 
-        if card_id is not None or self.none_count > 2:
+        if card_id is not None or self.none_count > self.retries:
             self.last_card_id = card_id
             return card_id
 
