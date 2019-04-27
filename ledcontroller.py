@@ -93,6 +93,8 @@ class LedController:
         if result_over == 24:
             for i in range(12):
                 led_array[i * 2] = [0, 255, 0]
+        if led_array[0] == 0:
+            led_array[0] = [0, 255, 0]
 
         self.led_device.show(led_array)
 
