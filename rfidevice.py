@@ -10,7 +10,7 @@ class RfiDevice:
         self.none_count = 0
         self.last_card_id = None
         self.configuration = configuration
-        self.retries = configuration.get_value("rfireader", "retries")
+        self.retries = int(configuration.get_value("rfireader", "retries"))
 
     def read_tag(self):
         (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
