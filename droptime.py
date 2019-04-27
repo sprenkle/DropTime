@@ -36,8 +36,6 @@ class DropTime:
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)
                 print(e)
-                time.sleep(10)
-            time.sleep(.1)
 
     def process_actions(self, card_id):
 
