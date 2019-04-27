@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import MFRC522
 import signal
+import logging
 
 
 class RfiDevice:
@@ -9,8 +10,8 @@ class RfiDevice:
         self.MIFAREReader = MFRC522.MFRC522()
         self.none_count = 0
         self.last_card_id = None
-        self.configuration = configuration
         self.retries = int(configuration.get_value("rfireader", "retries"))
+        logging.INFO("RFI Device retries = {}".format(self.retries))
 
     def read_tag(self):
         (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
@@ -18,10 +19,11 @@ class RfiDevice:
         card_id = None
         if status == self.MIFAREReader.MI_OK:
             card_id = uid[0] + (uid[1] << 8) + (uid[2] << 16) + (uid[3] << 24)
+        logging.DEBUG("RFI Device read {}".format(card_id))
 
         if card_id is None:
             self.none_count = self.none_count + 1
-        if card_id is not None:
+        else:
             self.none_count = 0
 
         if card_id is not None or self.none_count > self.retries:
