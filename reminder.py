@@ -20,7 +20,7 @@ class Reminder:
     # updates the reminders from repository
     def update(self):
         if datetime.now() >= self.next_update:
-            logging.debug("Called reminder update")
+            logging.info("Called reminder update")
             self.reminders = self.tag_repository.get_reminders(self.device_id)
             self.next_update = datetime.now() + timedelta(minutes=5)
 
