@@ -19,7 +19,7 @@ class RfiDevice:
         card_id = None
         if status == self.MIFAREReader.MI_OK:
             card_id = uid[0] + (uid[1] << 8) + (uid[2] << 16) + (uid[3] << 24)
-        logging.DEBUG("RFI Device read {}".format(card_id))
+        logging.DEBUG("RFI Device read {} none_count={}".format(card_id, self.none_count))
 
         if card_id is None:
             self.none_count = self.none_count + 1
