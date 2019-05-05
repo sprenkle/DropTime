@@ -12,7 +12,7 @@ class RfiDevice:
         self.last_card_id = None
         self.last_card_delay = int(configuration.get_value("rfireader", "delay"))
         self.last_time_read = datetime.datetime.now()
-        logging.info("RFI Device retries = {}".format(str(self.retries)))
+        logging.info("RFI Device delay = {}".format(str(self.last_card_delay)))
 
     def read_tag(self):
         (status, TagType) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
@@ -20,7 +20,7 @@ class RfiDevice:
         card_id = None
         if status == self.MIFAREReader.MI_OK:
             card_id = uid[0] + (uid[1] << 8) + (uid[2] << 16) + (uid[3] << 24)
-        logging.debug("RFI Device read {} none_count={}".format(card_id, self.none_count))
+        logging.debug("RFI Device read {}".format(card_id))
 
         if card_id is not None:
             self.last_time_read = datetime.datetime.now()
