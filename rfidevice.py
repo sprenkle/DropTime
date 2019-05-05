@@ -20,7 +20,7 @@ class RfiDevice:
         card_id = None
         if status == self.MIFAREReader.MI_OK:
             card_id = uid[0] + (uid[1] << 8) + (uid[2] << 16) + (uid[3] << 24)
-        logging.debug("RFI Device read {}".format(card_id))
+        logging.debug("RFI Device read {} {}".format(card_id, (self.last_time_read - datetime.datetime.now()).seconds))
 
         if card_id is not None:
             self.last_time_read = datetime.datetime.now()
