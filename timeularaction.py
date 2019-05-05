@@ -66,8 +66,7 @@ class TimeularAction:
                                                                    datetime.datetime.utcnow())
         elif activity["dailygoals"] == 4:  # for each week
             week = now.weekday()
-
-            start_time = datetime.datetime(year, month, day - week, 0, 0, 0)
+            start_time = datetime.datetime(year, month, day, 0, 0, 0) - datetime.timedelta(days=week)
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
         elif activity["dailygoals"] == 5:  # for each month

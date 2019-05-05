@@ -7,8 +7,8 @@
       "uuid": "e044c8b0-c5a6-4e0f-94b6-0bec78d6a30a"
     },
     "tag_api": {
-      "url": "http://10.0.0.231:5002",
-      "self_url": "10.0.0.231"
+      "url": "http://10.0.0.166:5002",
+      "self_url": "10.0.0.166"
     },
     "device": {
       "device_id": "08f98cd6-3602-41ee-aa27-a6768412254e"
