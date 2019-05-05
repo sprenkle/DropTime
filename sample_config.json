@@ -4,7 +4,8 @@
       "url": "https://api.timeular.com/api/v2"
     },
     "rfireader": {
-      "retries": 2
+      "retries": 2,
+      "delay": 5
     },
     "tag_api": {
       "url": "http://10.0.0.231:5002",
