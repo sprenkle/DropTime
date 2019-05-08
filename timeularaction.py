@@ -1,5 +1,6 @@
 import datetime
 import logging
+import sys
 
 
 class TimeularAction:
@@ -21,7 +22,11 @@ class TimeularAction:
     def execute(self, tag_id):
         logging.debug("tag_id = {}  running_tag_id={}".format(tag_id, self.running_tag_id))
 
-        self.stop_running_tag(tag_id)
+        try:
+            self.stop_running_tag(tag_id)
+        except:
+            e = sys.exc_info()[0]
+            logging.error(e)
 
         if tag_id is None:
             self.current_tag_is_none()
@@ -38,7 +43,10 @@ class TimeularAction:
         user_id = tag_to_action["userid"]
         token = self.get_token(user_id)
         logging.info("start tracking")
-        self.api.start_tracking(token, tag_to_action["identifier"])
+        if not self.api.start_tracking(token, tag_to_action["identifier"]):
+            self.current_tag_not_in_repository()
+            return
+
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
 
         if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity or \

@@ -33,7 +33,10 @@ class TimularApi:
         logging.info("TimularApi get_tracking")
         url = self.base_url + '/tracking'
         my_headers = {'Authorization': 'Bearer ' + token}
-        r = requests.get(url, headers=my_headers)
+        r = requests.get(url, headers=my_headers, timeout=3)
+        if not r.ok:
+            logging.error("Error from Timeular {}".format(r))
+            return None
         current_tracking = r.json()["currentTracking"];
         if current_tracking is None:
             return None
@@ -69,7 +72,9 @@ class TimularApi:
             tags.append(t)
         body = {"startedAt": start_time, "note": {"text": text, "tags": tags, "mentions": []}}
         r = requests.post(url, headers=my_headers, json=body)
-        return r.json()
+        if not r.ok:
+            return False
+        return True
 
     def get_token(self, api_key, api_secret):
         url = self.base_url + '/developer/sign-in'
