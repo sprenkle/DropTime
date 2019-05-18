@@ -26,7 +26,7 @@ class UsersList(Resource):
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['userid'] = row[0]
+            d['id'] = row[0]
             d['first'] = row[1]
             d['last'] = row[2]
             d['username'] = row[3]
@@ -34,14 +34,6 @@ class UsersList(Resource):
             objects_list.append(d)
         users = {"users": objects_list}
         return users
-
-    def post(self):
-        user = request.json
-        conn = db_connect.connect()  # connect to database
-        querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}','{}')" \
-            .format(user["first"], user["last"], user["username"], user["userpassword"])
-        conn.execute(querystring)  # This line performs query and returns json result
-        return jsonify({"results": "ok"})
 
 
 class Users(Resource):
@@ -52,49 +44,98 @@ class Users(Resource):
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['userid'] = row[0]
+            d['id'] = row[0]
             d['first'] = row[1]
             d['last'] = row[2]
             d['username'] = row[3]
             d['userpassword'] = row[4]
             objects_list.append(d)
-        return objects_list[0]
+        return {"users": objects_list[0]}
+
+    def post(self, user_id):
+        user = request.json["users"]
+        conn = db_connect.connect()  # connect to database
+        querystring = "INSERT INTO users (userid, first, last, username, userpassword)VALUES ('{}','{}','{}','{}','{}','{}')" \
+            .format(user_id, user["first"], user["last"], user["username"], user["userpassword"])
+        conn.execute(querystring)  # This line performs query and returns json result
+        return jsonify({"results": "ok"})
 
     def put(self, user_id):
-        user = request.json
+        user = request.json["users"]
         conn = db_connect.connect()  # connect to database
-        querystring = "Update users set username='{}', userpassword='{}' where Userid='{}'" \
-            .format(user["username"], user["userpassword"], user_id)
+        querystring = "Update users set first='{}', last='{}', username='{}', userpassword='{}' where userid='{}'" \
+            .format(user["first"], user["last"], user["username"], user["userpassword"], user_id)
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok"})
 
 
-class Devices(Resource):
+class DevicesList(Resource):
     def get(self):
         conn = db_connect.connect()  # connect to database
         query = conn.execute("select * from devices")  # This line performs query and returns json result
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['deviceid'] = row[0]
+            d['id'] = row[0]
             d['name'] = row[1]
             d['description'] = row[2]
             objects_list.append(d)
         devices = {"devices": objects_list}
         return devices  # Fetches first column that is Employee ID
 
-    def post(self):
-        device = request.json
+
+class Devices(Resource):
+    def get(self, device_id):
         conn = db_connect.connect()  # connect to database
-        device_id = uuid.uuid4()
+        str_query = "select * from devices where deviceid='{}'".format(device_id)
+        query = conn.execute(str_query)  # This line performs query and returns json result
+        objects_list = []
+        for row in query.cursor:
+            d = collections.OrderedDict()
+            d['id'] = row[0]
+            d['name'] = row[1]
+            d['description'] = row[2]
+            objects_list.append(d)
+        devices = {"devices": objects_list[0]}
+        return devices  # Fetches first column that is Employee ID
+
+    def post(self, device_id):
+        device = request.json['devices']
+        conn = db_connect.connect()  # connect to database
         querystring = "INSERT INTO devices (deviceid, name, description) VALUES ('{}','{}','{}')" \
             .format(device_id, device["name"], device["description"])
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok", "id": device_id})
 
+    def put(self, device_id):
+        device = request.json["devices"]
+        conn = db_connect.connect()  # connect to database
+        querystring = "Update devices set name='{}', description='{}' where deviceid='{}'" \
+            .format(device["name"], device["description"], device_id)
+        conn.execute(querystring)  # This line performs query and returns json result
+        return jsonify({"results": "ok"})
+
+
+class TagsList(Resource):
+
+    def get(self):
+        conn = db_connect.connect()  # connect to database
+        query = conn.execute("select * from tags")  # This line performs query and returns json result
+        objects_list = []
+        for row in query.cursor:
+            d = collections.OrderedDict()
+            d['id'] = row[0]
+            d['userid'] = row[1]
+            d['name'] = row[2]
+            d['description'] = row[3]
+            objects_list.append(d)
+        tags = {"tags": objects_list}
+        return tags  # Fetches first column that is Employee ID
+
 
 class Tags(Resource):
-    def get(self):
+
+    def get(self, tag_id):
         conn = db_connect.connect()  # connect to database
         query = conn.execute("select * from tags")  # This line performs query and returns json result
         objects_list = []
@@ -108,7 +149,7 @@ class Tags(Resource):
         tags = {"tags": objects_list}
         return tags  # Fetches first column that is Employee ID
 
-    def post(self):
+    def post(self, tag_id):
         tag = request.json
         conn = db_connect.connect()  # connect to database
         tag_id = uuid.uuid4()
@@ -117,6 +158,13 @@ class Tags(Resource):
         conn.execute(querystring)  # This line performs query and returns json result
         return jsonify({"results": "ok", "id": tag_id})
 
+    def put(self, tag_id):
+        user = request.json["users"]
+        conn = db_connect.connect()  # connect to database
+        querystring = "Update tags set userid='{}', name='{}', description='{}' where tagid='{}'" \
+            .format(user["first"], user["last"], user["username"], user["userpassword"], tag_id)
+        conn.execute(querystring)  # This line performs query and returns json result
+        return jsonify({"results": "ok"})
 
 class Activities(Resource):
 
@@ -127,7 +175,7 @@ class Activities(Resource):
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['activityid'] = row[0]
+            d['id'] = row[0]
             d['userid'] = row[1]
             d['name'] = row[2]
             d['color'] = row[3]
@@ -135,7 +183,7 @@ class Activities(Resource):
             d['dailygoals'] = row[5]
             d['dailytimeSec'] = row[6]
             objects_list.append(d)
-        activities = objects_list[0]
+        activities = {"activities": objects_list[0]}
         return activities  # Fetches first column that is Employee ID
 
 
@@ -147,7 +195,7 @@ class ActivitiesList(Resource):
         objects_list = []
         for row in query.cursor:
             d = collections.OrderedDict()
-            d['activityid'] = row[0]
+            d['id'] = row[0]
             d['userid'] = row[1]
             d['name'] = row[2]
             d['color'] = row[3]
@@ -373,8 +421,10 @@ api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
 api.add_resource(TagsToActions, '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
-api.add_resource(Devices, '/devices')  # Route_1
-api.add_resource(Tags, '/tags')  # Route_1
+api.add_resource(DevicesList, '/devices')  # Route_1
+api.add_resource(Devices, '/devices/<device_id>')  # Route_1
+api.add_resource(TagsList, '/tags')  # Route_1
+api.add_resource(Tags, '/tags/<tag_id>')  # Route_1
 api.add_resource(Activities, '/activities/<activity_id>')  # Route_1
 api.add_resource(ActivitiesList, '/activities')  # Route_1
 api.add_resource(Reminders, '/reminders/<device_id>')  # Route_1
