@@ -63,7 +63,7 @@ class Users(Resource):
         query = conn.execute(
             "select * from users where userid='{}'".format(user_id))  # This line performs query and returns json result
         objects_list = []
-        for row in query.cursor:
+        for row in query:
             d = collections.OrderedDict()
             d['userid'] = row[0]
             d['first'] = row[1]
@@ -91,7 +91,7 @@ class Devices(Resource):
         conn = db_connect.cursor()
         query = conn.execute("select * from devices")  # This line performs query and returns json result
         objects_list = []
-        for row in query.cursor:
+        for row in query:
             d = collections.OrderedDict()
             d['deviceid'] = row[0]
             d['name'] = row[1]
@@ -203,7 +203,7 @@ class Activities(Resource):
         query = conn.execute("select * from activities where activityid={}".format(
             activity_id))  # This line performs query and returns json result
         objects_list = []
-        for row in query.cursor:
+        for row in query:
             d = collections.OrderedDict()
             d['id'] = row[0]
             d['user'] = row[1]
@@ -314,7 +314,7 @@ class CurrentReminders(Resource):
         conn = db_connect.cursor()
         query = conn.execute("select * from reminders")
         objects_list = []
-        for row in query.cursor:
+        for row in query:
             d = collections.OrderedDict()
             d['reminderid'] = row[0]
             d['userid'] = row[1]
@@ -453,7 +453,7 @@ class TagLogQuery(Resource):
 
         query = conn.execute(query_string)
         objects_list = []
-        for row in query.cursor:
+        for row in query:
             d = collections.OrderedDict()
             d['duration'] = row[0]
             if row[0] is None:
@@ -479,7 +479,7 @@ class Label(Resource):
 
         query = conn.execute(query_string)
         objects_list = []
-        for row in query.cursor:
+        for row in query:
             objects_list.append(row[0])
         db_connect.close()
         return objects_list
