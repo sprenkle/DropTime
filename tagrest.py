@@ -219,6 +219,7 @@ class Activities(Resource):
 
     def post(self):
         activity = request.json
+        print(activity)
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
         querystring = "INSERT INTO activities (activityid, userid, name, color, show, " \
