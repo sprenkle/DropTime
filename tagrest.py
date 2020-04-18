@@ -50,6 +50,7 @@ class UsersList(Resource):
         querystring = "INSERT INTO users (first, last, username, userpassword)VALUES ('{}','{}','{}','{}','{}')" \
             .format(user["first"], user["last"], user["username"], user["userpassword"])
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
 
@@ -81,6 +82,7 @@ class Users(Resource):
         querystring = "Update users set username='{}', userpassword='{}' where Userid='{}'" \
             .format(user["username"], user["userpassword"], user_id)
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
 
@@ -109,6 +111,7 @@ class Devices(Resource):
         querystring = "INSERT INTO devices (deviceid, name, description) VALUES ('{}','{}','{}')" \
             .format(device_id, device["name"], device["description"])
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok", "id": device_id})
 
@@ -191,6 +194,7 @@ class Tags(Resource):
         querystring = "INSERT INTO tags (tagid, userid, name, description) VALUES ('{}','{}','{}','{}')" \
             .format(tag_id, tag["userid"], tag["name"], tag["description"])
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok", "id": tag_id})
 
@@ -313,6 +317,7 @@ class Reminders(Resource):
                     reminder["friday"], reminder["saturday"],
                     reminder_id)
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
 
@@ -358,6 +363,7 @@ class CurrentReminders(Resource):
                     reminder["friday"], reminder["saturday"],
                     reminder_id)
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
 
@@ -444,6 +450,7 @@ class TagLog(Resource):
         querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})" \
             .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])
         conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
 
