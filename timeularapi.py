@@ -38,6 +38,7 @@ class TimularApi:
             logging.error("Error from Timeular {}".format(r))
             return None
         current_tracking = r.json()["currentTracking"];
+        logging.info(current_tracking)
         if current_tracking is None:
             return None
         return current_tracking["activity"]["id"]

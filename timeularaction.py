@@ -39,20 +39,18 @@ class TimeularAction:
             self.current_tag_not_in_repository()
             return
 
-        if self.running_tag_id != tag_id: # This hits once per activation
-            self.start_time = datetime.datetime.now()
-
-        # have activity start it
-        self.running_tag_id = tag_id
-        # todo working on this
         tag_to_action = self.tag_repository.tags_to_actions(self.id, tag_id)
         user_id = tag_to_action["userid"]
         token = self.get_token(user_id)
 
-        if not self.api.start_tracking(token, tag_to_action["identifier"]):
-            self.current_tag_not_in_repository()
-            logging.info("returning - not self.api.start_tracking(token, tag_to_action[])")
-            return
+        if self.running_tag_id != tag_id: # This hits once per activation
+            self.start_time = datetime.datetime.now()
+            if not self.api.start_tracking(token, tag_to_action["identifier"]):
+                self.current_tag_not_in_repository()
+                logging.info("returning - not self.api.start_tracking(token, tag_to_action[])")
+                return
+
+        self.running_tag_id = tag_id
 
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
 
