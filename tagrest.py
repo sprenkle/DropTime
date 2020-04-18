@@ -205,17 +205,37 @@ class Activities(Resource):
         objects_list = []
         for row in query:
             d = collections.OrderedDict()
-            d['id'] = row[0]
-            d['user'] = row[1]
+            d['activityid'] = row[0]
+            d['userid'] = row[1]
             d['name'] = row[2]
             d['color'] = row[3]
             d['show'] = row[4]
             d['dailyGoals'] = row[5]
-            d['dailyTimeSec'] = row[6]
+            d['dailytimeSec'] = row[6]
             objects_list.append(d)
         activities = objects_list[0]
         db_connect.close()
         return activities  # Fetches first column that is Employee ID
+
+    def post(self):
+        activity = request.json
+        db_connect = sqlite3.connect('droptime.db')
+        conn = db_connect.cursor()
+        querystring = "INSERT INTO activities (activityid, userid, name, color, show, " \
+                      "dailyGoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')" \
+            .format(activity["activityid"], activity["userid"], activity["name"], activity["color"], activity["show"],
+                    activity["dailyGoals"], activity["dailytimeSec"])
+        try:
+            conn.execute(querystring)  # This line performs query and returns json result
+        except Exception as e:
+            querystring = "UPDATE activities set userid = '{}', name = '{}', color = '{}', show = '{}', " \
+                          "dailyGoals = {}, dailytimeSec = {} where activityid = {}" \
+                .format(activity["userid"], activity["name"], activity["color"], activity["show"],
+                        activity["dailyGoals"], activity["dailytimeSec"], activity["activityid"])
+            conn.execute(querystring)  # This line performs query and returns json result
+        db_connect.commit()
+        db_connect.close()
+        return jsonify({"results": "ok"})
 
 
 class ActivitiesList(Resource):
@@ -227,31 +247,18 @@ class ActivitiesList(Resource):
         objects_list = []
         for row in query:
             d = collections.OrderedDict()
-            d['id'] = row[0]
-            d['user'] = row[1]
+            d['activityid'] = row[0]
+            d['userid'] = row[1]
             d['name'] = row[2]
             d['color'] = row[3]
             d['show'] = row[4]
             d['dailyGoals'] = row[5]
-            d['dailyTimeSec'] = row[6]
+            d['dailytimeSec'] = row[6]
             objects_list.append(d)
         activities = {"activities": objects_list}
         db_connect.close()
         return activities  # Fetches first column that is Employee ID
 
-    def post(self):
-        activity = request.json
-        db_connect = sqlite3.connect('droptime.db')
-        conn = db_connect.cursor()
-        activity_id = uuid.uuid4()
-        querystring = "INSERT INTO activities (activityid, userid, name, color, show, integration, " \
-                      "dailygoals, dailytimeSec) VALUES ('{}','{}','{}','{}','{}','{}','{}')" \
-            .format(activity_id, activity["userid"], activity["name"], activity["color"], activity["show"],
-                    activity["integration"],
-                    activity["dailygoals"], activity["dailytimeSec"])
-        conn.execute(querystring)  # This line performs query and returns json result
-        db_connect.close()
-        return jsonify({"results": "ok", "id": activity_id})
 
 
 # {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
@@ -493,7 +500,7 @@ api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
 api.add_resource(Tag, '/tag', '/tag/<string:tag_id>')
 api.add_resource(Tags, '/tags/<string:user_id>', '/tags')  # Route_1
-api.add_resource(Activities, '/activities/<activity_id>')  # Route_1
+api.add_resource(Activities, '/activities', '/activities/<activity_id>')  # Route_1
 api.add_resource(ActivitiesList, '/activities')  # Route_1
 api.add_resource(Reminders, '/reminders/<device_id>')  # Route_1
 api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1

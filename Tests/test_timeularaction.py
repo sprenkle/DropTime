@@ -67,7 +67,7 @@ class TimularActionTests(unittest.TestCase):
         tag_repo = Mock()
         tag_repo.contains_id.return_value = True
         tag_repo.tags_to_actions.return_value = {"identifier": identifier, "userid": user_id}
-        tag_repo.get_activity.return_value = {"show": 1,  "dailygoals": 1, "dailytimeSec": 60}
+        tag_repo.get_activity.return_value = {"show": 1,  "dailyGoals": 1, "dailytimeSec": 60}
         tag_repo.get_api_key_token.return_value = (api_key, api_secret)
         tag_repo.get_activity_duration.return_value = 30
 
@@ -96,7 +96,7 @@ class TimularActionTests(unittest.TestCase):
         tag_repo = Mock()
         tag_repo.contains_id.return_value = True
         tag_repo.tags_to_actions.return_value = {"identifier": identifier, "userid": user_id}
-        tag_repo.get_activity.return_value = {"show": 1,  "dailygoals": 1, "dailytimeSec": 60}
+        tag_repo.get_activity.return_value = {"show": 1,  "dailyGoals": 1, "dailytimeSec": 60}
         tag_repo.get_api_key_token.return_value = (api_key, api_secret)
         tag_repo.get_activity_duration.return_value = 30
 

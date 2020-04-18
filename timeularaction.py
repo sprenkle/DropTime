@@ -49,8 +49,8 @@ class TimeularAction:
 
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
 
-        if ("show" in activity and activity["show"] == 0) or "dailygoals" not in activity or \
-                "" == activity["dailygoals"]:
+        if ("show" in activity and activity["show"] == 0) or "dailyGoals" not in activity or \
+                "" == activity["dailyGoals"]:
             self.led_controller.set_have_tracking_tag()
             return
 
@@ -62,30 +62,30 @@ class TimeularAction:
         day = now.day
         hour = now.hour
 
-        if activity["dailygoals"] == 1:  # reset each time you use it, like a timer
+        if activity["dailyGoals"] == 1:  # reset each time you use it, like a timer
             pass
-        elif activity["dailygoals"] == 2:  # for each hour
+        elif activity["dailyGoals"] == 2:  # for each hour
             start_time = datetime.datetime(year, month, day, hour, 0, 0)
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
-        elif activity["dailygoals"] == 3:  # for each day
+        elif activity["dailyGoals"] == 3:  # for each day
             start_time = datetime.datetime(year, month, day, 0, 0, 0)
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
-        elif activity["dailygoals"] == 4:  # for each week
+        elif activity["dailyGoals"] == 4:  # for each week
             week = now.weekday()
             start_time = datetime.datetime(year, month, day, 0, 0, 0) - datetime.timedelta(days=week)
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
-        elif activity["dailygoals"] == 5:  # for each month
+        elif activity["dailyGoals"] == 5:  # for each month
             start_time = datetime.datetime(year, month, 0, 0, 0, 0)
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
-        elif activity["dailygoals"] == 6:  # for each year
+        elif activity["dailyGoals"] == 6:  # for each year
             start_time = datetime.datetime(year, 0, 0, 0, 0, 0)
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
-        elif activity["dailygoals"] == 7:  # total lifetime
+        elif activity["dailyGoals"] == 7:  # total lifetime
             start_time = datetime.datetime.min
             time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], start_time,
                                                                    datetime.datetime.utcnow())
