@@ -91,7 +91,7 @@ if __name__ == "__main__":
         api = TimularApi(configuration, tag_repository)
 
     device_id = configuration.get_value("device", "device_id")
-    actions = Actions(TimeularAction(api, tag_repository, led_controller))
+    actions = Actions(TimeularAction(api, tag_repository, led_controller, device_id))
     dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions,
                         Reminder(tag_repository, device_id, led_controller))
     dropTime.run(-1)

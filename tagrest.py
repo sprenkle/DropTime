@@ -23,6 +23,7 @@ CORS(app)
 
 parser = reqparse.RequestParser()
 last_seen_tag = None
+last_device = None
 
 
 class UsersList(Resource):
@@ -370,7 +371,7 @@ class CurrentReminders(Resource):
 
 class LastSeenTag(Resource):
     def get(self):
-        return last_seen_tag
+        return last_seen_tag, last_device
 
 
 class TagsToActionsList(Resource):
@@ -393,10 +394,11 @@ class TagsToActionsList(Resource):
 
 class TagsToActions(Resource):
 
-    def get(self, action_type, tag_id):
-        global last_seen_tag
+    def get(self, action_type, tag_id, device_id):
+        global last_seen_tag, last_device
         if tag_id is not None:
             last_seen_tag = tag_id
+            last_device = device_id
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
         query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
@@ -504,7 +506,7 @@ class Label(Resource):
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
-api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>')  # Route_1
+api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>/<string:device_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1

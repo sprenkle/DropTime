@@ -5,7 +5,7 @@ import sys
 
 class TimeularAction:
 
-    def __init__(self, api, tag_repository, led_controller):
+    def __init__(self, api, tag_repository, led_controller, device_id):
         self.running_tag_id = None
         self.api = api
         self.tag_repository = tag_repository
@@ -13,6 +13,7 @@ class TimeularAction:
         self.id = 1
         self.led_controller = led_controller
         self.start_time = datetime.datetime.now()
+        self.device_id = device_id
 
     def get_id(self):
         return self.id
@@ -34,7 +35,7 @@ class TimeularAction:
             self.current_tag_is_none()
             return
 
-        if not self.tag_repository.contains_id(self.id, tag_id):
+        if not self.tag_repository.contains_id(self.id, tag_id, self.device_id):
             logging.info("Tag id is not in repository returning")
             self.current_tag_not_in_repository()
             return
@@ -100,7 +101,7 @@ class TimeularAction:
 
     def stop_running_tag(self, tag_id):
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
-            if self.tag_repository.contains_id(self.id, self.running_tag_id):
+            if self.tag_repository.contains_id(self.id, self.running_tag_id, self.device_id):
                 logging.info("Stopping tracking of current tag")
                 tag_to_action = self.tag_repository.tags_to_actions(self.id, self.running_tag_id)
                 token = self.get_token(tag_to_action["userid"])

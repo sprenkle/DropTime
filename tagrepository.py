@@ -12,8 +12,8 @@ class TagRepository:
         logging.info("url is {}".format(self.base_url))
         self.tags_to_action_dict = {}
 
-    def contains_id(self, action_type, tag_id):
-        url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id)
+    def contains_id(self, action_type, tag_id, device_id):
+        url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id) + '/' + device_id
         logging.debug("url is {}".format(url))
         r = requests.get(url)
         activity = r.json()
