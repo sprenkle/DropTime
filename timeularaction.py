@@ -21,7 +21,7 @@ class TimeularAction:
         return {}
 
     def execute(self, tag_id):
-        logging.debug("tag_id = {}  running_tag_id={}".format(tag_id, self.running_tag_id))
+        logging.info("tag_id = {}  running_tag_id={}".format(tag_id, self.running_tag_id))
 
         try:
             self.stop_running_tag(tag_id)
@@ -30,10 +30,12 @@ class TimeularAction:
             logging.error(e)
 
         if tag_id is None:
+            logging.info("Tag id is None returning")
             self.current_tag_is_none()
             return
 
         if not self.tag_repository.contains_id(self.id, tag_id):
+            logging.info("Tag id is not in repository returning")
             self.current_tag_not_in_repository()
             return
 
@@ -46,9 +48,10 @@ class TimeularAction:
         tag_to_action = self.tag_repository.tags_to_actions(self.id, tag_id)
         user_id = tag_to_action["userid"]
         token = self.get_token(user_id)
-        logging.info("start tracking")
+
         if not self.api.start_tracking(token, tag_to_action["identifier"]):
             self.current_tag_not_in_repository()
+            logging.info("returning - not self.api.start_tracking(token, tag_to_action[])")
             return
 
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
@@ -56,6 +59,7 @@ class TimeularAction:
         if ("show" in activity and activity["show"] == 0) or "dailyGoals" not in activity or \
                 "" == activity["dailyGoals"]:
             self.led_controller.set_have_tracking_tag()
+            logging.info("returning - No time tracking")
             return
 
         time_spent = 0
@@ -84,8 +88,7 @@ class TimeularAction:
 
         time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], self.start_time,
                                                                    datetime.datetime.utcnow())
-        print(activity["dailytimeSec"])
-        print(time_spent)
+        logging.info(f'dailytimeSec={activity["dailytimeSec"]} time_spent={time_spent}')
         self.led_controller.set_progress(activity["dailytimeSec"], time_spent)
 
     def get_token(self, user_id):
@@ -101,6 +104,7 @@ class TimeularAction:
     def stop_running_tag(self, tag_id):
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
             if self.tag_repository.contains_id(self.id, self.running_tag_id):
+                logging.info("Stopping tracking of current tag")
                 tag_to_action = self.tag_repository.tags_to_actions(self.id, self.running_tag_id)
                 token = self.get_token(tag_to_action["userid"])
                 self.api.stop_tracking(token, tag_to_action["identifier"])
