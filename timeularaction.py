@@ -60,8 +60,6 @@ class TimeularAction:
             logging.info("returning - No time tracking")
             return
 
-        time_spent = 0
-
         now = datetime.datetime.now()
         year = now.year
         month = now.month
@@ -69,27 +67,26 @@ class TimeularAction:
         hour = now.hour
 
         if activity["dailyGoals"] == 1:  # reset each time you use it, like a timer
-            pass
-        elif activity["dailyGoals"] == 2:  # for each hour
-            self.start_time = datetime.datetime(year, month, day, hour, 0, 0)
-        elif activity["dailyGoals"] == 3:  # for each day
-            self.start_time = datetime.datetime(year, month, day, 0, 0, 0)
-        elif activity["dailyGoals"] == 4:  # for each week
-            week = now.weekday()
-            self.start_time = datetime.datetime(year, month, day, 0, 0, 0) - datetime.timedelta(days=week)
-        elif activity["dailyGoals"] == 5:  # for each month
-            self.start_time = datetime.datetime(year, month, 0, 0, 0, 0)
-        elif activity["dailyGoals"] == 6:  # for each year
-            self.start_time = datetime.datetime(year, 0, 0, 0, 0, 0)
-        elif activity["dailyGoals"] == 7:  # total lifetime
-            self.start_time = datetime.datetime.min
-
-        time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], self.start_time, now)
+            time_spent = 0
+        else:
+            if activity["dailyGoals"] == 2:  # for each hour
+                self.start_time = datetime.datetime(year, month, day, hour, 0, 0)
+            elif activity["dailyGoals"] == 3:  # for each day
+                self.start_time = datetime.datetime(year, month, day, 0, 0, 0)
+            elif activity["dailyGoals"] == 4:  # for each week
+                week = now.weekday()
+                self.start_time = datetime.datetime(year, month, day, 0, 0, 0) - datetime.timedelta(days=week)
+            elif activity["dailyGoals"] == 5:  # for each month
+                self.start_time = datetime.datetime(year, month, 0, 0, 0, 0)
+            elif activity["dailyGoals"] == 6:  # for each year
+                self.start_time = datetime.datetime(year, 0, 0, 0, 0, 0)
+            elif activity["dailyGoals"] == 7:  # total lifetime
+                self.start_time = datetime.datetime.min
+            time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], self.start_time, now)
 
         logging.info("dailytimeSec={} start_time={} now={} time_spent={}".format(activity['dailytimeSec'],
                                                                                  self.start_time, now, time_spent))
-        self.led_controller.set_progress(activity["dailytimeSec"], time_spent + (datetime.datetime.now() -
-                                                                                 self.start_time).seconds)
+        self.led_controller.set_progress(activity["dailytimeSec"], time_spent)
 
     def get_token(self, user_id):
         if user_id not in self.user_to_token_dict:

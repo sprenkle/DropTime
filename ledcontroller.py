@@ -64,8 +64,7 @@ class LedController:
                               [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
     def show_progress(self):
-        total_time = self.progress_start_amount_time_sec + \
-                     (datetime.datetime.utcnow() - self.progress_started_time).seconds
+        total_time = self.progress_start_amount_time_sec + (datetime.datetime.utcnow() - self.progress_started_time).seconds
         percent = total_time / int(self.progress_goal_time_sec)
         logging.info("Led percent = {}".format(percent))
         result_over = 0
