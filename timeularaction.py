@@ -86,7 +86,8 @@ class TimeularAction:
 
         time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], self.start_time,
                                                                    datetime.datetime.utcnow())
-        logging.info("dailytimeSec={} time_spent={}".format(activity['dailytimeSec'], time_spent))
+        logging.info("dailytimeSec={} start_time={} time_spent={}".format(activity['dailytimeSec'],self.start_time,
+                                                                          time_spent))
         self.led_controller.set_progress(activity["dailytimeSec"], time_spent)
 
     def get_token(self, user_id):
