@@ -50,9 +50,9 @@ class DropTime:
                 self.tag_start = datetime.datetime.utcnow()
 
             logging.info("run - id " + str(card_id))
-            self.last_read = card_id
             self.actions.execute(card_id)
             logging.debug("Exiting process_actions")
+        self.last_read = card_id
 
     def log_tag(self, tag_id, start, end):
         self.tag_repository.log_tag(tag_id, self.device_id, start, end)
