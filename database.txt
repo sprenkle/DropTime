@@ -54,7 +54,7 @@ CREATE TABLE "activities"
     [name] NVARCHAR(80)  NOT NULL,
     [color] INTEGER  NULL,
     [show] INTEGER(1) NOT NULL, -- show daily goals colors
-    [dailygoals] INTEGER(1) NOT NULL, -- 0 none, 1 activation, 2 day, 3 week, 4 month, 5 year,
+    [dailyGoals] INTEGER(1) NOT NULL, -- 0 none, 1 activation, 2 day, 3 week, 4 month, 5 year,
     [dailytimeSec] INTEGER NOT NULL,
     FOREIGN KEY ([userid]) REFERENCES "users" ([userid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -89,7 +89,7 @@ CREATE TABLE "reminders"
     [reminderid] NVARCHAR(36) PRIMARY KEY NOT NULL,
     [userid] NVARCHAR(36),
     [start] NVARCHAR(23)  NOT NULL,
-    [stop] NVARCHAR(23)  NOT NULL,
+    [duration] int  NOT NULL,
     [showled] INTEGER(1) NOT NULL,
     [sunday] INTEGER(1) NOT NULL,
     [monday] INTEGER(1) NOT NULL,
@@ -108,11 +108,21 @@ CREATE TABLE "reminderstodevices"
 (
     [reminderid] NVARCHAR(36) NOT NULL,
     [deviceid] NVARCHAR(36),
-    FOREIGN KEY ([deviceid]) REFERENCES "reminderstodevices" ([deviceid])
+    FOREIGN KEY ([deviceid]) REFERENCES "devices" ([deviceid])
                 ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE INDEX [IFK_RemindersToDevicesReminderId] ON "reminderstodevices" ([reminderid]);
 
-
+CREATE TABLE "reminderstotags"
+(
+    [reminderid] NVARCHAR(36) NOT NULL,
+    [tagid] NVARCHAR(36),
+    [display] NVARCHAR(255),
+    FOREIGN KEY ([reminderid]) REFERENCES "fkreminderidreminderstotags" ([reminderid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION.s
+    FOREIGN KEY ([tagid]) REFERENCES "fktagidreminderstotags" ([tagid])
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE INDEX [IFK_RemindersTotagsReminderId] ON "reminderstotags" ([reminderid]);
 
 

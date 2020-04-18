@@ -1,7 +1,8 @@
 import board
 import neopixel
 pixels = neopixel.NeoPixel(board.D18, 30)
-from configuration import Configuration
+import logging
+
 
 
 class LedDevice:
@@ -16,11 +17,13 @@ class LedDevice:
                                    pixel_order=order)
 
     def show(self, led_patterns):
+        logging.debug("Led pattern {}".format(led_patterns))
         for i in range(self.num_pixels):
             self.pixels[i] = (led_patterns[i][0], led_patterns[i][1], led_patterns[i][2])
         self.pixels.show()
 
     def clear(self):
+        logging.debug("Led Clear")
         for i in range(self.num_pixels):
             self.pixels[i] = (0, 0, 0)
         self.pixels.show()

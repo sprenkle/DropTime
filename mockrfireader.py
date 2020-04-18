@@ -4,12 +4,12 @@ import datetime
 class MockRfiReader:
 
     def __init__(self):
-        self.arr = ['1111043878', None]
-        self.last_event_time = datetime.datetime.utcnow()
+        self.arr = ['1110505110']
+        self.last_event_time = datetime.datetime.utcnow() - datetime.timedelta(days=1)
         self.last_event = None
-        self.index = 0;
+        self.index = 0
 
-    def read_card(self):
+    def read_tag(self):
         if self.last_event_time < datetime.datetime.utcnow() - datetime.timedelta(seconds=5):
             if self.index == len(self.arr):
                 self.index = 0
@@ -26,4 +26,4 @@ if __name__ == "__main__":
     reader = MockRfiReader()
     start_time = datetime.datetime.utcnow()
     while start_time < datetime.datetime.utcnow() + datetime.timedelta(seconds=120):
-        print(reader.read_card())
+        print(reader.read_tag())
