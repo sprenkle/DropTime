@@ -84,7 +84,7 @@ class TimeularAction:
         elif activity["dailyGoals"] == 7:  # total lifetime
             self.start_time = datetime.datetime.min
 
-        time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], self.start_time,now)
+        time_spent = self.tag_repository.get_activity_duration(1, tag_to_action["identifier"], self.start_time, now)
         logging.info("dailytimeSec={} start_time={} now={} time_spent={}".format(activity['dailytimeSec'],
                                                                                  self.start_time, now, time_spent))
         self.led_controller.set_progress(activity["dailytimeSec"], time_spent)

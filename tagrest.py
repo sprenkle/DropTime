@@ -203,6 +203,7 @@ class Activities(Resource):
         query = conn.execute("select * from activities where activityid={}".format(
             activity_id))  # This line performs query and returns json result
         objects_list = []
+        activities = None
         for row in query:
             d = collections.OrderedDict()
             d['activityid'] = row[0]
@@ -213,7 +214,8 @@ class Activities(Resource):
             d['dailyGoals'] = row[5]
             d['dailytimeSec'] = row[6]
             objects_list.append(d)
-        activities = objects_list[0]
+        if len(objects_list) > 0:
+            activities = objects_list[0]
         db_connect.close()
         return activities  # Fetches first column that is Employee ID
 
