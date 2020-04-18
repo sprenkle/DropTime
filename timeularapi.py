@@ -59,6 +59,7 @@ class TimularApi:
             start_time = TimularApi.get_utc_time()
         current_tracking = self.get_tracking(token)
         if current_tracking is not None:
+            logging.info("Current_tracking is not None stopping it " + str(current_tracking))
             self.stop_tracking(token, current_tracking, TimularApi.get_utc_time(True))
         url = self.base_url + '/tracking/' + str(activity_id) + '/start'
         my_headers = {'Authorization': 'Bearer ' + token}
