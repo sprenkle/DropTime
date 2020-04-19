@@ -327,6 +327,10 @@ class Reminders(Resource):
 
     def post(self):
         reminder = request.json
+
+        if reminder["reminderid"] == "0":
+            reminder["reminderid"] = uuid.uuid4()
+
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
         querystring = "INSERT INTO reminders (reminderid, name, userid, deviceid, start," \
@@ -342,7 +346,7 @@ class Reminders(Resource):
             conn.execute(querystring)  # This line performs query and returns json result
         except Exception as e:
             querystring = "Update reminders set name='{}', userid='{}', deviceid='{}', start='{}'," \
-                          "duration={}, showled={}, sunday={}, monday={}, tuesday={}," \
+                          "duration={}, showled='{}', sunday={}, monday={}, tuesday={}," \
                           "wednesday={}, thursday={}, friday={}, saturday={} " \
                           "where reminderid='{}'" \
                 .format(reminder["name"], reminder["userid"], reminder["deviceid"], reminder["start"],
@@ -351,7 +355,7 @@ class Reminders(Resource):
                         reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
                         reminder["friday"], reminder["saturday"], reminder["reminderid"])
             print(querystring)
-            conn.execute(querystring)  # This line performs query and returns json result
+            conn.execute(querystring)
         db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
