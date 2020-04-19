@@ -342,11 +342,17 @@ class Reminders(Resource):
                     reminder["monday"],
                     reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
                     reminder["friday"], reminder["saturday"])
+        print(reminder)
+        if(reminder["showled"] == True or reminder["showled"] == 0):
+            show_led = 1
+        else:
+            show_led = 0
+
         try:
             conn.execute(querystring)  # This line performs query and returns json result
         except Exception as e:
-            querystring = "Update reminders set name='{}', userid='{}', deviceid='{}', start='{}'," \
-                          "duration={}, showled='{}', sunday={}, monday={}, tuesday={}," \
+            querystring = "Update reminders set name='{}', userid='{}', deviceid='{}', start={}," \
+                          "duration={}, showled={}, sunday={}, monday={}, tuesday={}," \
                           "wednesday={}, thursday={}, friday={}, saturday={} " \
                           "where reminderid='{}'" \
                 .format(reminder["name"], reminder["userid"], reminder["deviceid"], reminder["start"],

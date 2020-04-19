@@ -55,11 +55,14 @@ class TimeularAction:
 
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
 
-        if ("show" in activity and activity["show"] == 0) or "dailyGoals" not in activity or \
-                "" == activity["dailyGoals"]:
-            self.led_controller.set_have_tracking_tag()
+        logging.info("Checking what show is".format(activity["show"]))
+        if not activity["show"]:
             logging.info("returning - No time tracking")
+            self.led_controller.set_have_tracking_tag()
             return
+        else:
+            logging.info("show is true")
+
 
         now = datetime.datetime.now()
         year = now.year
