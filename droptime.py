@@ -29,13 +29,15 @@ class DropTime:
             try:
                 card_id = self.reader.read_tag()
                 logging.debug("card_id read is {}".format(card_id))
-                self.reminder.process_reminders(card_id)
-                if not self.reminder.update():
-                    self.process_actions(card_id)
+                self.process_actions(card_id)
                 self.led_controller.show()
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)
                 print(e)
+
+    # Nontag things
+    def process_nonactions(self):
+        self.reminder.update()
 
     def process_actions(self, card_id):
 
@@ -91,7 +93,7 @@ if __name__ == "__main__":
         api = TimularApi(configuration, tag_repository)
 
     device_id = configuration.get_value("device", "device_id")
-    actions = Actions(TimeularAction(api, tag_repository, led_controller, device_id))
+    actions = Actions(TimeularAction(api, tag_repository, led_controller, device_id), Reminder(tag_repository, device_id, led_controller))
     dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions,
                         Reminder(tag_repository, device_id, led_controller))
     dropTime.run(-1)

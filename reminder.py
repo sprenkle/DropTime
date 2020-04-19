@@ -15,7 +15,6 @@ class Reminder:
         self.has_reminder = False
         self.reminders = []
         self.next_update = datetime.now()
-        self.reminders = self.tag_repository.get_reminders(self.device_id)
 
     # updates the reminders from repository
     def update(self):
@@ -46,12 +45,16 @@ class Reminder:
                 display = list(eval(reminder["display"]))
                 for led_value in display:
                     led_list.append(led_value)
+
         if len(led_list) > 0:
             while len(led_list) < 24:
                 led_list += led_list
             self.led_controller.set_reminder(led_list[0:24])
         else:
             self.led_controller.clear_reminder()
+
+    def execute(self, tag_id):
+        self.tags_seen[tag_id] = datetime.now();
 
     def has_reminders(self):
         return len(self.reminders) > 0
