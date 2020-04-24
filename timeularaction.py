@@ -41,6 +41,8 @@ class TimeularAction:
             return
 
         tag_to_action = self.tag_repository.tags_to_actions(self.id, tag_id)
+        logging.info("tag_to_action")
+        logging.info(tag_to_action)
         user_id = tag_to_action["userid"]
         token = self.get_token(user_id)
 
