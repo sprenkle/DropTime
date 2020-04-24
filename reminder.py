@@ -22,6 +22,7 @@ class Reminder:
             logging.info("Called reminder update")
             self.reminders = self.tag_repository.get_reminders(self.device_id)
             self.next_update = datetime.now() + timedelta(minutes=5)
+            logging.info(self.device_id)
             logging.info(self.reminders)
             logging.info(self.next_update)
             logging.debug(self.reminders)
