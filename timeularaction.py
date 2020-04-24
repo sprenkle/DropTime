@@ -55,7 +55,7 @@ class TimeularAction:
 
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
 
-        logging.info("Checking what show is".format(activity["show"]))
+        logging.info("Checking what show is {}".format(activity["show"]))
         if not activity["show"]:
             logging.info("returning - No time tracking")
             self.led_controller.set_have_tracking_tag()

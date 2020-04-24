@@ -292,13 +292,13 @@ class ActivitiesList(Resource):
 # "monday":"", "tuesday":"", "wednesday":"", "thursday":"", "friday":"", "saturday":"",
 # "integration":""}
 class Reminders(Resource):
-    def get(self, device_id):
+    def get(self, user_id):
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
 
         sql = "select reminderid, name,userid,deviceid,start,duration,showled,sunday,monday," \
                              "tuesday,wednesday,thursday,friday,saturday from reminders" \
-                             " where deviceid = '{}'".format(device_id)
+                             " where userid = '{}'".format(user_id)
         print(sql)
         query = conn.execute(sql)
         objects_list = []
@@ -325,6 +325,17 @@ class Reminders(Resource):
         db_connect.close()
         return reminders
 
+    def delete(self, reminder_id):
+        db_connect = sqlite3.connect('droptime.db')
+        conn = db_connect.cursor()
+        querystring = "DELETE FROM reminders WHERE reminderid='{}'" \
+            .format(reminder_id)
+        conn.execute(querystring)
+        db_connect.commit()
+        db_connect.close()
+        return jsonify({"results": "ok"})
+
+
     def post(self):
         reminder = request.json
 
@@ -342,16 +353,10 @@ class Reminders(Resource):
                     reminder["monday"],
                     reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
                     reminder["friday"], reminder["saturday"])
-        print(reminder)
-        if(reminder["showled"] == True or reminder["showled"] == 0):
-            show_led = 1
-        else:
-            show_led = 0
-
         try:
-            conn.execute(querystring)  # This line performs query and returns json result
+            conn.execute(querystring)
         except Exception as e:
-            querystring = "Update reminders set name='{}', userid='{}', deviceid='{}', start={}," \
+            querystring = "Update reminders set name='{}', userid='{}', deviceid='{}', start='{}'," \
                           "duration={}, showled={}, sunday={}, monday={}, tuesday={}," \
                           "wednesday={}, thursday={}, friday={}, saturday={} " \
                           "where reminderid='{}'" \
@@ -360,7 +365,6 @@ class Reminders(Resource):
                         reminder["monday"],
                         reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
                         reminder["friday"], reminder["saturday"], reminder["reminderid"])
-            print(querystring)
             conn.execute(querystring)
         db_connect.commit()
         db_connect.close()
@@ -445,7 +449,9 @@ class TagsToActions(Resource):
             last_device = device_id
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
-        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
+
+        if(tag_id == None and device_id == None):
+            query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
                        "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
                                                                                                          action_type)
         query = conn.execute(query_string)
@@ -495,7 +501,7 @@ class TagLog(Resource):
         conn = db_connect.cursor()
         querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})" \
             .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])
-        conn.execute(querystring)  # This line performs query and returns json result
+        conn.execute(querystring)
         db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
@@ -550,7 +556,7 @@ class Label(Resource):
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
-api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>/<string:device_id>')  # Route_1
+api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>', '/tagstoactions/<action_type>/<string:tag_id>/<string:device_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
@@ -558,7 +564,7 @@ api.add_resource(Tag, '/tag', '/tag/<string:tag_id>')
 api.add_resource(Tags, '/tags/<string:user_id>', '/tags')  # Route_1
 api.add_resource(Activities, '/activities', '/activities/<activity_id>')  # Route_1
 api.add_resource(ActivitiesList, '/activities')  # Route_1
-api.add_resource(Reminders, '/reminders', '/reminders/<string:device_id>')  # Route_1
+api.add_resource(Reminders, '/reminders', '/reminders/<string:user_id>', '/reminders/delete/<string:reminder_id>')  # Route_1
 # api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
 api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1
