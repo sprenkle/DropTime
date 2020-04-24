@@ -442,7 +442,7 @@ class TagsToActionsList(Resource):
 
 class TagsToActions(Resource):
 
-    def get(self, action_type, tag_id, device_id):
+    def get(self, action_type, tag_id=None, device_id=None):
         global last_seen_tag, last_device
         if tag_id is not None:
             last_seen_tag = tag_id
@@ -450,10 +450,14 @@ class TagsToActions(Resource):
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
 
-        if(tag_id == None and device_id == None):
+        if tag_id is None and device_id is None:
+            query_string = conn.execute(
+                "select ta.tagid, ta.actiontype, ta.identifier from tagstoactions ta")  # This line performs query and returns json result
+        else:
             query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
                        "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
                                                                                                          action_type)
+
         query = conn.execute(query_string)
         objects_list = []
         for row in query:
