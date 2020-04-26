@@ -7,10 +7,26 @@ from ledcontroller import LedController
 
 class TestReminder(unittest.TestCase):
 
+    def test_execute(self):
+        from tagrepository import TagRepository
+        from configuration import Configuration
+
+        configuration = Configuration("..\configuration.json")
+        tag_repo = TagRepository(configuration)
+
+        led_controller = Mock()
+
+        reminder = Reminder(tag_repo, "08f98cd6-3602-41ee-aa27-a6768412254e", led_controller)
+        reminder.update()
+
+
     def test_when_no_reminders_calls_clear_reminder_on_led_controller(self):
+        from tagrepository import TagRepository
+        from configuration import Configuration
+
         reminder_list = {"reminders": []}
-        led_device = Mock()
-        tag_repo = LedController(led_device)
+        configuration = Configuration("..\configuration.json")
+        tag_repo = TagRepository(configuration)
         tag_repo.get_reminders = MagicMock(return_value=reminder_list)
         led_controller = Mock()
 
