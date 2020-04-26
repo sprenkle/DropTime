@@ -82,7 +82,7 @@ class TagRepository:
         return out
 
     def get_reminders(self, device_id):
-        url = self.base_url + "/reminders/{}".format(device_id)
+        url = self.base_url + "/RemindersDevice/{}".format(device_id)
         logging.debug("url is {}".format(url))
         r = requests.get(url)
         out = r.json()

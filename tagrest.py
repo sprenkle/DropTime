@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, url_for
 from flask_restful import Resource, Api, reqparse
 # from sqlalchemy import create_engine
 import sqlite3
@@ -287,10 +287,44 @@ class ActivitiesList(Resource):
         return activities  # Fetches first column that is Employee ID
 
 
+class RemindersDevice(Resource):
+    def get(self, device_id):
+        db_connect = sqlite3.connect('droptime.db')
+        conn = db_connect.cursor()
 
-# {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
-# "monday":"", "tuesday":"", "wednesday":"", "thursday":"", "friday":"", "saturday":"",
-# "integration":""}
+        sql = "select reminderid, name,userid,deviceid,start,duration,showled,sunday,monday," \
+                             "tuesday,wednesday,thursday,friday,saturday from reminders" \
+                             " where deviceid = '{}'".format(device_id)
+        print(sql)
+        query = conn.execute(sql)
+        objects_list = []
+        for row in query:
+            d = collections.OrderedDict()
+            d['reminderid'] = row[0]
+            d['name'] = row[1]
+            d['userid'] = row[2]
+            d['deviceid'] = row[3]
+            d['start'] = row[4]
+            d['duration'] = row[5]
+            d['showled'] = row[6]
+            d['sunday'] = row[7]
+            d['monday'] = row[8]
+            d['tuesday'] = row[9]
+            d['wednesday'] = row[10]
+            d['thursday'] = row[11]
+            d['friday'] = row[12]
+            d['saturday'] = row[13]
+            objects_list.append(d)
+        reminders = []
+        if len(objects_list) > 0:
+            reminders = {"reminders": objects_list}
+        else:
+            reminders = {"reminders": []}
+        db_connect.close()
+        return reminders
+
+
+
 class Reminders(Resource):
     def get(self, user_id):
         db_connect = sqlite3.connect('droptime.db')
@@ -562,7 +596,8 @@ class Label(Resource):
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
-api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>', '/tagstoactions/<action_type>/<string:tag_id>/<string:device_id>')  # Route_1
+api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>',
+                 '/tagstoactions/<action_type>/<string:tag_id>/<string:device_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
@@ -570,7 +605,9 @@ api.add_resource(Tag, '/tag', '/tag/<string:tag_id>')
 api.add_resource(Tags, '/tags/<string:user_id>', '/tags')  # Route_1
 api.add_resource(Activities, '/activities', '/activities/<activity_id>')  # Route_1
 api.add_resource(ActivitiesList, '/activities')  # Route_1
-api.add_resource(Reminders, '/reminders', '/reminders/<string:user_id>', '/reminders/delete/<string:reminder_id>')  # Route_1
+api.add_resource(Reminders, '/reminders', '/reminders/<string:user_id>',
+                 '/reminders/delete/<string:reminder_id>')  # Route_1
+api.add_resource(RemindersDevice, '/remindersdevice/<string:device_id>')  # Route_1
 # api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
 api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1
