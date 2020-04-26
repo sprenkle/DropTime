@@ -49,8 +49,10 @@ class Reminder:
                 logging.info("in reminder not inbetween time")
 
         if len(led_list) > 0:
+            logging.info("set_reminder")
             self.led_controller.set_reminder(led_list)
         else:
+            logging.info("clear_reminder")
             self.led_controller.clear_reminder()
 
     def execute(self, tag_id):
@@ -78,8 +80,14 @@ class Reminder:
 if __name__ == "__main__":
     from tagrepository import TagRepository
     from configuration import Configuration
+    from unittest.mock import MagicMock, Mock
 
-    _configuration = Configuration("configuration.json")
-    _device_id = _configuration.get_value("device", "device_id")
-    _reminder = Reminder(TagRepository(_configuration), _device_id)
-    _reminder.update()
+    logging.basicConfig(level=logging.INFO)
+    configuration = Configuration("configuration.json")
+    tag_repo = TagRepository(configuration)
+    led_controller = Mock()
+    reminder = Reminder(tag_repo, "08f98cd6-3602-41ee-aa27-a6768412254e", led_controller)
+
+    reminder.update()
+    reminder.execute("3172271240")
+    reminder.update()
