@@ -51,11 +51,14 @@ class Reminder:
             self.led_controller.clear_reminder()
 
     def execute(self, tag_id):
+        logging.info("Reminder tag_id = {}".format(tag_id))
         self.tag_repository.contains_id("2", tag_id, self.device_id)
         tag_to_action = self.tag_repository.tags_to_actions("2", tag_id)
 
         if tag_to_action is None:
+            logging.info("No tag to action found")
             return
+
 
         self.tags_seen[tag_to_action["identifier"]] = datetime.now();
 
