@@ -48,7 +48,7 @@ class LedController:
             #24 leds
             led_array = []
             for i in range(0, 24):
-                if i % div == 0:
+                if num > 1 and i % div == 0:
                     led_array.append([0, 0, 0])
                 else:
                     led_array.append([255, 255, 0])
