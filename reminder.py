@@ -29,6 +29,7 @@ class Reminder:
         current_dt = datetime.now()
         led_list = []
         for reminder in self.reminders:
+            logging.info("Processing Reminder {}".format(reminder["name"]))
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
             dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.minute, dt.second)
             # if dt > current_dt:
@@ -61,8 +62,10 @@ class Reminder:
             logging.info("No tag to action found")
             return
 
-
         self.tags_seen[tag_to_action["identifier"]] = datetime.now();
+
+        logging.info("tags_to_action {}".format(tag_to_action["identifier"],
+                                                self.tags_seen[tag_to_action["identifier"]]))
 
     def has_reminders(self):
         return len(self.reminders) > 0
