@@ -64,8 +64,7 @@ class Reminder:
 
         self.tags_seen[tag_to_action["identifier"]] = datetime.now();
 
-        logging.info("tags_to_action {}".format(tag_to_action["identifier"],
-                                                self.tags_seen[tag_to_action["identifier"]]))
+        logging.info("tags_to_action {} {}".format(tag_to_action["identifier"], self.tags_seen[tag_to_action["identifier"]]))
 
     def has_reminders(self):
         return len(self.reminders) > 0
