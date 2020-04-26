@@ -45,7 +45,7 @@ class Reminder:
                     led_list.append(reminder["name"])
                     logging.info("Reminder Opened " + reminder["name"])
             else:
-                logging.info("in reminder tag not inbetween time")
+                logging.info("in reminder not inbetween time")
 
         if len(led_list) > 0:
             self.led_controller.set_reminder(led_list)

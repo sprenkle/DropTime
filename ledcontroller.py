@@ -51,7 +51,7 @@ class LedController:
                 if i % div == 0:
                     led_array.append([0, 0, 0])
                 else:
-                    led_array.append([0, 255, 255])
+                    led_array.append([255, 255, 0])
             logging.info(led_array)
             self.led_device.show(led_array)
             return
