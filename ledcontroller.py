@@ -48,11 +48,11 @@ class LedController:
             #24 leds
             led_array = []
             for i in range(0, 24):
-                if i % div == 0 :
-                    led_array.append([0, 255, 255])
-                else:
+                if i % div == 0:
                     led_array.append([0, 0, 0])
-
+                else:
+                    led_array.append([0, 255, 255])
+            logging.info(led_array)
             self.led_device.show(led_array)
             return
 
