@@ -42,11 +42,18 @@ class LedController:
 
     def show(self):
         if self.reminders is not None and len(self.reminders) > 0:
-            self.led_device.show([[0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255],
-                              [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255],
-                              [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255],
-                              [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255],
-                              [0, 255, 255], [0, 255, 255], [0, 255, 255], [0, 255, 255]])
+            num = len(self.reminders)
+            div = 24 / num
+
+            #24 leds
+            led_array = []
+            for i in range(0, 24):
+                if i % div == 0 :
+                    led_array.append([0, 255, 255])
+                else:
+                    led_array.append([0, 0, 0])
+
+            self.led_device.show(led_array)
             return
 
         if self.tracking_progress:

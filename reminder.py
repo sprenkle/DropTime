@@ -31,19 +31,19 @@ class Reminder:
         for reminder in self.reminders:
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
             dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.minute, dt.second)
-            if dt > current_dt:
-                dt = dt - timedelta(days=1)
+            # if dt > current_dt:
+            #     dt = dt - timedelta(days=1)
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
 
             logging.info(self.tags_seen)
 
-            if dt <= current_dt <= end_time and reminder["reminderid"] in self.tags_seen and \
-                    (dt <= self.tags_seen[reminder["reminderid"]] <= end_time):
-                led_list.append(reminder["name"])
-                logging.info("activated " + reminder["name"])
-            else:
-                logging.info("Not activated")
+            if dt <= current_dt <= end_time:
+                if reminder["reminderid"] in self.tags_seen and dt <= self.tags_seen[reminder["reminderid"]] <= end_time:
+                    logging.info("Reminder Closed")
+                else:
+                    led_list.append(reminder["name"])
+                    logging.info("Reminder Opened " + reminder["name"])
 
         if len(led_list) > 0:
             self.led_controller.set_reminder(led_list)
