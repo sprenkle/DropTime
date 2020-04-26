@@ -322,6 +322,8 @@ class Reminders(Resource):
         reminders = []
         if len(objects_list) > 0:
             reminders = {"reminders": objects_list}
+        else:
+            reminders = {"reminders": []}
         db_connect.close()
         return reminders
 

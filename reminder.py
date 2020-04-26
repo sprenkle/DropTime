@@ -15,17 +15,15 @@ class Reminder:
         self.has_reminder = False
         self.reminders = []
         self.next_update = datetime.now()
+        self.device_id = device_id
 
     # updates the reminders from repository
     def update(self):
         if datetime.now() >= self.next_update:
             logging.info("Called reminder update")
-            self.reminders = self.tag_repository.get_reminders(self.device_id)
+            self.reminders = self.tag_repository.get_reminders(self.device_id)["reminders"]
             self.next_update = datetime.now() + timedelta(minutes=5)
-            logging.info(self.device_id)
             logging.info(self.reminders)
-            logging.info(self.next_update)
-            logging.debug(self.reminders)
 
         logging.info("update called")
         current_dt = datetime.now()
@@ -37,27 +35,29 @@ class Reminder:
                 dt = dt - timedelta(days=1)
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
-            if reminder["tagid"] in self.tags_seen:
-                tag_time = self.tags_seen[reminder["tagid"]]
-            else:
-                tag_time = None
+
             logging.info(self.tags_seen)
-            logging.info("{} <= {} <= {}  --  {} <= {} <= {}".format(dt, current_dt, end_time, dt, tag_time, end_time))
-            if dt <= current_dt <= end_time and (reminder["tagid"] not in self.tags_seen or
-                                                 not (dt <= self.tags_seen[reminder["tagid"]] <= end_time )):
-                display = list(eval(reminder["display"]))
-                for led_value in display:
-                    led_list.append(led_value)
+
+            if dt <= current_dt <= end_time and reminder["reminderid"] in self.tags_seen and \
+                    (dt <= self.tags_seen[reminder["reminderid"]] <= end_time):
+                led_list.append(reminder["name"])
+                logging.info("activated " + reminder["name"])
+            else:
+                logging.info("Not activated")
 
         if len(led_list) > 0:
-            while len(led_list) < 24:
-                led_list += led_list
-            self.led_controller.set_reminder(led_list[0:24])
+            self.led_controller.set_reminder(led_list)
         else:
             self.led_controller.clear_reminder()
 
     def execute(self, tag_id):
-        self.tags_seen[tag_id] = datetime.now();
+        self.tag_repository.contains_id("2", tag_id, self.device_id)
+        tag_to_action = self.tag_repository.tags_to_actions("2", tag_id)
+
+        if tag_to_action is None:
+            return
+
+        self.tags_seen[tag_to_action["identifier"]] = datetime.now();
 
     def has_reminders(self):
         return len(self.reminders) > 0
