@@ -32,8 +32,8 @@ class Reminder:
             logging.info("Processing Reminder {}".format(reminder["name"]))
             dt = datetime.strptime(reminder["start"], "%Y-%m-%dT%H:%M:%S.000")
             dt = datetime(current_dt.year, current_dt.month, current_dt.day, dt.hour, dt.minute, dt.second)
-            # if dt > current_dt:
-            #     dt = dt - timedelta(days=1)
+            if dt > current_dt:
+                dt = dt - timedelta(days=1)
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
 
