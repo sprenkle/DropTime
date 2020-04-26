@@ -108,13 +108,12 @@ class Devices(Resource):
         device = request.json
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
-        device_id = uuid.uuid4()
         querystring = "INSERT INTO devices (deviceid, name, description) VALUES ('{}','{}','{}')" \
-            .format(device_id, device["name"], device["description"])
+            .format(device["deviceid"], device["name"], device["description"])
         conn.execute(querystring)  # This line performs query and returns json result
         db_connect.commit()
         db_connect.close()
-        return jsonify({"results": "ok", "id": device_id})
+        return jsonify({"results": "ok"})
 
 
 class Tag(Resource):
@@ -406,51 +405,6 @@ class Reminders(Resource):
         db_connect.close()
         return jsonify({"results": "ok"})
 
-
-# class CurrentReminders(Resource):
-#
-#     def get(self, current_time):
-#         db_connect = sqlite3.connect('droptime.db')
-#         conn = db_connect.cursor()
-#         query = conn.execute("select * from reminders")
-#         objects_list = []
-#         for row in query:
-#             d = collections.OrderedDict()
-#             d['reminderid'] = row[0]
-#             d['userid'] = row[1]
-#             d['start'] = datetime.strptime(row[2], "%Y-%m-%dT%H:%M:%S.000")
-#             d['duration'] = row[3]
-#             d['showled'] = row[4]
-#             d['sunday'] = row[5]
-#             d['monday'] = row[6]
-#             d['tuesday'] = row[7]
-#             d['wednesday'] = row[8]
-#             d['thursday'] = row[9]
-#             d['friday'] = row[10]
-#             d['saturday'] = row[11]
-#
-#             objects_list.append(d)
-#         db_connect.close()
-#         return objects_list
-#
-#     def put(self, reminder_id):
-#         reminder = request.json
-#         db_connect = sqlite3.connect('droptime.db')
-#         conn = db_connect.cursor()
-#         querystring = "Update reminders set userid={}, start='{}'," \
-#                       "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
-#                       "wednesday={}, thursday={}, friday={}, saturday={} " \
-#                       "where reminderid='{}'" \
-#             .format(reminder["userid"], reminder["start"],
-#                     reminder["stop"], reminder["showled"], reminder["sunday"],
-#                     reminder["monday"],
-#                     reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
-#                     reminder["friday"], reminder["saturday"],
-#                     reminder_id)
-#         conn.execute(querystring)  # This line performs query and returns json result
-#         db_connect.commit()
-#         db_connect.close()
-#         return jsonify({"results": "ok"})
 
 
 class LastSeenTag(Resource):
