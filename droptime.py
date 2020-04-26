@@ -85,7 +85,6 @@ if __name__ == "__main__":
         from timeularapi import TimularApi
         from leddevice import LedDevice
         from tagrepository import TagRepository
-        #logging.basicConfig(level=logging.DEBUG)
         configuration = Configuration("configuration.json")
         led_device = LedDevice(configuration)
         led_controller = LedController(led_device)
@@ -94,9 +93,10 @@ if __name__ == "__main__":
         api = TimularApi(configuration, tag_repository)
 
     device_id = configuration.get_value("device", "device_id")
-    actions = Actions(TimeularAction(api, tag_repository, led_controller, device_id), Reminder(tag_repository, device_id, led_controller))
-    dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions,
-                        Reminder(tag_repository, device_id, led_controller))
+    timeular = TimeularAction(api, tag_repository, led_controller, device_id)
+    reminder = Reminder(tag_repository, device_id, led_controller)
+    actions = Actions(timeular, reminder)
+    dropTime = DropTime(led_controller, configuration, tag_repository, reader, actions, reminder)
     dropTime.run(-1)
 
 
