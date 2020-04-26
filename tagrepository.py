@@ -12,8 +12,8 @@ class TagRepository:
         logging.info("url is {}".format(self.base_url))
         self.tags_to_action_dict = {}
 
-    def contains_id(self, action_type, tag_id):
-        url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id)
+    def contains_id(self, action_type, tag_id, device_id):
+        url = self.base_url + '/tagstoactions/' + str(action_type) + '/' + str(tag_id) + '/' + device_id
         logging.debug("url is {}".format(url))
         r = requests.get(url)
         activity = r.json()
@@ -82,7 +82,7 @@ class TagRepository:
         return out
 
     def get_reminders(self, device_id):
-        url = self.base_url + "/reminders/{}".format(device_id)
+        url = self.base_url + "/remindersdevice/{}".format(device_id)
         logging.debug("url is {}".format(url))
         r = requests.get(url)
         out = r.json()

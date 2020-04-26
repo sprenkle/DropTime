@@ -83,11 +83,14 @@ CREATE TABLE "taglog"
 );
 CREATE INDEX [IFK_TAGLogTagidStart] ON "taglog" ([tagid],[start]);
 
+DROP TABLE "reminders";
 
 CREATE TABLE "reminders"
 (
     [reminderid] NVARCHAR(36) PRIMARY KEY NOT NULL,
+    [name] NVARCHAR(80),
     [userid] NVARCHAR(36),
+    [deviceid] NVARCHAR(36),
     [start] NVARCHAR(23)  NOT NULL,
     [duration] int  NOT NULL,
     [showled] INTEGER(1) NOT NULL,

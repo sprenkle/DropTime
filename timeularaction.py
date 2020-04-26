@@ -5,7 +5,7 @@ import sys
 
 class TimeularAction:
 
-    def __init__(self, api, tag_repository, led_controller):
+    def __init__(self, api, tag_repository, led_controller, device_id):
         self.running_tag_id = None
         self.api = api
         self.tag_repository = tag_repository
@@ -13,6 +13,7 @@ class TimeularAction:
         self.id = 1
         self.led_controller = led_controller
         self.start_time = datetime.datetime.now()
+        self.device_id = device_id
 
     def get_id(self):
         return self.id
@@ -34,12 +35,14 @@ class TimeularAction:
             self.current_tag_is_none()
             return
 
-        if not self.tag_repository.contains_id(self.id, tag_id):
+        if not self.tag_repository.contains_id(self.id, tag_id, self.device_id):
             logging.info("Tag id is not in repository returning")
             self.current_tag_not_in_repository()
             return
 
         tag_to_action = self.tag_repository.tags_to_actions(self.id, tag_id)
+        logging.info("tag_to_action")
+        logging.info(tag_to_action)
         user_id = tag_to_action["userid"]
         token = self.get_token(user_id)
 
@@ -54,11 +57,14 @@ class TimeularAction:
 
         activity = self.tag_repository.get_activity(tag_to_action["identifier"])
 
-        if ("show" in activity and activity["show"] == 0) or "dailyGoals" not in activity or \
-                "" == activity["dailyGoals"]:
-            self.led_controller.set_have_tracking_tag()
+        logging.info("Checking what show is {}".format(activity["show"]))
+        if not activity["show"]:
             logging.info("returning - No time tracking")
+            self.led_controller.set_have_tracking_tag()
             return
+        else:
+            logging.info("show is true")
+
 
         now = datetime.datetime.now()
         year = now.year
@@ -100,7 +106,7 @@ class TimeularAction:
 
     def stop_running_tag(self, tag_id):
         if self.running_tag_id is not None and self.running_tag_id != tag_id:
-            if self.tag_repository.contains_id(self.id, self.running_tag_id):
+            if self.tag_repository.contains_id(self.id, self.running_tag_id, self.device_id):
                 logging.info("Stopping tracking of current tag")
                 tag_to_action = self.tag_repository.tags_to_actions(self.id, self.running_tag_id)
                 token = self.get_token(tag_to_action["userid"])

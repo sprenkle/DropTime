@@ -8,7 +8,7 @@ class LedController:
 
     def __init__(self, led_device):
         self.led_device = led_device
-        self.reminder_leds = None
+        self.reminders = None
         self.progress_goal_time_sec = 0
         self.progress_start_amount_time_sec = 0
         self.progress_started_time = datetime.datetime.now()
@@ -27,11 +27,11 @@ class LedController:
         self.__have_tracking_tag = False
         self.tracking_progress = False
 
-    def set_reminder(self, leds):
-        self.reminder_leds = leds
+    def set_reminder(self, reminders):
+        self.reminders = reminders
 
     def clear_reminder(self):
-        self.reminder_leds = None
+        self.reminders = None
 
     def set_progress(self, goal_time, previous_time):
         logging.info("set_progress with goal_time={} previous_time={}".format(goal_time, previous_time))
@@ -41,8 +41,19 @@ class LedController:
         self.tracking_progress = True
 
     def show(self):
-        if self.reminder_leds is not None:
-            self.led_device.show(self.reminder_leds)
+        if self.reminders is not None and len(self.reminders) > 0:
+            num = len(self.reminders)
+            div = 24 / num
+
+            #24 leds
+            led_array = []
+            for i in range(0, 24):
+                if num > 1 and i % div == 0:
+                    led_array.append([0, 0, 0])
+                else:
+                    led_array.append([255, 255, 0])
+            logging.info(led_array)
+            self.led_device.show(led_array)
             return
 
         if self.tracking_progress:
@@ -66,7 +77,12 @@ class LedController:
     def show_progress(self):
         time_diff = (datetime.datetime.utcnow() - self.progress_started_time).seconds
         total_time = self.progress_start_amount_time_sec + time_diff
-        percent = total_time / float(self.progress_goal_time_sec)
+
+        if self.progress_goal_time_sec == 0:
+            percent = total_time / float(1)
+        else:
+            percent = total_time / float(self.progress_goal_time_sec)
+
         logging.info("now={} started_time={}  total_time={} goal_time={} Led percent = {} ".
                      format(datetime.datetime.utcnow(), self.progress_started_time, total_time,
                             float(self.progress_goal_time_sec), percent))

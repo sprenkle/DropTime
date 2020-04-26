@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, url_for
 from flask_restful import Resource, Api, reqparse
 # from sqlalchemy import create_engine
 import sqlite3
@@ -23,6 +23,7 @@ CORS(app)
 
 parser = reqparse.RequestParser()
 last_seen_tag = None
+last_device = None
 
 
 class UsersList(Resource):
@@ -107,13 +108,12 @@ class Devices(Resource):
         device = request.json
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
-        device_id = uuid.uuid4()
         querystring = "INSERT INTO devices (deviceid, name, description) VALUES ('{}','{}','{}')" \
-            .format(device_id, device["name"], device["description"])
+            .format(device["deviceid"], device["name"], device["description"])
         conn.execute(querystring)  # This line performs query and returns json result
         db_connect.commit()
         db_connect.close()
-        return jsonify({"results": "ok", "id": device_id})
+        return jsonify({"results": "ok"})
 
 
 class Tag(Resource):
@@ -201,27 +201,46 @@ class Tags(Resource):
 
 class Activities(Resource):
 
-    def get(self, activity_id):
-        db_connect = sqlite3.connect('droptime.db')
-        conn = db_connect.cursor()
-        query = conn.execute("select * from activities where activityid={}".format(
-            activity_id))  # This line performs query and returns json result
-        objects_list = []
-        activities = None
-        for row in query:
-            d = collections.OrderedDict()
-            d['activityid'] = row[0]
-            d['userid'] = row[1]
-            d['name'] = row[2]
-            d['color'] = row[3]
-            d['show'] = row[4]
-            d['dailyGoals'] = row[5]
-            d['dailytimeSec'] = row[6]
-            objects_list.append(d)
-        if len(objects_list) > 0:
-            activities = objects_list[0]
-        db_connect.close()
-        return activities  # Fetches first column that is Employee ID
+    def get(self, activity_id=None):
+        if activity_id is None:
+            db_connect = sqlite3.connect('droptime.db')
+            conn = db_connect.cursor()
+            query = conn.execute("select * from activities")  # This line performs query and returns json result
+            objects_list = []
+            for row in query:
+                d = collections.OrderedDict()
+                d['activityid'] = row[0]
+                d['userid'] = row[1]
+                d['name'] = row[2]
+                d['color'] = row[3]
+                d['show'] = row[4]
+                d['dailyGoals'] = row[5]
+                d['dailytimeSec'] = row[6]
+                objects_list.append(d)
+            activities = {"activities": objects_list}
+            db_connect.close()
+            return activities  # Fetches first column that is Employee ID
+        else:
+            db_connect = sqlite3.connect('droptime.db')
+            conn = db_connect.cursor()
+            query = conn.execute("select * from activities where activityid={}".format(
+                activity_id))  # This line performs query and returns json result
+            objects_list = []
+            activities = None
+            for row in query:
+                d = collections.OrderedDict()
+                d['activityid'] = row[0]
+                d['userid'] = row[1]
+                d['name'] = row[2]
+                d['color'] = row[3]
+                d['show'] = row[4]
+                d['dailyGoals'] = row[5]
+                d['dailytimeSec'] = row[6]
+                objects_list.append(d)
+            if len(objects_list) > 0:
+                activities = objects_list[0]
+            db_connect.close()
+            return activities  # Fetches first column that is Employee ID
 
     def post(self):
         activity = request.json
@@ -267,110 +286,130 @@ class ActivitiesList(Resource):
         return activities  # Fetches first column that is Employee ID
 
 
-
-# {"userid":"", "start":"", "stop":"", "showled":"", "sunday":"",
-# "monday":"", "tuesday":"", "wednesday":"", "thursday":"", "friday":"", "saturday":"",
-# "integration":""}
-class Reminders(Resource):
+class RemindersDevice(Resource):
     def get(self, device_id):
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
-        query = conn.execute("select rt.tagid, rt.display, rd.deviceid, r.* from reminders r join reminderstodevices rd on "
-                             "r.reminderid = rd.reminderid join reminderstotags rt on r.reminderid = rt.reminderid "
-                             "where rd.deviceid = '{}'".format(device_id))
-        objects_list = []
-        for row in query:
-            current_list = []
-            d = collections.OrderedDict()
-            d['tagid'] = row[0]
-            d['display'] = row[1]
-            d['deviceid'] = row[2]
-            d['reminderid'] = row[3]
-            d['userid'] = row[4]
-            d['start'] = row[5]
-            d['duration'] = row[6]
-            d['showled'] = row[7]
-            d['sunday'] = row[8]
-            d['monday'] = row[9]
-            d['tuesday'] = row[10]
-            d['wednesday'] = row[11]
-            d['thursday'] = row[12]
-            d['friday'] = row[13]
-            d['saturday'] = row[14]
-            current_list.append(d)
-            objects_list.append(current_list)
-        db_connect.close()
-        return objects_list
 
-    def put(self, reminder_id):
-        reminder = request.json
-        db_connect = sqlite3.connect('droptime.db')
-        conn = db_connect.cursor()
-        querystring = "Update reminders set userid={}, start='{}'," \
-                      "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
-                      "wednesday={}, thursday={}, friday={}, saturday={} " \
-                      "where reminderid='{}'" \
-            .format(reminder["userid"], reminder["start"],
-                    reminder["stop"], reminder["showled"], reminder["sunday"],
-                    reminder["monday"],
-                    reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
-                    reminder["friday"], reminder["saturday"],
-                    reminder_id)
-        conn.execute(querystring)  # This line performs query and returns json result
-        db_connect.commit()
-        db_connect.close()
-        return jsonify({"results": "ok"})
-
-
-class CurrentReminders(Resource):
-
-    def get(self, current_time):
-        db_connect = sqlite3.connect('droptime.db')
-        conn = db_connect.cursor()
-        query = conn.execute("select * from reminders")
+        sql = "select reminderid, name,userid,deviceid,start,duration,showled,sunday,monday," \
+                             "tuesday,wednesday,thursday,friday,saturday from reminders" \
+                             " where deviceid = '{}'".format(device_id)
+        print(sql)
+        query = conn.execute(sql)
         objects_list = []
         for row in query:
             d = collections.OrderedDict()
             d['reminderid'] = row[0]
-            d['userid'] = row[1]
-            d['start'] = datetime.strptime(row[2], "%Y-%m-%dT%H:%M:%S.000")
-            d['duration'] = row[3]
-            d['showled'] = row[4]
-            d['sunday'] = row[5]
-            d['monday'] = row[6]
-            d['tuesday'] = row[7]
-            d['wednesday'] = row[8]
-            d['thursday'] = row[9]
-            d['friday'] = row[10]
-            d['saturday'] = row[11]
-
+            d['name'] = row[1]
+            d['userid'] = row[2]
+            d['deviceid'] = row[3]
+            d['start'] = row[4]
+            d['duration'] = row[5]
+            d['showled'] = row[6]
+            d['sunday'] = row[7]
+            d['monday'] = row[8]
+            d['tuesday'] = row[9]
+            d['wednesday'] = row[10]
+            d['thursday'] = row[11]
+            d['friday'] = row[12]
+            d['saturday'] = row[13]
             objects_list.append(d)
+        reminders = []
+        if len(objects_list) > 0:
+            reminders = {"reminders": objects_list}
+        else:
+            reminders = {"reminders": []}
         db_connect.close()
-        return objects_list
+        return reminders
 
-    def put(self, reminder_id):
-        reminder = request.json
+
+
+class Reminders(Resource):
+    def get(self, user_id):
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
-        querystring = "Update reminders set userid={}, start='{}'," \
-                      "stop='{}', showled={}, sunday={}, monday={}, tuesday={}," \
-                      "wednesday={}, thursday={}, friday={}, saturday={} " \
-                      "where reminderid='{}'" \
-            .format(reminder["userid"], reminder["start"],
-                    reminder["stop"], reminder["showled"], reminder["sunday"],
-                    reminder["monday"],
-                    reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
-                    reminder["friday"], reminder["saturday"],
-                    reminder_id)
-        conn.execute(querystring)  # This line performs query and returns json result
+
+        sql = "select reminderid, name,userid,deviceid,start,duration,showled,sunday,monday," \
+                             "tuesday,wednesday,thursday,friday,saturday from reminders" \
+                             " where userid = '{}'".format(user_id)
+        print(sql)
+        query = conn.execute(sql)
+        objects_list = []
+        for row in query:
+            d = collections.OrderedDict()
+            d['reminderid'] = row[0]
+            d['name'] = row[1]
+            d['userid'] = row[2]
+            d['deviceid'] = row[3]
+            d['start'] = row[4]
+            d['duration'] = row[5]
+            d['showled'] = row[6]
+            d['sunday'] = row[7]
+            d['monday'] = row[8]
+            d['tuesday'] = row[9]
+            d['wednesday'] = row[10]
+            d['thursday'] = row[11]
+            d['friday'] = row[12]
+            d['saturday'] = row[13]
+            objects_list.append(d)
+        reminders = []
+        if len(objects_list) > 0:
+            reminders = {"reminders": objects_list}
+        else:
+            reminders = {"reminders": []}
+        db_connect.close()
+        return reminders
+
+    def delete(self, reminder_id):
+        db_connect = sqlite3.connect('droptime.db')
+        conn = db_connect.cursor()
+        querystring = "DELETE FROM reminders WHERE reminderid='{}'" \
+            .format(reminder_id)
+        conn.execute(querystring)
         db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
 
 
+    def post(self):
+        reminder = request.json
+
+        if reminder["reminderid"] == "0":
+            reminder["reminderid"] = uuid.uuid4()
+
+        db_connect = sqlite3.connect('droptime.db')
+        conn = db_connect.cursor()
+        querystring = "INSERT INTO reminders (reminderid, name, userid, deviceid, start," \
+                      "duration, showled, sunday, monday, tuesday," \
+                      "wednesday, thursday, friday, saturday) VALUES ('{}','{}','{}','{}','{}',{},{}," \
+                      "{},{},{},{},{},{},{})" \
+            .format(reminder["reminderid"], reminder["name"], reminder["userid"], reminder["deviceid"], reminder["start"],
+                    reminder["duration"], reminder["showled"], reminder["sunday"],
+                    reminder["monday"],
+                    reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
+                    reminder["friday"], reminder["saturday"])
+        try:
+            conn.execute(querystring)
+        except Exception as e:
+            querystring = "Update reminders set name='{}', userid='{}', deviceid='{}', start='{}'," \
+                          "duration={}, showled={}, sunday={}, monday={}, tuesday={}," \
+                          "wednesday={}, thursday={}, friday={}, saturday={} " \
+                          "where reminderid='{}'" \
+                .format(reminder["name"], reminder["userid"], reminder["deviceid"], reminder["start"],
+                        reminder["duration"], reminder["showled"], reminder["sunday"],
+                        reminder["monday"],
+                        reminder["tuesday"], reminder["wednesday"], reminder["thursday"],
+                        reminder["friday"], reminder["saturday"], reminder["reminderid"])
+            conn.execute(querystring)
+        db_connect.commit()
+        db_connect.close()
+        return jsonify({"results": "ok"})
+
+
+
 class LastSeenTag(Resource):
     def get(self):
-        return last_seen_tag
+        return {"last_tag": last_seen_tag, "last_device": last_device}
 
 
 class TagsToActionsList(Resource):
@@ -393,15 +432,22 @@ class TagsToActionsList(Resource):
 
 class TagsToActions(Resource):
 
-    def get(self, action_type, tag_id):
-        global last_seen_tag
+    def get(self, action_type, tag_id=None, device_id=None):
+        global last_seen_tag, last_device
         if tag_id is not None:
             last_seen_tag = tag_id
+            last_device = device_id
         db_connect = sqlite3.connect('droptime.db')
         conn = db_connect.cursor()
-        query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
+
+        if tag_id is None and device_id is None:
+            query_string = conn.execute(
+                "select ta.tagid, ta.actiontype, ta.identifier from tagstoactions ta")  # This line performs query and returns json result
+        else:
+            query_string = "select tta.tagid, tta.actiontype, tta.identifier, t.userid from tagstoactions tta join " \
                        "tags t on tta.tagid = t.tagid where tta.tagid = '{}' and actiontype='{}'".format(tag_id,
                                                                                                          action_type)
+
         query = conn.execute(query_string)
         objects_list = []
         for row in query:
@@ -449,7 +495,7 @@ class TagLog(Resource):
         conn = db_connect.cursor()
         querystring = "INSERT INTO taglog (tagid, deviceid, start, stop, totaltimes) VALUES ('{}','{}','{}','{}',{})" \
             .format(taglog["tagid"], taglog["deviceid"], taglog["start"], taglog["stop"], taglog["totaltimes"])
-        conn.execute(querystring)  # This line performs query and returns json result
+        conn.execute(querystring)
         db_connect.commit()
         db_connect.close()
         return jsonify({"results": "ok"})
@@ -504,7 +550,8 @@ class Label(Resource):
 
 api.add_resource(LastSeenTag, '/lastseentag')  # Route_1
 api.add_resource(TagsToActionsList, '/tagstoactions')  # Route_1
-api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>')  # Route_1
+api.add_resource(TagsToActions,     '/tagstoactions', '/tagstoactions/<action_type>/<string:tag_id>',
+                 '/tagstoactions/<action_type>/<string:tag_id>/<string:device_id>')  # Route_1
 api.add_resource(UsersList, '/users')  # Route_1UsersUpdate
 api.add_resource(Users, '/users/<user_id>')  # Route_1
 api.add_resource(Devices, '/devices')  # Route_1
@@ -512,8 +559,10 @@ api.add_resource(Tag, '/tag', '/tag/<string:tag_id>')
 api.add_resource(Tags, '/tags/<string:user_id>', '/tags')  # Route_1
 api.add_resource(Activities, '/activities', '/activities/<activity_id>')  # Route_1
 api.add_resource(ActivitiesList, '/activities')  # Route_1
-api.add_resource(Reminders, '/reminders/<device_id>')  # Route_1
-api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1
+api.add_resource(Reminders, '/reminders', '/reminders/<string:user_id>',
+                 '/reminders/delete/<string:reminder_id>')  # Route_1
+api.add_resource(RemindersDevice, '/remindersdevice/<string:device_id>')  # Route_1
+# api.add_resource(CurrentReminders, '/reminders/current/<current_time>')  # Route_1
 api.add_resource(TagLog, '/taglog')  # Route_1
 api.add_resource(TagLogQuery, '/taglog/<activity_type>/<activity_id>/start/<start>/end/<end>')  # Route_1
 api.add_resource(Label, '/label/<activity_id>')  # Route_1
