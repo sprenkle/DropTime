@@ -31,7 +31,7 @@ class LedController:
         self.reminders = reminders
 
     def clear_reminder(self):
-        self.reminder_leds = None
+        self.reminders = None
 
     def set_progress(self, goal_time, previous_time):
         logging.info("set_progress with goal_time={} previous_time={}".format(goal_time, previous_time))
