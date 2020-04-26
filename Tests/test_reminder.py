@@ -64,6 +64,7 @@ class TestReminder(unittest.TestCase):
         tag_repo.get_reminders = MagicMock(return_value=reminder_list)
         led_controller = Mock()
         reminder = Reminder(tag_repo, "08f98cd6-3602-41ee-aa27-a6768412254e", led_controller)
+        reminder.update()
         reminder.execute("3172271240")
         reminder.update()
         led_controller.clear_reminder.assert_called_once()
