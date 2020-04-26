@@ -26,6 +26,8 @@ class Reminder:
             logging.info(self.reminders)
 
         logging.info("update called")
+        logging.info("self.tags_seen {}".format(self.tags_seen))
+
         current_dt = datetime.now()
         led_list = []
         for reminder in self.reminders:
@@ -37,7 +39,6 @@ class Reminder:
             duration = reminder["duration"]
             end_time = (dt + timedelta(seconds=duration))
 
-            logging.info(self.tags_seen)
 
             if dt <= current_dt <= end_time:
                 if reminder["reminderid"] in self.tags_seen and dt <= self.tags_seen[reminder["reminderid"]] <= end_time:
@@ -70,11 +71,6 @@ class Reminder:
 
     def has_reminders(self):
         return len(self.reminders) > 0
-
-    def process_reminders(self, card_id):
-        logging.debug("process_reminders with tag_id = {}".format(card_id))
-        if card_id is not None:
-            self.tags_seen[str(card_id)] = datetime.now()
 
 
 if __name__ == "__main__":
