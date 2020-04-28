@@ -30,7 +30,9 @@ class DropTime:
                 card_id = self.reader.read_tag()
                 logging.debug("card_id read is {}".format(card_id))
                 self.process_nonactions()
+                self.reader.read_tag()
                 self.process_actions(card_id)
+                self.reader.read_tag()
                 self.led_controller.show()
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)
